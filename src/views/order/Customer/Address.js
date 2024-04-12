@@ -1,8 +1,8 @@
 // import React,{useEffect, useState} from 'react';
-import { useLocation,useNavigate } from 'react-router-dom';
+import {useNavigate } from 'react-router-dom';
 // import Select, { components } from 'react-select';
 
-import React,{useState} from 'react';
+import React,{useState,useEffect} from 'react';
 // import { useLocation } from 'react-router-dom';
 // import Select from 'react-select';
 
@@ -22,14 +22,15 @@ import ComponentCard from '../../../components/ComponentCard';
 
 
 const Edit= () => {
-  const location = useLocation();
-  const companyAddress = location.state || {}; // Default to an empty object if state is undefined
+  // const location = useLocation();
+  // const companyAddress = location.state || {};
   const navigate= useNavigate();
-  const [data, setData] = useState(companyAddress); 
+  const [data, setData] = useState([]); 
+  const [data2, setData2] = useState([]);
+  const [data3, setData3] = useState([]);
 
-
-console.log('data',companyAddress[0].AddressLine1);
-console.log('location',location.state);
+// console.log('data',companyAddress[0].AddressLine1);
+// console.log('location',location.state);
 
 const handleEditAdd = () => {
   // Navigate to the edit page with the item's id
@@ -37,26 +38,27 @@ const handleEditAdd = () => {
   navigate('/order/customers/address/add');
 };
 
-const handleEditAddress = ()=>{
+const handleEditAddress = (customer)=>{
     
-  console.log('address');
-   navigate('/order/customers/address/edit', {state:companyAddress });
+  console.log('address',customer);
+   navigate('/order/customers/address/edit', {state: customer });
  } 
 
  const handleDeleteClick = async (itemId) => {
   try {
     // Call your API endpoint to delete the item
-    // const response = await fetch(`your-api-endpoint/${itemId}`, {
-    //   method: 'DELETE',
-    //   headers: {
-    //     // Your headers here (if needed)
-    //   }
-    // });
+    const token = localStorage.getItem('userToken');
+    const response = await fetch(`https://factory.teamasia.in/api/public/cities/${itemId}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
 
     // Check if the request was successful
-    // if (!response.ok) {
-    //   throw new Error(`Error: ${response.statusText}`);
-    // }
+    if (!response.ok) {
+      throw new Error(`Error: ${response.statusText}`);
+    }
 
     // Filter out the deleted item from your data state
     const updatedData = data.filter((item) => item.id !== itemId);
@@ -69,7 +71,88 @@ const handleEditAddress = ()=>{
   }
 };
 
- 
+function getStateNameById(stateId) {
+  const stateName = data3.find(state => state.id === stateId);
+  console.log('state',stateName);
+  return stateName ? stateName.name : 'Unknown State';
+}
+
+// This function finds the name of the country by its ID
+function getCityNameById(cityId) {
+  const cityName = data2.find(country => country.id === cityId);
+  console.log('city',cityName);
+  return cityName ? cityName.name : 'Unknown City';
+}
+
+const citiesWithNames = data.map(city => ({
+  ...city,
+  stateName: getStateNameById(city.state_id),
+  cityName: getCityNameById(city.city_id)
+}));
+
+useEffect(() => {
+  
+  // Fetch the data from the API
+  const fetchData = async () => {
+    const token = localStorage.getItem('userToken');
+    // console.log('token',token);
+    const response = await fetch('https://factory.teamasia.in/api/public/addresses', {
+      method: 'GET', 
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    // console.log('result',response);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const result = await response.json();
+    console.log("responsejson",result);
+    setData(result.addresses); 
+  };
+
+  const fetchData2 = async () => {
+    const token = localStorage.getItem('userToken');
+    // console.log('token',token);
+    const response = await fetch('https://factory.teamasia.in/api/public/cities', {
+      method: 'GET', 
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    // console.log('result',response);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const result = await response.json();
+    console.log("responsejson2",result);
+    setData2(result.cities); 
+  };
+  const fetchData3 = async () => {
+    const token = localStorage.getItem('userToken');
+    // console.log('token',token);
+    const response = await fetch('https://factory.teamasia.in/api/public/states', {
+      method: 'GET', 
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    // console.log('result',response);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const result = await response.json();
+    console.log("responsejson3",result);
+    setData3(result.states); 
+  };
+
+  fetchData3();
+  fetchData2();
+  fetchData();
+
+
+},[]);
+
   return (
 
     <ComponentCard
@@ -114,12 +197,12 @@ const handleEditAddress = ()=>{
                       </thead>
           
               <tbody>
-              {data.map((customer) => (
+              {citiesWithNames.map((customer) => (
                   <tr key={customer.id}>
                     <Row>
-                      <Col md="6">{customer.AddressLine1}</Col>
-                      <Col md="2">{customer.City}</Col>
-                      <Col md="2">{customer.State}</Col>
+                      <Col md="6">{customer.address_line_1}</Col>
+                      <Col md="2">{customer.cityName}</Col>
+                      <Col md="2">{customer.stateName}</Col>
                       <Col md="2"><button type="button" className="btn mybtncustomer btn-secondary btn-sm mr-2" onClick={() => handleEditAddress(customer)}><i className="bi bi-pencil-fill my-pen-color" /></button><button type="button" className="btn mybtncustomer btn-secondary btn-sm mr-2" onClick={() => handleDeleteClick(customer.id)}><i className="bi bi-trash-fill my-trash-color" /></button></Col>
                      
                     </Row>

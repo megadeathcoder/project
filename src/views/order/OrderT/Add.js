@@ -1,5 +1,4 @@
-import React,{useState} from 'react';
-
+import React,{useState, useEffect} from 'react';
 import {
   Card,
   CardBody,
@@ -12,36 +11,155 @@ import {
   Input,
   FormText,
   Button,
-
 } from 'reactstrap';
 // import { useParams } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 // import ComponentCard from '../../components/ComponentCard';
 
-const Add = () => {
-  const location = useLocation();
-  const {Name} = location.state || {}; // Default to an empty object if state is undefined
-  const [items, setItems] = useState([]);
- console.log("items",items);
-  const addItem = () => {
-    const newItems = items.slice();
-    newItems.push('')
-    setItems(newItems);
+const Edit = () => {
+  const navigate = useNavigate();
+  const [data, setData] = useState([]);
+
+  // const items = [
+  //   { id: 1, grain: '1037 A', fabric: 'NW.needlepunch_220gsm', quality: 'SURPLUS', color: 'black',hsnCode:'56039400',PricePerUnit:'274.4',Thickness:'1.5',TaxRate:'12',deliveryDate:'2021-06-19',CustomerItemRefernce:'', quantity: '450 m' },
+  // { id: 2, grain: '3001 A', fabric: 'WP.matty_165g_110gsm', quality: 'SURPLUS', color: 'black',hsnCode:'56039400',PricePerUnit:'274.4',Thickness:'1.5',TaxRate:'12',deliveryDate:'2021-06-19',CustomerItemRefernce:'', quantity: '150 m' },
+  // ]
+
+
+  const [formDatas, setFormDataS] = useState({});
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    console.log('hi')
+    setFormDataS(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
   };
 
-  const removeItem = index => {
-    const newItems = items.slice();
-    newItems.splice(index, 1);
-    setItems(newItems);
+
+
+//  console.log("items",items);
+
+
+
+  // const handleInputChange = (index, event) => {
+  //   const newItems = items.slice();
+  //   console.log("data",index,newItems);
+  //   newItems[index] =  event.target.value;
+  //   setItems(newItems);
+  //   setData2(newItems);
+  // };
+
+  const handleTypeChange = (e) => {
+    const { name, value } = e.target;
+    // setSelectedType(e.target.value);
+    setFormDataS(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
+    // console.log('e',e.target.options[e.target.selectedIndex].text);
+    console.log('e',e.target.value);
   };
 
-  const handleInputChange = (index, event) => {
-    const newItems = items.slice();
-    console.log("data",index,newItems);
-    newItems[index] =  event.target.value;
-    setItems(newItems);
-  };
+  async function apiCall() {
+    try {
+      
+        // const formData = new FormData();
+        // formData.append('name', formDatas.name);
+        // formData.append('iso_code', formDatas.isoCode);
+        // formData.append('isd_code', formDatas.isdCode);
+
+        // console.log('item',items);
+
+        // // console.log('dataX',formDatas);
+        // const filtered = items.filter((temp)=>{
+        //   return temp.id !== 'z';
+        // });
+
+        console.log('formdataX',formDatas);
+        // console.log('filtered',filtered);
+  
+
+        const token = localStorage.getItem('userToken');
+        const response = await fetch(`https://factory.teamasia.in/api/public/ordertemplates`, {
+            method: "POST",
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+           
+            body: JSON.stringify({
+              title: formDatas.title,
+              type: '1',
+              customer_id: formDatas.customerId,
+              is_trashed: '0'
+            }),
+        });
+
+        const dataZ = await response.json();
+        console.log("dataapi",dataZ)
+        if (response.ok) {
+
+
+          navigate('/order/order-templates');
+            
+        } 
+            // Handle any errors, such as showing an error message to the user
+            console.error("Authentication failed:", dataZ.message);
+            return null;
+      
+    } catch (error) {
+        console.error("Network error:", error);
+        return null;
+    }
+}
+
+const handleSubmit = async (event) => {
+  event.preventDefault();
+  console.log('event',event);
+  apiCall();
+};
+
+
+
+  useEffect(() => {
+
+    // Fetch the data from the API
+    const fetchData = async () => {
+      const token = localStorage.getItem('userToken');
+      // console.log('token',token);
+      const response = await fetch(`https://factory.teamasia.in/api/public/customers`, {
+        method: 'GET', 
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      // console.log('result',response);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const result = await response.json();
+      console.log("responsejson1",result);
+      setData(result.customers);
+      setFormDataS(prevState => ({
+        ...prevState,
+        customerId: result.customers[0].id
+      }
+      ))
+    };
+
+ 
+
+  
+   
+  
+
+    fetchData();
+
+  },[]);
+
   return (
 <div>
      
@@ -55,46 +173,40 @@ const Add = () => {
              </CardTitle>
            </CardBody>
            <CardBody>
-             <Form>
+             <Form onSubmit={handleSubmit}>
+
                <Row>
-                 <Col md="8" className='mb-5'>
+                 <Col md="8" className=''>
                    <FormGroup>
-                     <Label>Fabric Name</Label>
-                     <Input type="text" placeholder ={Name} />
+                     <Label>Template Title</Label>
+                     <Input type="text" 
+                     name="title" 
+                     id="name"
+                     placeholder="Enter name" 
+                     value={formDatas.title}
+                     onChange={handleChange} 
+                      />
                      <FormText className="muted"></FormText>
                    </FormGroup>
                  </Col>
 
-                 <Row>
-                  <Col md="8">
-                      <Button disabled className='btn btn-warning'>Add Items</Button>
+                 <Col md="8" className='mb-5'>
+                    <FormGroup>
+                      <Label>Choose Customer</Label>
+                      <Input type="select" 
+                         name="customerId" 
+                         value={formDatas.customerId}
+                        onChange={handleTypeChange} >
+                           {data.map((item)=>{
+   
+                             return <option key={item.id} value={item.id}>{item.company_name}</option>
+                           })}
+                      </Input>
+                      {/* <FormText className="muted">Popular Dates</FormText> */}
+                    </FormGroup>
                   </Col>
-                  <Col md="2">
-                    <Button type="button" className='btn-success' onClick={addItem}>+</Button>
-                  </Col>
-                </Row>
 
-                 <table className="table">        
-                  <thead>
-                        <tr>
-                          <Row>
-                            <Col md="3"><th>Name</th></Col>
-                          </Row>
-                        </tr>
-                      </thead>
-          
-              <tbody>
-              {items.map((item, index) => (
-                  <tr key={item.index}>
-                    <Row>
-                      <Col md="8"><Input name="product" value={item} type="text" onChange={e => handleInputChange(index, e)} placeholder="" /></Col>
-                      <Col md="1"><button type="button"  style={{ backgroundColor:"red",marginTop:"5px"}} onClick={() => removeItem(index)}>X</button></Col>
-                    </Row>
-                    
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                  
 
                  <Col md="4">
                    <FormGroup>
@@ -123,4 +235,4 @@ const Add = () => {
   );
 };
 
-export default Add;
+export default Edit;

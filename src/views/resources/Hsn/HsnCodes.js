@@ -11,18 +11,7 @@ import ComponentCard from '../../../components/ComponentCard';
 
 const HsnCodes = () => {
   const navigate = useNavigate();
-  const [data, setData] = useState([
-    { id: 1, Code: '39209959', CodeName: 'PVC Film'},
-    { id: 2, Code: '39209959', CodeName: 'PVC Film'},
-    { id: 3, Code: '39209959', CodeName: 'PVC Film'},
-    { id: 4, Code: '39209959', CodeName: 'PVC Film'},
-    { id: 5, Code: '39209959', CodeName: 'PVC Film'},
-    { id: 6, Code: '39209959', CodeName: 'PVC Film'},
-    { id: 7, Code: '39209959', CodeName: 'PVC Film'},
-    { id: 8, Code: '39209959', CodeName: 'PVC Film'},
-    { id: 9, Code: '39209959', CodeName: 'PVC Film'},
-    { id: 10, Code: '39209959', CodeName: 'PVC Film'},
-  ]);
+  const [data, setData] = useState([]);
   // const data = [
   //   { id: 1, Code: '39209959', CodeName: 'PVC Film'},
   //   { id: 2, Code: '39209959', CodeName: 'PVC Film'},
@@ -53,17 +42,18 @@ const HsnCodes = () => {
   const handleDeleteClick = async (itemId) => {
     try {
       // Call your API endpoint to delete the item
-      // const response = await fetch(`your-api-endpoint/${itemId}`, {
-      //   method: 'DELETE',
-      //   headers: {
-      //     // Your headers here (if needed)
-      //   }
-      // });
+      const token = localStorage.getItem('userToken');
+      const response = await fetch(`https://factory.teamasia.in/api/public/hsns/${itemId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
   
       // Check if the request was successful
-      // if (!response.ok) {
-      //   throw new Error(`Error: ${response.statusText}`);
-      // }
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
   
       // Filter out the deleted item from your data state
       const updatedData = data.filter((item) => item.id !== itemId);
@@ -75,7 +65,6 @@ const HsnCodes = () => {
       console.error('Failed to delete the item', error);
     }
   };
-  
 
   useEffect(() => {
     
@@ -83,7 +72,7 @@ const HsnCodes = () => {
     const fetchData = async () => {
       const token = localStorage.getItem('userToken');
       console.log('token',token);
-      const response = await fetch('https://indiapuleather.com/teamasia/api/public/cities', {
+      const response = await fetch('https://factory.teamasia.in/api/public/hsns', {
         method: 'GET', 
         headers: {
           'Authorization': `Bearer ${token}`
@@ -94,7 +83,7 @@ const HsnCodes = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const result = await response.json();
-      setData(result); 
+      setData(result.hsns); 
     };
   
     fetchData();
@@ -128,8 +117,8 @@ const HsnCodes = () => {
               <tbody>
                 {data.map((product) => (
                   <tr key={product.id}>
-                  <td>{product.Code}</td>
-                  <td>{product.CodeName}</td>
+                  <td>{product.hsn_code}</td>
+                  <td>{product.name}</td>
                   <td>
                     {/* Action buttons or icons */}
                       <button type="button" className="btn mybtncustomer btn-secondary btn-sm mr-2" onClick={() => handleEditClick(product)}><i className="bi bi-pencil-fill my-pen-color" /></button>

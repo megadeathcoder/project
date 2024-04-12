@@ -11,18 +11,7 @@ import ComponentCard from '../../../components/ComponentCard';
 
 const Grains = () => {
   const navigate = useNavigate();
-  const [data, setData] = useState([
-    { id: 1, Name: '1001 A'},
-    { id: 2, Name: '1002 A'},
-    { id: 3, Name: '1003 A'},
-    { id: 4, Name: '1004 A'},
-    { id: 5, Name: '1005 A'},
-    { id: 6, Name: '1006 A'},
-    { id: 7, Name: '1007 A'},
-    { id: 8, Name: '1008 A'},
-    { id: 9, Name: '1009 A'},
-    { id: 10, Name: '1000 A'},
-  ]);
+  const [data, setData] = useState([]);
   // const data = [
   //   { id: 1, Name: '1001 A'},
   //   { id: 2, Name: '1002 A'},
@@ -53,17 +42,18 @@ const Grains = () => {
   const handleDeleteClick = async (itemId) => {
     try {
       // Call your API endpoint to delete the item
-      // const response = await fetch(`your-api-endpoint/${itemId}`, {
-      //   method: 'DELETE',
-      //   headers: {
-      //     // Your headers here (if needed)
-      //   }
-      // });
+      const token = localStorage.getItem('userToken');
+      const response = await fetch(`https://factory.teamasia.in/api/public/grains/${itemId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
   
       // Check if the request was successful
-      // if (!response.ok) {
-      //   throw new Error(`Error: ${response.statusText}`);
-      // }
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
   
       // Filter out the deleted item from your data state
       const updatedData = data.filter((item) => item.id !== itemId);
@@ -83,7 +73,7 @@ const Grains = () => {
     const fetchData = async () => {
       const token = localStorage.getItem('userToken');
       console.log('token',token);
-      const response = await fetch('https://indiapuleather.com/teamasia/api/public/cities', {
+      const response = await fetch('https://factory.teamasia.in/api/public/grains', {
         method: 'GET', 
         headers: {
           'Authorization': `Bearer ${token}`
@@ -94,7 +84,7 @@ const Grains = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const result = await response.json();
-      setData(result); 
+      setData(result.grains); 
     };
   
     fetchData();
@@ -128,7 +118,7 @@ const Grains = () => {
               <tbody>
                 {data.map((product) => (
                   <tr key={product.id}>
-                  <td>{product.Name}</td>
+                  <td>{product.name}</td>
                   <td>
                     {/* Action buttons or icons */}
                       <button type="button" className="btn mybtncustomer btn-secondary btn-sm mr-2" onClick={() => handleEditClick(product)}><i className="bi bi-pencil-fill my-pen-color" /></button>

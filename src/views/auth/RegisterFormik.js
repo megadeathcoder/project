@@ -36,7 +36,7 @@ const RegisterFormik = () => {
       formData.append('password', password);
       formData.append('confirm_password', confirmPassword);
 
-        const response = await fetch("https://indiapuleather.com/teamasia/api/public/api/register", {
+        const response = await fetch("https://factory.teamasia.in/api/public/api/register", {
             method: "POST",
             // headers: {
             //     "Content-Type": "application/json",

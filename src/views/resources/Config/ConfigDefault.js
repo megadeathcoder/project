@@ -11,18 +11,7 @@ import ComponentCard from '../../../components/ComponentCard';
 
 const ConfigDefault = () => {
   const navigate = useNavigate();
-  const [data, setData] = useState([
-    { id: 1, DisplayName: 'Grades', ConfigName: 'grading', SearchType: 'Year', Value: '1'},
-    { id: 2, DisplayName: 'Grades', ConfigName: 'grading', SearchType: 'Day', Value: '1'},
-    { id: 3, DisplayName: 'Grades', ConfigName: 'grading', SearchType: 'Week', Value: '1'},
-    { id: 4, DisplayName: 'Grades', ConfigName: 'grading', SearchType: 'Month', Value: '1'},
-    { id: 5, DisplayName: 'Grades', ConfigName: 'grading', SearchType: 'Year', Value: '1'},
-    { id: 6, DisplayName: 'Grades', ConfigName: 'grading', SearchType: 'Day', Value: '1'},
-    { id: 7, DisplayName: 'Grades', ConfigName: 'grading', SearchType: 'Month', Value: '1'},
-    { id: 8, DisplayName: 'Grades', ConfigName: 'grading', SearchType: 'Week', Value: '1'},
-    { id: 9, DisplayName: 'Grades', ConfigName: 'grading', SearchType: 'year', Value: '1'},
-    { id: 10, DisplayName: 'Grades', ConfigName: 'grading', SearchType: 'Day', Value: '1'},
-  ]);
+  const [data, setData] = useState([]);
   // const data = [
   //   { id: 1, DisplayName: 'Grades', ConfigName: 'grading', SearchType: 'year', Value: '1'},
   //   { id: 2, DisplayName: 'Grades', ConfigName: 'grading', SearchType: 'year', Value: '1'},
@@ -53,17 +42,18 @@ const ConfigDefault = () => {
   const handleDeleteClick = async (itemId) => {
     try {
       // Call your API endpoint to delete the item
-      // const response = await fetch(`your-api-endpoint/${itemId}`, {
-      //   method: 'DELETE',
-      //   headers: {
-      //     // Your headers here (if needed)
-      //   }
-      // });
+      const token = localStorage.getItem('userToken');
+      const response = await fetch(`https://factory.teamasia.in/api/public/configs/${itemId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
   
       // Check if the request was successful
-      // if (!response.ok) {
-      //   throw new Error(`Error: ${response.statusText}`);
-      // }
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
   
       // Filter out the deleted item from your data state
       const updatedData = data.filter((item) => item.id !== itemId);
@@ -76,6 +66,22 @@ const ConfigDefault = () => {
     }
   };
   
+  const typechanger =(protype)=>{
+     if(protype === '0')
+     {
+      return 'day';
+     }
+     if(protype === '1')
+     {
+      return 'week';
+     }
+      if(protype === '2')
+     {
+      return 'month';
+     }
+      return 'year';
+     
+  }
 
   useEffect(() => {
     
@@ -83,7 +89,7 @@ const ConfigDefault = () => {
     const fetchData = async () => {
       const token = localStorage.getItem('userToken');
       console.log('token',token);
-      const response = await fetch('https://indiapuleather.com/teamasia/api/public/cities', {
+      const response = await fetch('https://factory.teamasia.in/api/public/configs', {
         method: 'GET', 
         headers: {
           'Authorization': `Bearer ${token}`
@@ -94,7 +100,8 @@ const ConfigDefault = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const result = await response.json();
-      setData(result); 
+      setData(result.configs); 
+      console.log('result',result.configs); 
     };
   
     fetchData();
@@ -129,13 +136,14 @@ const ConfigDefault = () => {
             <th>Actions</th>
           </tr>
               </thead>
+             
               <tbody>
                 {data.map((product) => (
                   <tr key={product.id}>
-                  <td>{product.DisplayName}</td>
-                  <td>{product.ConfigName}</td>
-                  <td>{product.SearchType}</td>
-                  <td>{product.Value}</td>
+                  <td>{product.display_name}</td>
+                  <td>{product.name}</td>
+                  <td>{typechanger(product.type)}</td>
+                  <td>{product.value}</td>
                   <td>
                     {/* Action buttons or icons */}
                       <button type="button" className="btn mybtncustomer btn-secondary btn-sm mr-2" onClick={() => handleEditClick(product)}><i className="bi bi-pencil-fill my-pen-color" /></button>

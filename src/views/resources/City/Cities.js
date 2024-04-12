@@ -10,20 +10,11 @@ import ComponentCard from '../../../components/ComponentCard';
 
 const Cities = () => {
   const navigate = useNavigate();
-  const [data, setData] = useState([
-    { id: 1, CityName: 'Noida', State: 'Uttar Pradesh', Country: 'India' },
-    { id: 2, CityName: 'Noida1', State: 'Uttar Pradesh1', Country: 'India1' },
-    { id: 3, CityName: 'Noida2', State: 'Uttar Pradesh2', Country: 'India2' },
-    { id: 4, CityName: 'Noida3', State: 'Uttar Pradesh3', Country: 'India3' },
-    { id: 5, CityName: 'Noida4', State: 'Uttar Pradesh4', Country: 'India4' },
-    { id: 6, CityName: 'Noida5', State: 'Uttar Pradesh5', Country: 'India5' },
-    { id: 7, CityName: 'Noida6', State: 'Uttar Pradesh6', Country: 'India6' },
-    { id: 8, CityName: 'Noida7', State: 'Uttar Pradesh7', Country: 'India7' },
-    { id: 9, CityName: 'Noida8', State: 'Uttar Pradesh8', Country: 'India8' },
-    { id: 10, CityName: 'Noida9', State: 'Uttar Pradesh9', Country: 'India9' },
-  ]);
+  const [data, setData] = useState([]);
+  const [data2, setData2] = useState([]);
+  const [data3, setData3] = useState([]);
 
-  // const data = [
+  // const data2 = [
   //   { id: 1, CityName: 'Noida', State: 'Uttar Pradesh', Country: 'India' },
   //   { id: 2, CityName: 'Noida', State: 'Uttar Pradesh', Country: 'India' },
   //   { id: 3, CityName: 'Noida', State: 'Uttar Pradesh', Country: 'India' },
@@ -54,17 +45,18 @@ const Cities = () => {
   const handleDeleteClick = async (itemId) => {
     try {
       // Call your API endpoint to delete the item
-      // const response = await fetch(`your-api-endpoint/${itemId}`, {
-      //   method: 'DELETE',
-      //   headers: {
-      //     // Your headers here (if needed)
-      //   }
-      // });
+      const token = localStorage.getItem('userToken');
+      const response = await fetch(`https://factory.teamasia.in/api/public/cities/${itemId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
   
       // Check if the request was successful
-      // if (!response.ok) {
-      //   throw new Error(`Error: ${response.statusText}`);
-      // }
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
   
       // Filter out the deleted item from your data state
       const updatedData = data.filter((item) => item.id !== itemId);
@@ -77,29 +69,87 @@ const Cities = () => {
     }
   };
   
+  function getStateNameById(stateId) {
+    const stateName = data3.find(state => state.id === stateId);
+    console.log('state',stateName);
+    return stateName ? stateName.name : 'Unknown State';
+  }
+  
+  // This function finds the name of the country by its ID
+  function getCountryNameById(countryId) {
+    const countryName = data2.find(country => country.id === countryId);
+    console.log('country',countryName);
+    return countryName ? countryName.name : 'Unknown Country';
+  }
+
+  const citiesWithNames = data.map(city => ({
+    ...city,
+    stateName: getStateNameById(city.state_id),
+    countryName: getCountryNameById(city.country_id)
+  }));
 
   useEffect(() => {
     
     // Fetch the data from the API
     const fetchData = async () => {
       const token = localStorage.getItem('userToken');
-      console.log('token',token);
-      const response = await fetch('https://indiapuleather.com/teamasia/api/public/cities', {
+      // console.log('token',token);
+      const response = await fetch('https://factory.teamasia.in/api/public/cities', {
         method: 'GET', 
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
-      console.log('result',response);
+      // console.log('result',response);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const result = await response.json();
-      setData(result); 
+      console.log("responsejson",result);
+      setData(result.cities); 
+    };
+
+    const fetchData2 = async () => {
+      const token = localStorage.getItem('userToken');
+      // console.log('token',token);
+      const response = await fetch('https://factory.teamasia.in/api/public/countries', {
+        method: 'GET', 
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      // console.log('result',response);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const result = await response.json();
+      console.log("responsejson2",result);
+      setData2(result.countries); 
+    };
+    const fetchData3 = async () => {
+      const token = localStorage.getItem('userToken');
+      // console.log('token',token);
+      const response = await fetch('https://factory.teamasia.in/api/public/states', {
+        method: 'GET', 
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      // console.log('result',response);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const result = await response.json();
+      console.log("responsejson3",result);
+      setData3(result.states); 
     };
   
+    fetchData3();
+    fetchData2();
     fetchData();
-  }, []);
+
+  
+  },[]);
 
   return (
     <ComponentCard
@@ -130,18 +180,19 @@ const Cities = () => {
           </tr>
               </thead>
               <tbody>
-                {data.map((product) => (
+                {citiesWithNames.map((product) => (
                   <tr key={product.id}>
-                  <td>{product.CityName}</td>
-                  <td>{product.State}</td>
-                  <td>{product.Country}</td>
+                  <td>{product.name}</td>
+                  <td>{product.stateName}</td>
+                  <td>{product.countryName}</td>
                   <td>
-                    {/* Action buttons or icons */}
                       <button type="button" className="btn mybtncustomer btn-secondary btn-sm mr-2" onClick={() => handleEditClick(product)}><i className="bi bi-pencil-fill my-pen-color" /></button>
                       <button type="button" className="btn mybtncustomer btn-secondary btn-sm mr-2" onClick={() => handleDeleteClick(product.id)}><i className="bi bi-trash-fill my-trash-color" /></button>
                   </td>
                 </tr>
                 ))}
+
+     
               </tbody>
             </table>
             

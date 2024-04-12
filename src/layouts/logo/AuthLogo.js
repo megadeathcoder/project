@@ -2,9 +2,11 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 
 import { ReactComponent as LogoDarkIcon } from '../../assets/images/logos/elite-dark-icon.svg';
-// import LogoDarkText from '../../assets/images/logos/logo-text.png';
+// import LogoDarkIcon from '../../assets/images/logos/elite-dark-icon.png';
+// import LogoDarkText from '../../assets/images/logos/elite-dark-icon.png';
+// import LogoWhiteIcon  from '../../assets/images/logos/elite-white-icon.png';
 import { ReactComponent as LogoWhiteIcon } from '../../assets/images/logos/elite-white-icon.svg';
-// import LogoWhiteText from '../../assets/images/logos/logo-light-text.png';
+// import LogoWhiteText from '../../assets/images/logos/elite-dark-icon.svg';
 
 const AuthLogo = () => {
   const isDarkMode = useSelector((state) => state.customizer.isDark);

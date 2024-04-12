@@ -23,11 +23,13 @@ import user1 from '../../assets/images/users/user4.jpg';
 import { ToggleMiniSidebar, ToggleMobileSidebar } from '../../store/customizer/CustomizerSlice';
 import ProfileDD from './ProfileDD';
 import Logo from '../logo/Logo';
+import {useAuth} from '../../views/auth/AuthContext'
 
 const Header = () => {
   const isDarkMode = useSelector((state) => state.customizer.isDark);
   const topbarColor = useSelector((state) => state.customizer.topbarBg);
   const dispatch = useDispatch();
+  const {logout} = useAuth()
 
   return (
     <Navbar
@@ -145,7 +147,7 @@ const Header = () => {
           <DropdownMenu className="ddWidth">
             <ProfileDD />
             <div className="p-2 px-3">
-              <Button color="danger" size="sm">
+              <Button color="danger" size="sm" onClick={logout}>
                 Logout
               </Button>
             </div>

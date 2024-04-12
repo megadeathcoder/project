@@ -28,19 +28,47 @@ const Add = () => {
   const [data1,setData1] = useState(UseThisasdefaultstatusforOrders === '1')
   const [data2,setData2] = useState(NotifyCustomersviaEmailandSMS === '1')
   const content = {
-    entityMap: {},
-    blocks: [
+    "blocks": [
       {
-        key: '637gr',
-        text: 'Initialized from content state.',
-        type: 'unstyled',
-        depth: 0,
-        inlineStyleRanges: [],
-        entityRanges: [],
-        data: {},
-      },
-    ],
+          "key": "4oo9e",
+          "text": " jhbjmb,jjmn jftujtf",
+          "type": "header-five",
+          "depth": 0,
+          "inlineStyleRanges": [
+              {
+                  "offset": 0,
+                  "length": 20,
+                  "style": "color-rgb(97,189,109)"
+              },
+              {
+                  "offset": 0,
+                  "length": 20,
+                  "style": "fontfamily-Times New Roman"
+              },
+              {
+                  "offset": 0,
+                  "length": 20,
+                  "style": "SUPERSCRIPT"
+              },
+              {
+                  "offset": 0,
+                  "length": 20,
+                  "style": "STRIKETHROUGH"
+              },
+              {
+                  "offset": 0,
+                  "length": 20,
+                  "style": "fontsize-96"
+              }
+          ],
+          "entityRanges": [],
+          "data": {}
+      }
+  ],
+  "entityMap": {}
   };
+ 
+
   const [contentState, setEditorState] = useState(convertFromRaw(content));
   
   const onContentStateChange = (c) => {

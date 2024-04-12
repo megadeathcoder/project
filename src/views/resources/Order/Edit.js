@@ -16,15 +16,16 @@ import {
   FormText,
   Button,
 } from 'reactstrap';
-import { useLocation } from 'react-router-dom';
+import { useLocation,useNavigate } from 'react-router-dom';
 import DashCard from '../../../components/dashboard/dashboardCards/DashCard';
 
 
 
 const Edit = () => {
   const location = useLocation();
-  const {DisplayName, Status,UseThisasdefaultstatusforOrders, NotifyCustomersviaEmailandSMS,ShortDescription,SmsContent,EmailContent,Subject} = location.state || {}; // Default to an empty object if state is undefined
-  
+  const navigate = useNavigate();
+  const {id,name:DisplayName,status: Status,is_default_status:UseThisasdefaultstatusforOrders,is_notify: NotifyCustomersviaEmailandSMS,short_description:ShortDescription,sms_content:SmsContent,email_content:EmailContent,subject:Subject} = location.state || {}; // Default to an empty object if state is undefined
+
   const [data1,setData1] = useState(UseThisasdefaultstatusforOrders === '1')
   const [data2,setData2] = useState(NotifyCustomersviaEmailandSMS === '1')
   const content = {
@@ -41,6 +42,7 @@ const Edit = () => {
       ],
       "entityMap": {}
   };
+
   const [contentState, setEditorState] = useState(convertFromRaw(content));
   
   const onContentStateChange = (c) => {
@@ -58,6 +60,83 @@ const Edit = () => {
     console.log('by',data2);
 }
 
+
+const [formDatas, setFormDataS] = useState({
+  name:DisplayName,
+  Status,
+  UseThisasdefaultstatusforOrders,
+  NotifyCustomersviaEmailandSMS,
+  ShortDescription,
+  SmsContent,
+  EmailContent,
+  Subject
+});
+
+const handleChange = (e) => {
+  const { name, value } = e.target;
+  setFormDataS(prevState => ({
+    ...prevState,
+    [name]: value
+  }));
+};
+
+async function apiCall() {
+  try {
+      // const formData = new FormData();
+      // formData.append('name', formDatas.name);
+      // formData.append('iso_code', formDatas.isoCode);
+      // formData.append('isd_code', formDatas.isdCode);
+      // console.log("json",JSON.stringify({
+      //   name:formDatas.name,
+      //   iso_code:formDatas.isoCode,
+      //   isd_code:formDatas.isdCode
+      // }));
+      // console.log('formdata',formData);
+
+      const token = localStorage.getItem('userToken');
+      const response = await fetch(`https://factory.teamasia.in/api/public/pasteteams/${id}`, {
+          method: "PUT",
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+         
+          body: JSON.stringify({
+            name:formDatas.name,
+            status:formDatas.Status,
+            is_default_status:formDatas.UseThisasdefaultstatusforOrders,
+            is_notify:formDatas.NotifyCustomersviaEmailandSMS,
+            short_description:formDatas.ShortDescription,
+            sms_content:formDatas.SmsContent,
+            email_content:formDatas.EmailContent,
+            subject:formDatas.Subject,
+          }),
+      });
+
+      const data = await response.json();
+      console.log("dataapi",data)
+      if (response.ok) {
+
+
+        navigate('/resources/paste-types');
+          
+      } 
+          // Handle any errors, such as showing an error message to the user
+          console.error("Authentication failed:", data.message);
+          return null;
+    
+  } catch (error) {
+      console.error("Network error:", error);
+      return null;
+  }
+}
+
+const handleSubmit = async (event) => {
+event.preventDefault();
+console.log('event',event);
+apiCall();
+
+};
   return (
 <div>
      
@@ -71,19 +150,33 @@ const Edit = () => {
              </CardTitle>
            </CardBody>
            <CardBody>
-             <Form>
+             <Form onSubmit={handleSubmit}>
                <Row>
                  <Col md="6">
                    <FormGroup>
                      <Label>Display Name</Label>
-                     <Input type="text" placeholder ={DisplayName} />
+                     <Input   
+                      type="text" 
+                      name="name" 
+                      id="name" 
+                      placeholder="Enter name" 
+                      value={formDatas.name}
+                      onChange={handleChange}
+                     />
                      <FormText className="muted"></FormText>
                    </FormGroup>
                  </Col>
                  <Col md="6">
                    <FormGroup>
                      <Label>Status</Label>
-                     <Input type="text" placeholder ={Status} />
+                     <Input   
+                      type="text" 
+                      name="Status" 
+                      id="name" 
+                      placeholder="Enter name" 
+                      value={formDatas.Status}
+                      onChange={handleChange}
+                     />
                      <FormText className="muted"></FormText>
                    </FormGroup>
                  </Col>
@@ -107,21 +200,42 @@ const Edit = () => {
                  <Col md="12">
                    <FormGroup>
                      <Label>Short Description</Label>
-                     <Input type="textarea" placeholder ={ShortDescription} />
+                     <Input   
+                      type="textarea" 
+                      name="ShortDescription" 
+                      id="name" 
+                      placeholder="Enter name" 
+                      value={formDatas.ShortDescription}
+                      onChange={handleChange}
+                     />
                      <FormText className="muted"></FormText>
                    </FormGroup>
                  </Col>
                  <Col md="12">
                    <FormGroup>
                      <Label>SMS Content</Label>
-                     <Input type="textarea" placeholder ={SmsContent} />
+                     <Input   
+                      type="textarea" 
+                      name="SmsContent" 
+                      id="name" 
+                      placeholder="Enter name" 
+                      value={formDatas.SmsContent}
+                      onChange={handleChange}
+                     />
                      <FormText className="muted"></FormText>
                    </FormGroup>
                  </Col>
                  <Col md="12">
                    <FormGroup>
                      <Label>Subject</Label>
-                     <Input type="text" placeholder ={Subject} />
+                     <Input
+                      type="text"   
+                      name="Subject" 
+                      id="name" 
+                      placeholder="Enter name" 
+                      value={formDatas.Subject}
+                      onChange={handleChange}
+                     />
                      <FormText className="muted"></FormText>
                    </FormGroup>
                  </Col>

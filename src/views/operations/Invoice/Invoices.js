@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import {
   Collapse,
   Button,
@@ -13,24 +13,15 @@ import {
   CardBody,
 } from 'reactstrap';
 
+import { useNavigate } from 'react-router-dom';
+
 import ComponentCard from '../../../components/ComponentCard';
 
 const Invoices = () => {
+  const navigate = useNavigate();
   const [collapse, setCollapse] = useState(false);
-
-  const orders = [
-    { invoiceNo: 'TCINV22-23/0781', orderId: '#1591', invoiceDate: '28 Jun, 2022' },
-    { invoiceNo: 'TCINV22-23/0782', orderId: '#1592', invoiceDate: '28 Jun, 2022' },
-    { invoiceNo: 'TCINV22-23/0783', orderId: '#1593', invoiceDate: '28 Jun, 2022' },
-    { invoiceNo: 'TCINV22-23/0784', orderId: '#1594', invoiceDate: '28 Jun, 2022' },
-    { invoiceNo: 'TCINV22-23/0785', orderId: '#1595', invoiceDate: '28 Jun, 2022' },
-    { invoiceNo: 'TCINV22-23/0786', orderId: '#1596', invoiceDate: '28 Jun, 2022' },
-    { invoiceNo: 'TCINV22-23/0787', orderId: '#1597', invoiceDate: '28 Jun, 2022' },
-    { invoiceNo: 'TCINV22-23/0788', orderId: '#1598', invoiceDate: '28 Jun, 2022' },
-    { invoiceNo: 'TCINV22-23/0789', orderId: '#1599', invoiceDate: '28 Jun, 2022' },
-    { invoiceNo: 'TCINV22-23/0780', orderId: '#1590', invoiceDate: '28 Jun, 2022' },
-    
-  ];
+  const [data,setData] =useState([]);
+ 
   const tableStyle = {
     // margin: 'auto', 
     // width: '60%',  
@@ -38,6 +29,40 @@ const Invoices = () => {
   };
 
   const toggle = () => setCollapse(!collapse);
+
+
+  const handleEditAdd = () => {
+    // Navigate to the edit page with the item's id
+    // Navigate(`/resources/address-types/edit/${itemId}`);
+    navigate('/operations/invoices/add');
+  };
+
+
+
+  useEffect(() => {
+    
+    // Fetch the data from the API
+    const fetchData = async () => {
+      const token = localStorage.getItem('userToken');
+      console.log('token',token);
+      const response = await fetch('https://factory.teamasia.in/api/public/invoices', {
+        method: 'GET', 
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      console.log('result',response);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const result = await response.json();
+      setData(result.invoices); 
+      console.log('result',result.invoices);
+    };
+  
+    fetchData();
+  }, []);
 
   return (
     <ComponentCard
@@ -49,7 +74,7 @@ const Invoices = () => {
     }
   >
 
-<Button className='my-btn-color' style={{ marginBottom: '1rem',marginRight:'10px' }}>
+<Button className='my-btn-color' style={{ marginBottom: '1rem',marginRight:'10px' }} onClick={handleEditAdd}>
            Create Invoice
             </Button>
            
@@ -113,11 +138,11 @@ const Invoices = () => {
               </tr>
               </thead>
               <tbody>
-                {orders.map((order) => (
-                  <tr key={order.orderId}>
-                    <td>{order.invoiceNo}</td>
-                    <td>{order.orderId}</td>
-                    <td>{order.invoiceDate}</td>
+                {data.map((order) => (
+                  <tr key={order.id}>
+                    <td>{order.invoice_no}</td>
+                    <td>{order.order_id}</td>
+                    <td>{order.created_at}</td>
                     <td>
                       {/* Replace with actual action components or icons */}
                        <button type="button" className="btn mybtncustomer btn-secondary btn-sm mr-2"><i className="bi bi-printer-fill my-printer-color" /></button>

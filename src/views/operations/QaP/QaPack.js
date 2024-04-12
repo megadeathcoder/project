@@ -13,10 +13,11 @@ import {
   CardBody,
 } from 'reactstrap';
 
+import { useNavigate } from 'react-router-dom';
 import ComponentCard from '../../../components/ComponentCard';
 
 const QaPack = () => {
-  
+  const navigate = useNavigate();
   const [collapse, setCollapse] = useState(false);
   const data = [
     { id: 1, code: 'JR-001', planDate: '2024-01-01', companyName: 'ABC Textiles', quantity: 1000, orderId: 'O-201', productId: 'P-101' },
@@ -29,9 +30,7 @@ const QaPack = () => {
     { id: 8, code: 'JR-003', planDate: '2024-01-03', companyName: 'Looms & Weaves', quantity: 1200, orderId: 'O-203', productId: 'P-103' },
     { id: 9, code: 'JR-003', planDate: '2024-01-03', companyName: 'Looms & Weaves', quantity: 1200, orderId: 'O-203', productId: 'P-103' },
     { id: 10, code: 'JR-003', planDate: '2024-01-03', companyName: 'Looms & Weaves', quantity: 1200, orderId: 'O-203', productId: 'P-103' },
-    
 
-  
   ];
   const tableStyle = {
     // margin: 'auto', 
@@ -41,7 +40,9 @@ const QaPack = () => {
 
   const toggle = () => setCollapse(!collapse);
 
-
+const handleJumboSearch = ()=>{
+  navigate('/operations/qa-packaging/jumboroll');
+}
   return (
     <ComponentCard
     title=""
@@ -51,7 +52,7 @@ const QaPack = () => {
       </p>
     }
   >
-    <Button className='my-btn-color' style={{ marginBottom: '1rem',marginRight:'10px' }}>
+    <Button className='my-btn-color' style={{ marginBottom: '1rem',marginRight:'10px' }} onClick={() => handleJumboSearch()}>
            Load By Code
             </Button>
            

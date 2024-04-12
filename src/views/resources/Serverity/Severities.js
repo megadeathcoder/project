@@ -11,18 +11,7 @@ import ComponentCard from '../../../components/ComponentCard';
 
 const Severities = () => {
   const navigate = useNavigate();
-  const [data, setData] = useState([
-    { id: 1, Name: 'High'},
-    { id: 2, Name: 'High'},
-    { id: 3, Name: 'High'},
-    { id: 4, Name: 'High'},
-    { id: 5, Name: 'High'},
-    { id: 6, Name: 'High'},
-    { id: 7, Name: 'High'},
-    { id: 8, Name: 'High'},
-    { id: 9, Name: 'High'},
-    { id: 10, Name: 'High'},
-  ]);
+  const [data, setData] = useState([]);
   // const data = [
   //   { id: 1, Name: 'High'},
   //   { id: 2, Name: 'High'},
@@ -50,20 +39,22 @@ const Severities = () => {
     // Navigate(`/resources/address-types/edit/${itemId}`);
     navigate('/resources/severities/add');
   };
+
   const handleDeleteClick = async (itemId) => {
     try {
       // Call your API endpoint to delete the item
-      // const response = await fetch(`your-api-endpoint/${itemId}`, {
-      //   method: 'DELETE',
-      //   headers: {
-      //     // Your headers here (if needed)
-      //   }
-      // });
+      const token = localStorage.getItem('userToken');
+      const response = await fetch(`https://factory.teamasia.in/api/public/severities/${itemId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
   
       // Check if the request was successful
-      // if (!response.ok) {
-      //   throw new Error(`Error: ${response.statusText}`);
-      // }
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
   
       // Filter out the deleted item from your data state
       const updatedData = data.filter((item) => item.id !== itemId);
@@ -83,7 +74,7 @@ const Severities = () => {
     const fetchData = async () => {
       const token = localStorage.getItem('userToken');
       console.log('token',token);
-      const response = await fetch('https://indiapuleather.com/teamasia/api/public/cities', {
+      const response = await fetch('https://factory.teamasia.in/api/public/severities', {
         method: 'GET', 
         headers: {
           'Authorization': `Bearer ${token}`
@@ -94,7 +85,7 @@ const Severities = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const result = await response.json();
-      setData(result); 
+      setData(result.severities); 
     };
   
     fetchData();
@@ -127,7 +118,7 @@ const Severities = () => {
               <tbody>
                 {data.map((product) => (
                   <tr key={product.id}>
-                  <td>{product.Name}</td>
+                  <td>{product.name}</td>
                   <td>
                     {/* Action buttons or icons */}
                       <button type="button" className="btn mybtncustomer btn-secondary btn-sm mr-2" onClick={() => handleEditClick(product)}><i className="bi bi-pencil-fill my-pen-color" /></button>

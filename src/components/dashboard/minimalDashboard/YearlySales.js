@@ -68,15 +68,15 @@ const optionssalesummary = {
 };
 const seriessalessummry = [
   {
-    name: 'Iphone',
+    name: 'PU leather',
     data: [50, 130, 80, 70, 180, 105, 250],
   },
   {
-    name: 'Ipad',
+    name: 'PVC leather',
     data: [80, 100, 60, 200, 150, 100, 150],
   },
   {
-    name: 'Iwatch',
+    name: 'Rexine',
     data: [20, 80, 70, 140, 140, 80, 200],
   },
 ];
@@ -89,15 +89,15 @@ const YearlySales = () => {
         <div className="d-flex align-items-center gap-2">
           <div className="d-flex align-items-center">
             <i className="bi bi-record-fill fs-4 text-cyan"></i>
-            <span className='fs-6 text-muted'>Iphone</span>
+            <span className='fs-6 text-muted'>PU leather</span>
           </div>
           <div className="d-flex align-items-center">
             <i className="bi bi-record-fill fs-4 text-primary"></i>
-            <span className='fs-6 text-muted'>Ipad</span>
+            <span className='fs-6 text-muted'>PVC leather</span>
           </div>
           <div className="d-flex align-items-center">
             <i className="bi bi-record-fill fs-4 text-purple"></i>
-            <span className='fs-6 text-muted'>Iwatch</span>
+            <span className='fs-6 text-muted'>Rexine</span>
           </div>
         </div>
       }

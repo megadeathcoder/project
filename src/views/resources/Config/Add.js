@@ -15,19 +15,86 @@ import {
 
 } from 'reactstrap';
 // import { useParams } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
+import { useLocation,useNavigate } from 'react-router-dom';
 
 // import ComponentCard from '../../components/ComponentCard';
 
-const Add = () => {
+const Edit = () => {
   const location = useLocation();
-  const {DisplayName, ConfigName, SearchType, Value} = location.state || {}; // Default to an empty object if state is undefined
+  const navigate = useNavigate();
+
+  const {display_name:DisplayName, name:ConfigName, type:SearchType,value:Value} = location.state || {}; // Default to an empty object if state is undefined
  
-  const [selectedType, setSelectedType] = useState(SearchType || '');
+  const [selectedType, setSelectedType] = useState(SearchType || '0');
 
   const handleTypeChange = (e) => {
+    console.log('selectedType',e.target.value);
     setSelectedType(e.target.value);
   };
+ 
+  const [formDatas, setFormDataS] = useState({
+    DisplayName,
+    ConfigName,
+    Value
+  });
+  
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormDataS(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
+  };
+
+  async function apiCall() {
+    try {
+        const formData = new FormData();
+        formData.append('name',formDatas.ConfigName);
+        formData.append('display_name',formDatas.DisplayName);
+        formData.append('type',selectedType);
+        formData.append('value',formDatas.Value);
+
+        // console.log("json",JSON.stringify({
+        //   display_name:formDatas.DisplayName,
+        //   name:formDatas.ConfigName,
+        //   type:selectedType,
+        //   value:formDatas.Value
+        // }));
+        // console.log('formdata',formData);
+
+        const token = localStorage.getItem('userToken');
+        const response = await fetch(`https://factory.teamasia.in/api/public/configs`, {
+            method: "POST",
+            headers: {
+              'Authorization': `Bearer ${token}`
+            },
+           
+            body: formData,
+        });
+        const data = await response.json();
+        console.log("dataapi",data)
+        if (response.ok) {
+
+
+          navigate('/resources/config-default');
+            
+        } 
+            // Handle any errors, such as showing an error message to the user
+            console.error("Authentication failed:", data.message);
+            return null;
+      
+    } catch (error) {
+        console.error("Network error:", error);
+        return null;
+    }
+}
+
+const handleSubmit = async (event) => {
+  event.preventDefault();
+  console.log('event',event);
+  apiCall();
+};
+
   return (
 <div>
      <Row>
@@ -40,19 +107,34 @@ const Add = () => {
              </CardTitle>
            </CardBody>
            <CardBody>
-             <Form>
+             <Form onSubmit={handleSubmit}>
                <Row>
                  <Col md="3">
                    <FormGroup>
                      <Label>Display Name</Label>
-                     <Input type="text" placeholder ={DisplayName} />
+                     <Input        
+                     type="text" 
+                      name="DisplayName" 
+                      id="name" 
+                      placeholder="Enter name" 
+                      value={formDatas.DisplayName}
+                      onChange={handleChange} 
+                     />
                      <FormText className="muted"></FormText>
                    </FormGroup>
                  </Col>
                  <Col md="3">
                    <FormGroup>
                      <Label>Config Name</Label>
-                     <Input type="text" placeholder ={ConfigName} disabled/>
+                     <Input        
+                     type="text" 
+                      name="ConfigName" 
+                      id="name" 
+                      placeholder="Enter name" 
+                      value={formDatas.ConfigName}
+                      onChange={handleChange}
+                     />
+
                      <FormText className="muted"></FormText>
                    </FormGroup>
                  </Col>
@@ -60,10 +142,10 @@ const Add = () => {
                    <FormGroup>
                      <Label>Type</Label>
                      <Input type="select" name="Select Gender" value={selectedType} onChange={handleTypeChange}>
-                        <option>Day</option>
-                        <option>Week</option>
-                        <option>Month</option>
-                        <option>Year</option>
+                        <option value="0">Day</option>
+                        <option value="1">Week</option>
+                        <option value="2">Month</option>
+                        <option value="3">Year</option>
                       </Input>
                      <FormText className="muted"></FormText>
                    </FormGroup>
@@ -72,7 +154,14 @@ const Add = () => {
                  <Col md="3">
                    <FormGroup>
                      <Label>Value</Label>
-                     <Input type="text" placeholder ={Value} />
+                     <Input        
+                     type="text" 
+                      name="Value" 
+                      id="name" 
+                      placeholder="Enter name" 
+                      value={formDatas.Value}
+                      onChange={handleChange} 
+                     />
                      <FormText className="muted"></FormText>
                    </FormGroup>
                  </Col>
@@ -95,4 +184,4 @@ const Add = () => {
   );
 };
 
-export default Add;
+export default Edit;

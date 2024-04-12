@@ -1,4 +1,4 @@
-import React from 'react';
+import React ,{ useState } from 'react';
 
 import {
   Card,
@@ -15,14 +15,64 @@ import {
 
 } from 'reactstrap';
 // import { useParams } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
+import { useLocation,useNavigate } from 'react-router-dom';
 
 // import ComponentCard from '../../components/ComponentCard';
 
-const Add = () => {
+const Edit = () => {
   const location = useLocation();
-  const {Code, ColorName} = location.state || {}; // Default to an empty object if state is undefined
+  const navigate = useNavigate();
+  const {name:Name,code} = location.state || {};  // Default to an empty object if state is undefined
+  const [formDatas, setFormDataS] = useState({
+    name:Name,
+    code,
+  });
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormDataS(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
+  };
+
+  async function apiCall() {
+    try {
+        const formData = new FormData();
+        formData.append('name', formDatas.name);
+        formData.append('code',formDatas.code);
+       
+        console.log('formdata',formData);
+
+        const token = localStorage.getItem('userToken');
+        const response = await fetch(`https://factory.teamasia.in/api/public/colors`, {
+          method: "POST",
+          headers: {
+            'Authorization': `Bearer ${token}`
+          },
+          body: formData,
+        });
+        const data = await response.json();
+        console.log("dataapi",data)
+        if (response.ok) {
+          navigate('/resources/colors');
+        } 
+            // Handle any errors, such as showing an error message to the user
+            console.error("Authentication failed:", data.message);
+            return null;
+      
+    } catch (error) {
+        console.error("Network error:", error);
+        return null;
+    }
+}
+
+const handleSubmit = async (event) => {
+  event.preventDefault();
+  console.log('event',event);
+  apiCall();
+
+};
   return (
 <div>
      
@@ -36,19 +86,33 @@ const Add = () => {
              </CardTitle>
            </CardBody>
            <CardBody>
-             <Form>
+             <Form onSubmit={handleSubmit}>
                <Row>
                  <Col md="4">
                    <FormGroup>
                      <Label>Color Code</Label>
-                     <Input type="text" placeholder ={Code} />
+                     <Input        
+                     type="text" 
+                      name="code" 
+                      id="name" 
+                      placeholder="Enter name" 
+                      value={formDatas.code}
+                      onChange={handleChange} 
+                     />
                      <FormText className="muted"></FormText>
                    </FormGroup>
                  </Col>
                  <Col md="4">
                    <FormGroup>
                      <Label>Name</Label>
-                     <Input type="text" placeholder ={ColorName} />
+                     <Input        
+                     type="text" 
+                      name="name" 
+                      id="name" 
+                      placeholder="Enter name" 
+                      value={formDatas.name}
+                      onChange={handleChange}
+                     />
                      <FormText className="muted"></FormText>
                    </FormGroup>
                  </Col>
@@ -79,4 +143,4 @@ const Add = () => {
   );
 };
 
-export default Add;
+export default Edit;

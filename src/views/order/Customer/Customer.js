@@ -20,22 +20,7 @@ import ComponentCard from '../../../components/ComponentCard';
 const Customer = () => { // Removed the empty object pattern
   const navigate = useNavigate();
   const [collapse, setCollapse] = useState(false);
-  const [data, setData] = useState([{ id: 1, companyName: 'A N Furnishings', Factory: ['A N Furnishings','A N Furnishings1'] ,AddLabels:[],CompanyDescription:'Company Description',LimitforDaysAllowed:'',LimitforCreditAllowed:'',CompanyRepresentatives:[[{Name:'',	Designation:'',	Email:'',	Countrycode:'', Mobile:''}]],CompanyDocuments:[{'title':'GST Certificate','file':'125674242.png'}],companyAddress:[{AddressType:'',AddressAlias:'',AddressLine1:'10706, 2nd Floor, Jhandewalan Road, Nabi Karim, Near Singhara Chowk, New Delhi, 110055',AddressLine2:'10706, 2nd Floor, Jhandewalan Road, Nabi Karim, Near Singhara Chowk, New Delhi, 110055',Landmark:'',PinCode:'110055',Country:'India',State:'Delhi',City:'Delhi',GSTNo:'07DPLPS6325R2ZU'}]},
-  { id: 2, companyName: 'A R V Footwear Pvt. Ltd.', Factory: [] ,AddLabels:[],CompanyDescription:'Company Description',LimitforDaysAllowed:'',LimitforCreditAllowed:'',CompanyRepresentatives:[{Name:'',	Designation:'',	Email:'',	Countrycode:'', Mobile:''}],CompanyDocuments:[{'title':'GST Certificate','file':'125674242.png'}],companyAddress:[{AddressType:'',AddressAlias:'',AddressLine1:'10706, 2nd Floor, Jhandewalan Road, Nabi Karim, Near Singhara Chowk, New Delhi, 110055',AddressLine2:'10706, 2nd Floor, Jhandewalan Road, Nabi Karim, Near Singhara Chowk, New Delhi, 110055',Landmark:'',PinCode:'',Country:'',State:'',City:'',GSTNo:''}] },
-  { id: 3, companyName: 'A-One Footarts Pvt. Ltd.', Factory: [] ,AddLabels:[],CompanyDescription:'Company Description',LimitforDaysAllowed:'',LimitforCreditAllowed:'',CompanyRepresentatives:[{Name:'',	Designation:'',	Email:'',	Countrycode:'', Mobile:''}],CompanyDocuments:[{'title':'GST Certificate','file':'125674242.png'}],companyAddress:[{AddressType:'',AddressAlias:'',AddressLine1:'10706, 2nd Floor, Jhandewalan Road, Nabi Karim, Near Singhara Chowk, New Delhi, 110055',AddressLine2:'10706, 2nd Floor, Jhandewalan Road, Nabi Karim, Near Singhara Chowk, New Delhi, 110055',Landmark:'',PinCode:'',Country:'',State:'',City:'',GSTNo:''}] },
-  { id: 4, companyName: 'A.K.M Industries', Factory: [] ,AddLabels:[],CompanyDescription:'Company Description',LimitforDaysAllowed:'',LimitforCreditAllowed:'',CompanyRepresentatives:[{Name:'',	Designation:'',	Email:'',	Countrycode:'', Mobile:''}],CompanyDocuments:[{'title':'GST Certificate','file':'125674242.png'}],companyAddress:[{AddressType:'',AddressAlias:'',AddressLine1:'10706, 2nd Floor, Jhandewalan Road, Nabi Karim, Near Singhara Chowk, New Delhi, 110055',AddressLine2:'10706, 2nd Floor, Jhandewalan Road, Nabi Karim, Near Singhara Chowk, New Delhi, 110055',Landmark:'',PinCode:'',Country:'',State:'',City:'',GSTNo:''}] },
-  { id: 5, companyName: 'A N Furnishings', Factory: [] ,AddLabels:[],CompanyDescription:'Company Description',LimitforDaysAllowed:'',LimitforCreditAllowed:'',CompanyRepresentatives:[{Name:'',	Designation:'',	Email:'',	Countrycode:'', Mobile:''}],CompanyDocuments:[{'title':'GST Certificate','file':'125674242.png'}],companyAddress:[{AddressType:'',AddressAlias:'',AddressLine1:'10706, 2nd Floor, Jhandewalan Road, Nabi Karim, Near Singhara Chowk, New Delhi, 110055',AddressLine2:'10706, 2nd Floor, Jhandewalan Road, Nabi Karim, Near Singhara Chowk, New Delhi, 110055',Landmark:'',PinCode:'',Country:'',State:'',City:'',GSTNo:''}] },
-  { id: 6, companyName: 'A R V Footwear Pvt. Ltd.', Factory: [] ,AddLabels:[],CompanyDescription:'Company Description',LimitforDaysAllowed:'',LimitforCreditAllowed:'',CompanyRepresentatives:[{Name:'',	Designation:'',	Email:'',	Countrycode:'', Mobile:''}],CompanyDocuments:[{'title':'GST Certificate','file':'125674242.png'}],companyAddress:[{AddressType:'',AddressAlias:'',AddressLine1:'10706, 2nd Floor, Jhandewalan Road, Nabi Karim, Near Singhara Chowk, New Delhi, 110055',AddressLine2:'10706, 2nd Floor, Jhandewalan Road, Nabi Karim, Near Singhara Chowk, New Delhi, 110055',Landmark:'',PinCode:'',Country:'',State:'',City:'',GSTNo:''}] },
-  { id: 7, companyName: 'A-One Footarts Pvt. Ltd.', Factory: [] ,AddLabels:[],CompanyDescription:'Company Description',LimitforDaysAllowed:'',LimitforCreditAllowed:'',CompanyRepresentatives:[{Name:'',	Designation:'',	Email:'',	Countrycode:'', Mobile:''}],CompanyDocuments:[{'title':'GST Certificate','file':'125674242.png'}],companyAddress:[{AddressType:'',AddressAlias:'',AddressLine1:'10706, 2nd Floor, Jhandewalan Road, Nabi Karim, Near Singhara Chowk, New Delhi, 110055',AddressLine2:'10706, 2nd Floor, Jhandewalan Road, Nabi Karim, Near Singhara Chowk, New Delhi, 110055',Landmark:'',PinCode:'',Country:'',State:'',City:'',GSTNo:''}] },
-  { id: 8, companyName: 'A.K.M Industries', Factory: [] ,AddLabels:[],CompanyDescription:'Company Description',LimitforDaysAllowed:'',LimitforCreditAllowed:'',CompanyRepresentatives:[{Name:'',	Designation:'',	Email:'',	Countrycode:'', Mobile:''}],CompanyDocuments:[{'title':'GST Certificate','file':'125674242.png'}],companyAddress:[{AddressType:'',AddressAlias:'',AddressLine1:'10706, 2nd Floor, Jhandewalan Road, Nabi Karim, Near Singhara Chowk, New Delhi, 110055',AddressLine2:'10706, 2nd Floor, Jhandewalan Road, Nabi Karim, Near Singhara Chowk, New Delhi, 110055',Landmark:'',PinCode:'',Country:'',State:'',City:'',GSTNo:''}] },
-  { id: 9, companyName: 'A N Furnishings', Factory: [] ,AddLabels:[],CompanyDescription:'Company Description',LimitforDaysAllowed:'',LimitforCreditAllowed:'',CompanyRepresentatives:[{Name:'',	Designation:'',	Email:'',	Countrycode:'', Mobile:''}],CompanyDocuments:[{'title':'GST Certificate','file':'125674242.png'}],companyAddress:[{AddressType:'',AddressAlias:'',AddressLine1:'10706, 2nd Floor, Jhandewalan Road, Nabi Karim, Near Singhara Chowk, New Delhi, 110055',AddressLine2:'10706, 2nd Floor, Jhandewalan Road, Nabi Karim, Near Singhara Chowk, New Delhi, 110055',Landmark:'',PinCode:'',Country:'',State:'',City:'',GSTNo:''}] },
-  { id: 10, companyName: 'A R V Footwear Pvt. Ltd.', Factory: [] ,AddLabels:[],CompanyDescription:'Company Description',LimitforDaysAllowed:'',LimitforCreditAllowed:'',CompanyRepresentatives:[{Name:'',	Designation:'',	Email:'',	Countrycode:'', Mobile:''}],CompanyDocuments:[{'title':'GST Certificate','file':'125674242.png'}],companyAddress:[{AddressType:'',AddressAlias:'',AddressLine1:'10706, 2nd Floor, Jhandewalan Road, Nabi Karim, Near Singhara Chowk, New Delhi, 110055',AddressLine2:'10706, 2nd Floor, Jhandewalan Road, Nabi Karim, Near Singhara Chowk, New Delhi, 110055',Landmark:'',PinCode:'',Country:'',State:'',City:'',GSTNo:''}] },
-  { id: 11, companyName: 'A-One Footarts Pvt. Ltd.', Factory: [] ,AddLabels:[],CompanyDescription:'Company Description',LimitforDaysAllowed:'',LimitforCreditAllowed:'',CompanyRepresentatives:[{Name:'',	Designation:'',	Email:'',	Countrycode:'', Mobile:''}],CompanyDocuments:[{'title':'GST Certificate','file':'125674242.png'}],companyAddress:[{AddressType:'',AddressAlias:'',AddressLine1:'10706, 2nd Floor, Jhandewalan Road, Nabi Karim, Near Singhara Chowk, New Delhi, 110055',AddressLine2:'10706, 2nd Floor, Jhandewalan Road, Nabi Karim, Near Singhara Chowk, New Delhi, 110055',Landmark:'',PinCode:'',Country:'',State:'',City:'',GSTNo:''}] },
-  { id: 12, companyName: 'A.K.M Industries', Factory: [] ,AddLabels:[],CompanyDescription:'Company Description',LimitforDaysAllowed:'',LimitforCreditAllowed:'',CompanyRepresentatives:[{Name:'',	Designation:'',	Email:'',	Countrycode:'', Mobile:''}],CompanyDocuments:[{'title':'GST Certificate','file':'125674242.png'}],companyAddress:[{AddressType:'',AddressAlias:'',AddressLine1:'10706, 2nd Floor, Jhandewalan Road, Nabi Karim, Near Singhara Chowk, New Delhi, 110055',AddressLine2:'10706, 2nd Floor, Jhandewalan Road, Nabi Karim, Near Singhara Chowk, New Delhi, 110055',Landmark:'',PinCode:'',Country:'',State:'',City:'',GSTNo:''}] },
-  { id: 13, companyName: 'A N Furnishings', Factory: [] ,AddLabels:[],CompanyDescription:'Company Description',LimitforDaysAllowed:'',LimitforCreditAllowed:'',CompanyRepresentatives:[{Name:'',	Designation:'',	Email:'',	Countrycode:'', Mobile:''}],CompanyDocuments:[{'title':'GST Certificate','file':'125674242.png'}],companyAddress:[{AddressType:'',AddressAlias:'',AddressLine1:'10706, 2nd Floor, Jhandewalan Road, Nabi Karim, Near Singhara Chowk, New Delhi, 110055',AddressLine2:'10706, 2nd Floor, Jhandewalan Road, Nabi Karim, Near Singhara Chowk, New Delhi, 110055',Landmark:'',PinCode:'',Country:'',State:'',City:'',GSTNo:''}] },
-  { id: 14, companyName: 'A R V Footwear Pvt. Ltd.', Factory: [] ,AddLabels:[],CompanyDescription:'Company Description',LimitforDaysAllowed:'',LimitforCreditAllowed:'',CompanyRepresentatives:[{Name:'',	Designation:'',	Email:'',	Countrycode:'', Mobile:''}],CompanyDocuments:[{'title':'GST Certificate','file':'125674242.png'}],companyAddress:[{AddressType:'',AddressAlias:'',AddressLine1:'10706, 2nd Floor, Jhandewalan Road, Nabi Karim, Near Singhara Chowk, New Delhi, 110055',AddressLine2:'10706, 2nd Floor, Jhandewalan Road, Nabi Karim, Near Singhara Chowk, New Delhi, 110055',Landmark:'',PinCode:'',Country:'',State:'',City:'',GSTNo:''}] },
-  { id: 15, companyName: 'A-One Footarts Pvt. Ltd.', Factory: [] ,AddLabels:[],CompanyDescription:'Company Description',LimitforDaysAllowed:'',LimitforCreditAllowed:'',CompanyRepresentatives:[{Name:'',	Designation:'',	Email:'',	Countrycode:'', Mobile:''}],CompanyDocuments:[{'title':'GST Certificate','file':'125674242.png'}],companyAddress:[{AddressType:'',AddressAlias:'',AddressLine1:'10706, 2nd Floor, Jhandewalan Road, Nabi Karim, Near Singhara Chowk, New Delhi, 110055',AddressLine2:'10706, 2nd Floor, Jhandewalan Road, Nabi Karim, Near Singhara Chowk, New Delhi, 110055',Landmark:'',PinCode:'',Country:'',State:'',City:'',GSTNo:''}] },
-  { id: 16, companyName: 'A.K.M Industries', Factory: [] ,AddLabels:[],CompanyDescription:'Company Description',LimitforDaysAllowed:'',LimitforCreditAllowed:'',CompanyRepresentatives:[{Name:'',	Designation:'',	Email:'',	Countrycode:'', Mobile:''}],CompanyDocuments:[{'title':'GST Certificate','file':'125674242.png'}],companyAddress:[{AddressType:'',AddressAlias:'',AddressLine1:'10706, 2nd Floor, Jhandewalan Road, Nabi Karim, Near Singhara Chowk, New Delhi, 110055',AddressLine2:'10706, 2nd Floor, Jhandewalan Road, Nabi Karim, Near Singhara Chowk, New Delhi, 110055',Landmark:'',PinCode:'',Country:'',State:'',City:'',GSTNo:''}] },]);
+  const [data, setData] = useState([]);
  
   
 
@@ -60,10 +45,9 @@ const Customer = () => { // Removed the empty object pattern
   const handleEditAddress = (customer)=>{
     
     console.log('address');
-     navigate('/order/customers/address/edit', {state:customer.companyAddress });
+     navigate('/order/customers/address/edit', {state:customer});
    } 
    const handlePendingReport = (customer)=>{
-    
     console.log('address');
      navigate('/order/customers/pending-report',{state:customer.id});
    } 
@@ -100,7 +84,7 @@ const Customer = () => { // Removed the empty object pattern
     const fetchData = async () => {
       const token = localStorage.getItem('userToken');
       console.log('token',token);
-      const response = await fetch('https://indiapuleather.com/teamasia/api/public/cities', {
+      const response = await fetch('https://factory.teamasia.in/api/public/customers', {
         method: 'GET', 
         headers: {
           'Authorization': `Bearer ${token}`
@@ -112,7 +96,8 @@ const Customer = () => { // Removed the empty object pattern
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const result = await response.json();
-      setData(result); 
+      setData(result.customers); 
+      console.log('result',result.customers);
     };
   
     fetchData();
@@ -177,7 +162,7 @@ const Customer = () => { // Removed the empty object pattern
               <tbody>
                 {data.map((customer) => (
                   <tr key={customer.id}>
-                    <td>{customer.companyName}</td>
+                    <td>{customer.company_name}</td>
                     <td></td>
                     <td>
                       {/* Added type="button" to each button */}

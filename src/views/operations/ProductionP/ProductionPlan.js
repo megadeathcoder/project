@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Collapse,
   Button,
@@ -18,6 +19,7 @@ import ComponentCard from '../../../components/ComponentCard';
 const ProductionPlan = () => {
   const [collapse, setCollapse] = useState(false);
   const [collapse1, setCollapse1] = useState(false);
+  const navigate = useNavigate();
   const data = [
 
       { id: 1, planDate: '01 Aug, 2022', createdBy: 'Team Operations', status: 'published' },
@@ -45,6 +47,11 @@ const ProductionPlan = () => {
   const toggle = () => setCollapse(!collapse);
   const toggle1 = () => setCollapse1(!collapse1);
 
+  const handleViewClick = (item) => {
+    // Navigate to the edit page with the item's id
+    // Navigate(`/resources/address-types/edit/${itemId}`);
+    navigate('/operations/production-plans/view', { state: item });
+  };
 
   return (
     <ComponentCard
@@ -136,8 +143,8 @@ const ProductionPlan = () => {
               <td>{plan.status}</td>
               <td>
                 {/* Replace these with actual icons or buttons */}
-                      <button type="button" className="btn mybtncustomer btn-secondary btn-sm mr-2" ><i className="bi bi-pencil-fill my-pen-color" /></button>
-                      <button type="button" className="btn mybtncustomer btn-secondary btn-sm mr-2"><i className="bi bi-printer-fill my-eye-color" /></button>
+                      <button type="button" className="btn mybtncustomer btn-secondary btn-sm mr-2" onClick={() => handleViewClick(plan)}><i className="bi bi-eye-fill my-eye-color" /></button>
+                      <button type="button" className="btn mybtncustomer btn-secondary btn-sm mr-2"><i className="bi bi-printer-fill my-bell-color" /></button>
               </td>
             </tr>
           ))}

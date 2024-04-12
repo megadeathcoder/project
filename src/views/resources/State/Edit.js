@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React,{useState,useEffect} from 'react';
 
 import {
   Card,
@@ -15,18 +15,113 @@ import {
 
 } from 'reactstrap';
 // import { useParams } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
+import { useLocation,useNavigate } from 'react-router-dom';
 
 // import ComponentCard from '../../components/ComponentCard';
 
 const Edit = () => {
   const location = useLocation();
-  const {StateName,Country} = location.state || {}; // Default to an empty object if state is undefined
-  const [selectedType, setSelectedType] = useState(Country || '');
+  const navigate = useNavigate();
+  const {id,name:Name,country_id:countryId,countryName} = location.state || {}; // Default to an empty object if state is undefined
+  const [selectedType, setSelectedType] = useState(countryName|| '');
 
-  const handleTypeChange = (e) => {
-    setSelectedType(e.target.value);
+  
+
+    const [data2, setData2] = useState([]);
+
+    const [formDatas, setFormDataS] = useState({
+      name:Name,
+      countryId
+    });
+
+    console.log("formdata",location.state);
+    const handleChange = (e) => {
+      const { name, value } = e.target;
+      console.log('hi')
+      setFormDataS(prevState => ({
+        ...prevState,
+        [name]: value
+      }));
+    };
+
+    const handleTypeChange = (e) => {
+      setSelectedType(e.target.value);
+      // console.log('e',e.target.options[e.target.selectedIndex].text);
+      console.log('e',e.target.value);
+      setFormDataS(prevState => ({
+        ...prevState,
+        countryId: e.target.value
+      }));
+    };
+    
+    async function apiCall() {
+      try {
+       
+          const token = localStorage.getItem('userToken');
+          console.log('country_id',formDatas.countryId)
+          const response = await fetch(`https://factory.teamasia.in/api/public/states/${id}`, {
+              method: "PUT",
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+              },
+            
+              body: JSON.stringify({
+                name:formDatas.name,
+                country_id:formDatas.countryId,
+              }),
+          });
+          const data = await response.json();
+          console.log("dataapi",data)
+          if (response.ok) {
+
+
+            navigate('/resources/states');
+              
+          } 
+              // Handle any errors, such as showing an error message to the user
+              console.error("Authentication failed:", data.message);
+              return null;;
+        
+      } catch (error) {
+          console.error("Network error:", error);
+          return null;
+      }
+  }
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    console.log('event',event);
+    apiCall();
+
   };
+
+  useEffect(() => {
+
+    const fetchData2 = async () => {
+      const token = localStorage.getItem('userToken');
+      // console.log('token',token);
+      const response = await fetch(`https://factory.teamasia.in/api/public/countries`, {
+        method: 'GET', 
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      // console.log('result',response);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const result = await response.json();
+      console.log("responsejson2",result);
+      setData2(result.countries); 
+    };
+
+  
+    fetchData2();
+
+  
+  },[]);
+
   return (
 <div>
      
@@ -40,23 +135,35 @@ const Edit = () => {
              </CardTitle>
            </CardBody>
            <CardBody>
-             <Form>
+             <Form onSubmit={handleSubmit}>
                <Row>
                  <Col md="4">
                    <FormGroup>
                      <Label>Name</Label>
-                     <Input type="text"  value={StateName} />
+                     <Input type="text" 
+                        name="name" 
+                        id="name"
+                        placeholder="Enter name" 
+                        value={formDatas.name}
+                        onChange={handleChange} 
+                        />
                      <FormText className="muted"></FormText>
                    </FormGroup>
                  </Col>
                  <Col md="4">
                    <FormGroup>
-                     <Label>Type</Label>
-                     <Input type="select" name="Select Gender" value={selectedType} onChange={handleTypeChange}>
-                        <option>India</option>
-                        <option>Week</option>
-                        <option>Month</option>
-                        <option>Year</option>
+                     <Label>Country</Label>
+                     <Input type="select"
+                      name="countryId" 
+                      //  value={selectedType} 
+                      value={selectedType}
+                    //  value={countryName}
+                     onChange={handleTypeChange}>
+                        {data2.map((item)=>{
+
+                          return <option key={item.id} value={item.id}>{item.name}</option>
+                        })}
+                        
                       </Input>
                      <FormText className="muted"></FormText>
                    </FormGroup>

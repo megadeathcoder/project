@@ -12,18 +12,7 @@ import ComponentCard from '../../../components/ComponentCard';
 
 const BomCoding = () => {
   const navigate = useNavigate();
-  const [data, setData] = useState([
-    { id: 1, BomCodingName: 'Apparel', CategoryCode: 'APP' ,SerialNumber:1},
-    { id: 2, BomCodingName: 'Automotive', CategoryCode: 'AUT' ,SerialNumber:2},
-    { id: 3, BomCodingName: 'Eco Material', CategoryCode: 'ECO',SerialNumber:3 },
-    { id: 4, BomCodingName: 'Flooring', CategoryCode: 'FLO',SerialNumber:4 },
-    { id: 5, BomCodingName: 'Foams', CategoryCode: 'FOM',SerialNumber:5 },
-    { id: 6, BomCodingName: 'Footwear', CategoryCode: 'FOT',SerialNumber:6 },
-    { id: 7, BomCodingName: 'Leathergoods', CategoryCode: 'LET',SerialNumber:7 },
-    { id: 8, BomCodingName: 'Saddlery', CategoryCode: 'SAD' ,SerialNumber:8},
-    { id: 9, BomCodingName: 'Upholstery', CategoryCode: 'UPH',SerialNumber:9 },
-    { id: 10, BomCodingName: 'WINNER', CategoryCode: 'WIN',SerialNumber:10 },
-  ]);
+  const [data, setData] = useState([]);
   // const data = [
   //   { id: 1, BomCodingName: 'Apparel', CategoryCode: 'APP' },
   //   { id: 2, BomCodingName: 'Automotive', CategoryCode: 'AUT' },
@@ -57,17 +46,18 @@ const BomCoding = () => {
   const handleDeleteClick = async (itemId) => {
     try {
       // Call your API endpoint to delete the item
-      // const response = await fetch(`your-api-endpoint/${itemId}`, {
-      //   method: 'DELETE',
-      //   headers: {
-      //     // Your headers here (if needed)
-      //   }
-      // });
+      const token = localStorage.getItem('userToken');
+      const response = await fetch(`https://factory.teamasia.in/api/public/bomcodingcategories/${itemId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
   
       // Check if the request was successful
-      // if (!response.ok) {
-      //   throw new Error(`Error: ${response.statusText}`);
-      // }
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
   
       // Filter out the deleted item from your data state
       const updatedData = data.filter((item) => item.id !== itemId);
@@ -87,7 +77,7 @@ const BomCoding = () => {
     const fetchData = async () => {
       const token = localStorage.getItem('userToken');
       console.log('token',token);
-      const response = await fetch('https://indiapuleather.com/teamasia/api/public/cities', {
+      const response = await fetch('https://factory.teamasia.in/api/public/bomcodingcategories', {
         method: 'GET', 
         headers: {
           'Authorization': `Bearer ${token}`
@@ -98,7 +88,8 @@ const BomCoding = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const result = await response.json();
-      setData(result); 
+      setData(result.bomcodingcategories); 
+      console.log('result',result);
     };
   
     fetchData();
@@ -132,11 +123,11 @@ const BomCoding = () => {
           </tr>
               </thead>
               <tbody>
-                {data.map((product) => (
+                {data.map((product,index) => (
                   <tr key={product.id}>
-                  <td>{product.id}</td>
-                  <td>{product.BomCodingName}</td>
-                  <td>{product.CategoryCode}</td>
+                  <td>{index + 1}</td>
+                  <td>{product.name}</td>
+                  <td>{product.code}</td>
                   <td>
                     {/* Action buttons or icons */}
                       <button type="button" className="btn mybtncustomer btn-secondary btn-sm mr-2" onClick={() => handleEditClick(product)}><i className="bi bi-pencil-fill my-pen-color" /></button>

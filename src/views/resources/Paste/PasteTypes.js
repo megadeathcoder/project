@@ -11,13 +11,7 @@ import ComponentCard from '../../../components/ComponentCard';
 
 const PasteTypes = () => {
   const navigate = useNavigate();
-  const [data, setData] = useState([
-    { id: 1, Name: 'Adhesive'},
-    { id: 2, Name: 'Form'},
-    { id: 3, Name: 'Pre Skin'},
-    { id: 4, Name: 'Skin'},
-    { id: 5, Name: 'Top'},
-  ]);
+  const [data, setData] = useState([]);
   // const data = [
   //   { id: 1, grain: '1037 A', fabric: 'NW.needlepunch_220gsm', quality: 'SURPLUS', color: 'black', quantity: '450 m' },
   //   { id: 2, grain: '3001 A', fabric: 'WP.matty_165g_110gsm', quality: 'SURPLUS', color: 'black', quantity: '150 m' },
@@ -51,17 +45,18 @@ const PasteTypes = () => {
   const handleDeleteClick = async (itemId) => {
     try {
       // Call your API endpoint to delete the item
-      // const response = await fetch(`your-api-endpoint/${itemId}`, {
-      //   method: 'DELETE',
-      //   headers: {
-      //     // Your headers here (if needed)
-      //   }
-      // });
+      const token = localStorage.getItem('userToken');
+      const response = await fetch(`https://factory.teamasia.in/api/public/pasteteams/${itemId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
   
       // Check if the request was successful
-      // if (!response.ok) {
-      //   throw new Error(`Error: ${response.statusText}`);
-      // }
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
   
       // Filter out the deleted item from your data state
       const updatedData = data.filter((item) => item.id !== itemId);
@@ -81,7 +76,7 @@ const PasteTypes = () => {
     const fetchData = async () => {
       const token = localStorage.getItem('userToken');
       console.log('token',token);
-      const response = await fetch('https://indiapuleather.com/teamasia/api/public/cities', {
+      const response = await fetch('https://factory.teamasia.in/api/public/pasteteams', {
         method: 'GET', 
         headers: {
           'Authorization': `Bearer ${token}`
@@ -92,7 +87,7 @@ const PasteTypes = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const result = await response.json();
-      setData(result); 
+      setData(result.pasteteams); 
     };
   
     fetchData();
@@ -125,7 +120,7 @@ const PasteTypes = () => {
               <tbody>
                 {data.map((product) => (
                   <tr key={product}>
-                  <td>{product.Name}</td>
+                  <td>{product.name}</td>
                   <td>
                     {/* Action buttons or icons */}
                       <button type="button" className="btn mybtncustomer btn-secondary btn-sm mr-2" onClick={() => handleEditClick(product)}><i className="bi bi-pencil-fill my-pen-color" /></button>

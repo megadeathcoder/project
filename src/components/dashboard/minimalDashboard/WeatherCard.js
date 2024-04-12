@@ -17,7 +17,7 @@ const WeatherCard = () => {
             <div className="display-4 mt-n5">
               73<sup>°F</sup>
             </div>
-            <p>AHMEDABAD, INDIA</p>
+            <p>HARYANA, INDIA</p>
           </Col>
         </Row>
       </CardBody>

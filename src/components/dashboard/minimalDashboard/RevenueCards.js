@@ -5,14 +5,14 @@ const revenues = [
   {
     id: 1,
     icon: Icon.Users,
-    title: 'My New Clients',
+    title: 'New Customer',
     earn: '23',
     color: 'primary',
   },
   {
     id: 2,
     icon: Icon.Edit,
-    title: 'New Projects',
+    title: 'Production Plans',
     earn: '56',
     color: 'cyan',
   },
@@ -26,7 +26,7 @@ const revenues = [
   {
     id: 4,
     icon: Icon.ShoppingBag,
-    title: 'All Projects',
+    title: 'Dispatch',
     earn: '86',
     color: 'warning',
   },

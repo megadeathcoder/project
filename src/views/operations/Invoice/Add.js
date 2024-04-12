@@ -15,36 +15,85 @@ import {
 
 } from 'reactstrap';
 // import { useParams } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 // import ComponentCard from '../../components/ComponentCard';
 
-const Add = () => {
-  const location = useLocation();
-  const {Name} = location.state || {}; // Default to an empty object if state is undefined
-  const [items, setItems] = useState([]);
- console.log("items",items);
-  const addItem = () => {
-    const newItems = items.slice();
-    newItems.push('')
-    setItems(newItems);
+const Edit = () => {
+  const navigate = useNavigate();
+
+
+ 
+  const [selectedType, setSelectedType] = useState('1');
+
+  const handleTypeChange = (e) => {
+    console.log('selectedType',e.target.value);
+    setSelectedType(e.target.value);
+  };
+ 
+  const [formDatas, setFormDataS] = useState({});
+  
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormDataS(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
   };
 
-  const removeItem = index => {
-    const newItems = items.slice();
-    newItems.splice(index, 1);
-    setItems(newItems);
-  };
+  async function apiCall() {
+    try {
+        const formData = new FormData();
+        formData.append('invoice_no',formDatas.InvoiceNo);
+        formData.append('order_id',formDatas.OrderId);
+        formData.append('invoice_unit',selectedType);
+        formData.append('item_quantity',formDatas.ItemQuantity);
+        formData.append('file_path',formDatas.file);
+        formData.append('is_trashed','0');
 
-  const handleInputChange = (index, event) => {
-    const newItems = items.slice();
-    console.log("data",index,newItems);
-    newItems[index] =  event.target.value;
-    setItems(newItems);
-  };
+        // console.log("json",JSON.stringify({
+        //   display_name:formDatas.DisplayName,
+        //   name:formDatas.ConfigName,
+        //   type:selectedType,
+        //   value:formDatas.Value
+        // }));
+        // console.log('formdata',formData);
+
+        const token = localStorage.getItem('userToken');
+        const response = await fetch(`https://factory.teamasia.in/api/public/invoices`, {
+            method: "POST",
+            headers: {
+              'Authorization': `Bearer ${token}`
+            },
+           
+            body: formData,
+        });
+        const data = await response.json();
+        console.log("dataapi",data)
+        if (response.ok) {
+
+
+          navigate('/operations/invoices');
+            
+        } 
+            // Handle any errors, such as showing an error message to the user
+            console.error("Authentication failed:", data.message);
+            return null;
+      
+    } catch (error) {
+        console.error("Network error:", error);
+        return null;
+    }
+}
+
+const handleSubmit = async (event) => {
+  event.preventDefault();
+  console.log('event',event);
+  apiCall();
+};
+
   return (
 <div>
-     
      <Row>
        <Col md="12">
          <Card>
@@ -55,47 +104,92 @@ const Add = () => {
              </CardTitle>
            </CardBody>
            <CardBody>
-             <Form>
+             <Form onSubmit={handleSubmit}>
                <Row>
-                 <Col md="8" className='mb-5'>
+                 <Col md="10">
                    <FormGroup>
-                     <Label>Fabric Name</Label>
-                     <Input type="text" placeholder ={Name} />
+                     <Label>Invoice No.</Label>
+                     <Input        
+                     type="text" 
+                      name="InvoiceNo" 
+                      id="name" 
+                      placeholder="Enter name" 
+                      value={formDatas.InvoiceNo}
+                      onChange={handleChange} 
+                     />
                      <FormText className="muted"></FormText>
                    </FormGroup>
                  </Col>
+                 <Col md="5">
+                   <FormGroup>
+                     <Label>Order Id</Label>
+                     <Input        
+                     type="text" 
+                      name="OrderId" 
+                      id="name" 
+                      placeholder="Enter name" 
+                      value={formDatas.OrderId}
+                      onChange={handleChange}
+                     />
 
-                 <Row>
-                  <Col md="8">
-                      <Button disabled className='btn btn-warning'>Add Items</Button>
-                  </Col>
-                  <Col md="2">
-                    <Button type="button" className='btn-success' onClick={addItem}>+</Button>
-                  </Col>
-                </Row>
+                     <FormText className="muted"></FormText>
+                   </FormGroup>
+                 </Col>
+                 <Col md="5">
+                   <FormGroup>
+                     <Label>Item Quantity</Label>
+                     <Input        
+                     type="text" 
+                      name="ItemQuantity" 
+                      id="name" 
+                      placeholder="Enter name" 
+                      value={formDatas.ItemQuantity}
+                      onChange={handleChange}
+                     />
 
-                 <table className="table">        
-                  <thead>
-                        <tr>
-                          <Row>
-                            <Col md="3"><th>Name</th></Col>
-                          </Row>
-                        </tr>
-                      </thead>
-          
-              <tbody>
-              {items.map((item, index) => (
-                  <tr key={item.index}>
-                    <Row>
-                      <Col md="8"><Input name="product" value={item} type="text" onChange={e => handleInputChange(index, e)} placeholder="" /></Col>
-                      <Col md="1"><button type="button"  style={{ backgroundColor:"red",marginTop:"5px"}} onClick={() => removeItem(index)}>X</button></Col>
-                    </Row>
-                    
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-
+                     <FormText className="muted"></FormText>
+                   </FormGroup>
+                 </Col>
+                 <Col md="5">
+                   <FormGroup>
+                     <Label>Invoice Unit</Label>
+                     <Input type="select" name="Select Gender" value={selectedType} onChange={handleTypeChange}>
+                        <option value="1">Mtr</option>
+                        <option value="2">Kg</option>
+                        <option value="3">Sq Mtr</option>
+                      </Input>
+                     <FormText className="muted"></FormText>
+                   </FormGroup>
+                  
+                 </Col>
+                 <Col md="5">
+                   <FormGroup>
+                     <Label>Invoice Value</Label>
+                     <Input        
+                     type="text" 
+                      name="InvoiceValue" 
+                      id="name" 
+                      placeholder="Enter name" 
+                      value={formDatas.InvoiceValue}
+                      onChange={handleChange} 
+                     />
+                     <FormText className="muted"></FormText>
+                   </FormGroup>
+                 </Col>
+                 <Col md="5">
+                   <FormGroup>
+                     <Label>File Upload</Label>
+                     <Input        
+                     type="text" 
+                      name="file" 
+                      id="name" 
+                      placeholder="Enter name" 
+                      value={formDatas.file}
+                      onChange={handleChange} 
+                     />
+                     <FormText className="muted"></FormText>
+                   </FormGroup>
+                 </Col>
                  <Col md="4">
                    <FormGroup>
                     <Button type="submit" className="btn my-btn-color" style={{marginTop:"28px"}}>
@@ -103,24 +197,16 @@ const Add = () => {
                     </Button>
                    </FormGroup>
                  </Col>
+
                </Row>
-               
-              
+
              </Form>
-             
            </CardBody>
-          
-          
-           
          </Card>
        </Col> 
      </Row>
-     
    </div>
-
-   
-   
   );
 };
 
-export default Add;
+export default Edit;

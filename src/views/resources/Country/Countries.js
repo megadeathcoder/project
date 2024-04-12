@@ -11,31 +11,20 @@ import ComponentCard from '../../../components/ComponentCard';
 
 const Countries = () => {
   const navigate = useNavigate();
-  const [data, setData] = useState([
-    { id: 1, CountryName: 'Aaland Islands',IsoCode:'AX',IsdCode:'358'},
-    { id: 2, CountryName: 'Aaland Islands1',IsoCode:'AX',IsdCode:'358'},
-    { id: 3, CountryName: 'Aaland Islands2',IsoCode:'AX',IsdCode:'358'},
-    { id: 4, CountryName: 'Aaland Islands3',IsoCode:'AX',IsdCode:'358'},
-    { id: 5, CountryName: 'Aaland Islands4',IsoCode:'AX',IsdCode:'358'},
-    { id: 6, CountryName: 'Aaland Islands5',IsoCode:'AX',IsdCode:'358'},
-    { id: 7, CountryName: 'Aaland Islands6',IsoCode:'AX',IsdCode:'358'},
-    { id: 8, CountryName: 'Aaland Islands7',IsoCode:'AX',IsdCode:'358'},
-    { id: 9, CountryName: 'Aaland Islands8',IsoCode:'AX',IsdCode:'358'},
-    { id: 10, CountryName: 'Aaland Islands9',IsoCode:'AX',IsdCode:'358'},  
-  ]);
+  const [data, setData] = useState([]);
   
   // const data = [
-  //   { id: 1, CountryName: 'Aaland Islands'},
-  //   { id: 2, CountryName: 'Aaland Islands'},
-  //   { id: 3, CountryName: 'Aaland Islands'},
-  //   { id: 4, CountryName: 'Aaland Islands'},
-  //   { id: 5, CountryName: 'Aaland Islands'},
-  //   { id: 6, CountryName: 'Aaland Islands'},
-  //   { id: 7, CountryName: 'Aaland Islands'},
-  //   { id: 8, CountryName: 'Aaland Islands'},
-  //   { id: 9, CountryName: 'Aaland Islands'},
-  //   { id: 10, CountryName: 'Aaland Islands'},  
-  // ];
+  //   { id: 1, CountryName: 'Aaland Islands',IsoCode:'AX',IsdCode:'358'},
+  //   { id: 2, CountryName: 'Aaland Islands1',IsoCode:'AX',IsdCode:'358'},
+  //   { id: 3, CountryName: 'Aaland Islands2',IsoCode:'AX',IsdCode:'358'},
+  //   { id: 4, CountryName: 'Aaland Islands3',IsoCode:'AX',IsdCode:'358'},
+  //   { id: 5, CountryName: 'Aaland Islands4',IsoCode:'AX',IsdCode:'358'},
+  //   { id: 6, CountryName: 'Aaland Islands5',IsoCode:'AX',IsdCode:'358'},
+  //   { id: 7, CountryName: 'Aaland Islands6',IsoCode:'AX',IsdCode:'358'},
+  //   { id: 8, CountryName: 'Aaland Islands7',IsoCode:'AX',IsdCode:'358'},
+  //   { id: 9, CountryName: 'Aaland Islands8',IsoCode:'AX',IsdCode:'358'},
+  //   { id: 10, CountryName: 'Aaland Islands9',IsoCode:'AX',IsdCode:'358'},  
+  // ]
 
   const tableStyle = {
     // margin: 'auto', 
@@ -56,17 +45,18 @@ const Countries = () => {
   const handleDeleteClick = async (itemId) => {
     try {
       // Call your API endpoint to delete the item
-      // const response = await fetch(`your-api-endpoint/${itemId}`, {
-      //   method: 'DELETE',
-      //   headers: {
-      //     // Your headers here (if needed)
-      //   }
-      // });
+      const token = localStorage.getItem('userToken');
+      const response = await fetch(`https://factory.teamasia.in/api/public/countries/${itemId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
   
       // Check if the request was successful
-      // if (!response.ok) {
-      //   throw new Error(`Error: ${response.statusText}`);
-      // }
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
   
       // Filter out the deleted item from your data state
       const updatedData = data.filter((item) => item.id !== itemId);
@@ -86,7 +76,7 @@ const Countries = () => {
     const fetchData = async () => {
       const token = localStorage.getItem('userToken');
       console.log('token',token);
-      const response = await fetch('https://indiapuleather.com/teamasia/api/public/cities', {
+      const response = await fetch('https://factory.teamasia.in/api/public/countries', {
         method: 'GET', 
         headers: {
           'Authorization': `Bearer ${token}`
@@ -97,7 +87,8 @@ const Countries = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const result = await response.json();
-      setData(result); 
+      console.log("responsejson in country",result);
+      setData(result.countries); 
     };
   
     fetchData();
@@ -131,7 +122,7 @@ const Countries = () => {
               <tbody>
                 {data.map((product) => (
                   <tr key={product.id}>
-                  <td>{product.CountryName}</td>
+                  <td>{product.name}</td>
                  
                   <td>
                     {/* Action buttons or icons */}

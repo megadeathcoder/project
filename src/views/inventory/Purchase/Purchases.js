@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import {
   Collapse,
   Button,
@@ -13,26 +13,30 @@ import {
   CardBody,
 } from 'reactstrap';
 
+import { useNavigate } from 'react-router-dom';
+
 import ComponentCard from '../../../components/ComponentCard';
 
 const Purchases = () => {
+  const navigate = useNavigate();
   const [collapse, setCollapse] = useState(false);
-
-  const data = [
+  const [data, setData] = useState([]);
+  // const data = [
    
-    { id: 1, Vendor: '1037 A', PurchaseDate: 'NW.needlepunch_220gsm', CreatedBy: 'SURPLUS', color: 'black', quantity: '450 m' },
-    { id: 2, Vendor: '1037 A', PurchaseDate: 'NW.needlepunch_220gsm', CreatedBy: 'SURPLUS', color: 'black', quantity: '450 m' },
-    { id: 3, Vendor: '1037 A', PurchaseDate: 'NW.needlepunch_220gsm', CreatedBy: 'SURPLUS', color: 'black', quantity: '450 m' },
-    { id: 4, Vendor: '1037 A', PurchaseDate: 'NW.needlepunch_220gsm', CreatedBy: 'SURPLUS', color: 'black', quantity: '450 m' },
-    { id: 5, Vendor: '1037 A', PurchaseDate: 'NW.needlepunch_220gsm', CreatedBy: 'SURPLUS', color: 'black', quantity: '450 m' },
-    { id: 6, Vendor: '1037 A', PurchaseDate: 'NW.needlepunch_220gsm', CreatedBy: 'SURPLUS', color: 'black', quantity: '450 m' },
-    { id: 7, Vendor: '1037 A', PurchaseDate: 'NW.needlepunch_220gsm', CreatedBy: 'SURPLUS', color: 'black', quantity: '450 m' },
-    { id: 8, Vendor: '1037 A', PurchaseDate: 'NW.needlepunch_220gsm', CreatedBy: 'SURPLUS', color: 'black', quantity: '450 m' },
-    { id: 9, Vendor: '1037 A', PurchaseDate: 'NW.needlepunch_220gsm', CreatedBy: 'SURPLUS', color: 'black', quantity: '450 m' },
-    { id: 10, Vendor: '1037 A', PurchaseDate: 'NW.needlepunch_220gsm', CreatedBy: 'SURPLUS', color: 'black', quantity: '450 m' },
+  //   { id: 1, Vendor: '1037 A', PurchaseDate: 'NW.needlepunch_220gsm', CreatedBy: 'SURPLUS', color: 'black', quantity: '450 m' },
+  //   { id: 2, Vendor: '1037 A', PurchaseDate: 'NW.needlepunch_220gsm', CreatedBy: 'SURPLUS', color: 'black', quantity: '450 m' },
+  //   { id: 3, Vendor: '1037 A', PurchaseDate: 'NW.needlepunch_220gsm', CreatedBy: 'SURPLUS', color: 'black', quantity: '450 m' },
+  //   { id: 4, Vendor: '1037 A', PurchaseDate: 'NW.needlepunch_220gsm', CreatedBy: 'SURPLUS', color: 'black', quantity: '450 m' },
+  //   { id: 5, Vendor: '1037 A', PurchaseDate: 'NW.needlepunch_220gsm', CreatedBy: 'SURPLUS', color: 'black', quantity: '450 m' },
+  //   { id: 6, Vendor: '1037 A', PurchaseDate: 'NW.needlepunch_220gsm', CreatedBy: 'SURPLUS', color: 'black', quantity: '450 m' },
+  //   { id: 7, Vendor: '1037 A', PurchaseDate: 'NW.needlepunch_220gsm', CreatedBy: 'SURPLUS', color: 'black', quantity: '450 m' },
+  //   { id: 8, Vendor: '1037 A', PurchaseDate: 'NW.needlepunch_220gsm', CreatedBy: 'SURPLUS', color: 'black', quantity: '450 m' },
+  //   { id: 9, Vendor: '1037 A', PurchaseDate: 'NW.needlepunch_220gsm', CreatedBy: 'SURPLUS', color: 'black', quantity: '450 m' },
+  //   { id: 10, Vendor: '1037 A', PurchaseDate: 'NW.needlepunch_220gsm', CreatedBy: 'SURPLUS', color: 'black', quantity: '450 m' },
     
   
-  ];
+  // ];
+
   const tableStyle = {
     // margin: 'auto', 
     // width: '60%',  
@@ -40,6 +44,42 @@ const Purchases = () => {
   };
 
   const toggle = () => setCollapse(!collapse);
+
+  const handleEditAdd = () => {
+    // Navigate to the edit page with the item's id
+    // Navigate(`/resources/address-types/edit/${itemId}`);
+    navigate('/inventory/purchases/add');
+  };
+
+  const handleEditClick = (item) => {
+    // Navigate to the edit page with the item's id
+    // Navigate(`/resources/address-types/edit/${itemId}`);
+    navigate('/inventory/purchases/edit', { state: item });
+  };
+
+  useEffect(() => {
+    
+    // Fetch the data from the API
+    const fetchData = async () => {
+      const token = localStorage.getItem('userToken');
+      console.log('token',token);
+      const response = await fetch('https://factory.teamasia.in/api/public/purchases', {
+        method: 'GET', 
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      console.log('result',response);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const result = await response.json();
+      setData(result.purchases); 
+      console.log('result.orderstatuses',result.purchases); 
+    };
+  
+    fetchData();
+  }, []);
 
   return (
     <ComponentCard
@@ -52,7 +92,7 @@ const Purchases = () => {
   >
      <Row>
       <Col md="8">
-        <Button className='my-btn-color' style={{ marginBottom: '1rem',marginRight:'10px' }}>
+        <Button className='my-btn-color' style={{ marginBottom: '1rem',marginRight:'10px' }} onClick={handleEditAdd}>
           Add Purchase
         </Button>
         <Button className='my-btn-color' onClick={toggle.bind(null)} style={{ marginBottom: '1rem' }}>
@@ -111,14 +151,14 @@ const Purchases = () => {
               <tbody>
                 {data.map((product) => (
                   <tr key={product.id}>
-                  <td>{product.Vendor}</td>
-                  <td>{product.PurchaseDate}</td>
+                  <td>{product.vendor_id}</td>
+                  <td>{product.purchase_date}</td>
                   <td>{product.CreatedBy}</td>
                   <td>
                     {/* Action buttons or icons */}
-                      <button type="button" className="btn mybtncustomer btn-secondary btn-sm mr-2" ><i className="bi bi-pencil-fill my-pen-color" /></button>
+                      <button type="button" className="btn mybtncustomer btn-secondary btn-sm mr-2" onClick={() => handleEditClick(product)}><i className="bi bi-pencil-fill my-pen-color" /></button>
                       <button type="button" className="btn mybtncustomer btn-secondary btn-sm mr-2"><i className="bi bi-eye-fill my-eye-color" /></button>
-                      <button type="button" className="btn mybtncustomer btn-secondary btn-sm mr-2"> <i className="bi bi-geo-alt-fill my-geo-color" /> </button>
+                      <button type="button" className="btn mybtncustomer btn-secondary btn-sm mr-2"><i className="bi bi-geo-alt-fill my-geo-color" /> </button>
                       <button type="button" className="btn mybtncustomer btn-secondary btn-sm mr-2"><i className="bi bi-list my-list-color" /></button>
                       <button type="button" className="btn mybtncustomer btn-secondary btn-sm mr-2"><i className="bi bi-trash-fill my-trash-color" /></button>
                   </td>

@@ -11,18 +11,7 @@ import ComponentCard from '../../../components/ComponentCard';
 
 const Fabrics = () => {
   const navigate = useNavigate();
-  const [data, setData] = useState([
-    { id: 1, Name: 'ACF',Color:['grey','white']},  
-    { id: 2, Name: 'ACF',Color:['grey1','white']},  
-    { id: 3, Name: 'ACF',Color:['grey2','white']},  
-    { id: 4, Name: 'ACF',Color:['grey3','white']},  
-    { id: 5, Name: 'ACF',Color:['grey4','white']},  
-    { id: 6, Name: 'ACF',Color:['grey5','white']},  
-    { id: 7, Name: 'ACF',Color:['grey6','white']},  
-    { id: 8, Name: 'ACF',Color:['grey7','white']},  
-    { id: 9, Name: 'ACF',Color:['grey8','white']},  
-    { id: 10, Name: 'ACF',Color:['grey9','white']},  
-  ]);
+  const [data, setData] = useState([]);
   // const data = [
   //   { id: 1, Name: 'ACF'},  
   //   { id: 2, Name: 'ACF'},  
@@ -51,20 +40,22 @@ const Fabrics = () => {
     // Navigate(`/resources/address-types/edit/${itemId}`);
     navigate('/resources/fabrics/add');
   };
+
   const handleDeleteClick = async (itemId) => {
     try {
       // Call your API endpoint to delete the item
-      // const response = await fetch(`your-api-endpoint/${itemId}`, {
-      //   method: 'DELETE',
-      //   headers: {
-      //     // Your headers here (if needed)
-      //   }
-      // });
+      const token = localStorage.getItem('userToken');
+      const response = await fetch(`https://factory.teamasia.in/api/public/fabrics/${itemId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
   
       // Check if the request was successful
-      // if (!response.ok) {
-      //   throw new Error(`Error: ${response.statusText}`);
-      // }
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
   
       // Filter out the deleted item from your data state
       const updatedData = data.filter((item) => item.id !== itemId);
@@ -84,7 +75,7 @@ const Fabrics = () => {
     const fetchData = async () => {
       const token = localStorage.getItem('userToken');
       console.log('token',token);
-      const response = await fetch('https://indiapuleather.com/teamasia/api/public/cities', {
+      const response = await fetch('https://factory.teamasia.in/api/public/fabrics', {
         method: 'GET', 
         headers: {
           'Authorization': `Bearer ${token}`
@@ -95,7 +86,7 @@ const Fabrics = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const result = await response.json();
-      setData(result); 
+      setData(result.fabrics); 
     };
   
     fetchData();
@@ -128,7 +119,7 @@ const Fabrics = () => {
               <tbody>
                 {data.map((product) => (
                   <tr key={product.id}>
-                  <td>{product.Name}</td>
+                  <td>{product.name}</td>
                   <td>
                     {/* Action buttons or icons */}
                       <button type="button" className="btn mybtncustomer btn-secondary btn-sm mr-2" onClick={() => handleEditClick(product)}><i className="bi bi-pencil-fill my-pen-color" /></button>

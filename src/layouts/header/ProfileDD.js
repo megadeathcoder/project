@@ -1,16 +1,19 @@
 import React from 'react';
 import { DropdownItem } from 'reactstrap';
 import { User, FileText, Star, Settings, Droplet } from 'react-feather';
-import user1 from '../../assets/images/users/user1.jpg';
+import user5 from '../../assets/images/users/user4.jpg';
+import {useAuth} from '../../views/auth/AuthContext';
 
 const ProfileDD = () => {
+  const {authUser} = useAuth();
+  console.log('authUser',authUser);
   return (
     <div>
       <div className="d-flex gap-3 p-3 border-bottom pt-2 align-items-center">
-        <img src={user1} alt="user" className="rounded-circle" width="55" />
+        <img src={user5} alt="user" className="rounded-circle" width="55" />
         <span>
-          <h5 className="mb-0 fw-medium">John Deo</h5>
-          <small className='text-muted'>info@wrappixel.com</small>
+          <h5 className="mb-0 fw-medium">user</h5>
+          <small className='text-muted'>{authUser}</small>
         </span>
       </div>
       <DropdownItem className="px-4 py-3">

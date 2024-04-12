@@ -12,18 +12,7 @@ import ComponentCard2 from '../../../assets/images/logos/logo-text.png';
 
 const Faults = () => {
   const navigate = useNavigate();
-  const [data, setData] = useState([
-    { id: 1, FaultCode: 'F036', Image: '../../../assets/images/logos/logo-text.png', FaultName: 'Coating layer separation', Desciption: 'black'},
-    { id: 2, FaultCode: 'F036', Image: '../../../assets/images/logos/logo-text.png', FaultName: 'Coating layer separation', Desciption: 'black'},
-    { id: 3, FaultCode: 'F036', Image: '../../../assets/images/logos/logo-text.png', FaultName: 'Coating layer separation', Desciption: 'black'},
-    { id: 4, FaultCode: 'F036', Image: '../../../assets/images/logos/logo-text.png', FaultName: 'Coating layer separation', Desciption: 'black'},
-    { id: 5, FaultCode: 'F036', Image: '../../../assets/images/logos/logo-text.png', FaultName: 'Coating layer separation', Desciption: 'black'},
-    { id: 6, FaultCode: 'F036', Image: '../../../assets/images/logos/logo-text.png', FaultName: 'Coating layer separation', Desciption: 'black'},
-    { id: 7, FaultCode: 'F036', Image: '../../../assets/images/logos/logo-text.png', FaultName: 'Coating layer separation', Desciption: 'black'},
-    { id: 8, FaultCode: 'F036', Image: '../../../assets/images/logos/logo-text.png', FaultName: 'Coating layer separation', Desciption: 'black'},
-    { id: 9, FaultCode: 'F036', Image: '../../../assets/images/logos/logo-text.png', FaultName: 'Coating layer separation', Desciption: 'black'},
-    { id: 10, FaultCode: 'F036', Image: '../../../assets/images/logos/logo-text.png', FaultName: 'Coating layer separation', Desciption: 'black'},
-  ]);
+  const [data, setData] = useState([]);
   // const data = [
   //   { id: 1, FaultCode: 'F036', Image: '../../../assets/images/logos/logo-text.png', FaultName: 'Coating layer separation', Desciption: 'black'},
   //   { id: 2, FaultCode: 'F036', Image: '../../../assets/images/logos/logo-text.png', FaultName: 'Coating layer separation', Desciption: 'black'},
@@ -55,17 +44,18 @@ const Faults = () => {
   const handleDeleteClick = async (itemId) => {
     try {
       // Call your API endpoint to delete the item
-      // const response = await fetch(`your-api-endpoint/${itemId}`, {
-      //   method: 'DELETE',
-      //   headers: {
-      //     // Your headers here (if needed)
-      //   }
-      // });
+      const token = localStorage.getItem('userToken');
+      const response = await fetch(`https://factory.teamasia.in/api/public/faults/${itemId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
   
       // Check if the request was successful
-      // if (!response.ok) {
-      //   throw new Error(`Error: ${response.statusText}`);
-      // }
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
   
       // Filter out the deleted item from your data state
       const updatedData = data.filter((item) => item.id !== itemId);
@@ -85,7 +75,7 @@ const Faults = () => {
     const fetchData = async () => {
       const token = localStorage.getItem('userToken');
       console.log('token',token);
-      const response = await fetch('https://indiapuleather.com/teamasia/api/public/cities', {
+      const response = await fetch('https://factory.teamasia.in/api/public/faults', {
         method: 'GET', 
         headers: {
           'Authorization': `Bearer ${token}`
@@ -96,7 +86,8 @@ const Faults = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const result = await response.json();
-      setData(result); 
+      setData(result.faults); 
+      console.log('result',result.faults);
     };
   
     fetchData();
@@ -132,10 +123,10 @@ const Faults = () => {
               <tbody>
                 {data.map((product) => (
                   <tr key={product.id}>
-                  <td>{product.FaultCode}</td>
-                  <td><img src={ComponentCard2} alt='img' style={{width:"40px"}}/></td>
-                  <td>{product.FaultName}</td>
-                  <td>{product.Desciption}</td>
+                  <td>{product.code}</td>
+                  <td><img src={ComponentCard2} alt={product.image_path} style={{width:"40px"}}/></td>
+                  <td>{product.name}</td>
+                  <td>{product.description}</td>
                   <td>
                     {/* Action buttons or icons */}
                       <button type="button" className="btn mybtncustomer btn-secondary btn-sm mr-2" onClick={() => handleEditClick(product)}><i className="bi bi-pencil-fill my-pen-color" /></button>

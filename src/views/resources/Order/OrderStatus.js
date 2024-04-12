@@ -11,30 +11,21 @@ import ComponentCard from '../../../components/ComponentCard';
 
 const OrderStatus = () => {
   const navigate = useNavigate();
-  const [data, setData] = useState([
-    { id: 1, DisplayName: 'Parked', Status: 'parked',UseThisasdefaultstatusforOrders:'1', NotifyCustomersviaEmailandSMS:'1',ShortDescription:'Order is produced and dispatched and no further processing is needed.',SmsContent:'',Subject:'',EmailContent:'s'},
-    { id: 2, DisplayName: 'Parked', Status: 'parked',UseThisasdefaultstatusforOrders:'0', NotifyCustomersviaEmailandSMS:'0',ShortDescription:'Order is produced and dispatched and no further processing is needed.',SmsContent:'',Subject:'',EmailContent:''},
-    { id: 3, DisplayName: 'Parked', Status: 'parked',UseThisasdefaultstatusforOrders:'1', NotifyCustomersviaEmailandSMS:'0',ShortDescription:'Order is produced and dispatched and no further processing is needed.',SmsContent:'',Subject:'',EmailContent:''},
-    { id: 4, DisplayName: 'Parked', Status: 'parked',UseThisasdefaultstatusforOrders:'0', NotifyCustomersviaEmailandSMS:'1',ShortDescription:'Order is produced and dispatched and no further processing is needed.',SmsContent:'',Subject:'',EmailContent:''},
-    { id: 5, DisplayName: 'Parked', Status: 'parked',UseThisasdefaultstatusforOrders:'1', NotifyCustomersviaEmailandSMS:'1',ShortDescription:'Order is produced and dispatched and no further processing is needed.',SmsContent:'',Subject:'',EmailContent:''},
-    { id: 6, DisplayName: 'Parked', Status: 'parked',UseThisasdefaultstatusforOrders:'0', NotifyCustomersviaEmailandSMS:'0',ShortDescription:'Order is produced and dispatched and no further processing is needed.',SmsContent:'',Subject:'',EmailContent:''},
-    { id: 7, DisplayName: 'Parked', Status: 'parked',UseThisasdefaultstatusforOrders:'1', NotifyCustomersviaEmailandSMS:'1',ShortDescription:'Order is produced and dispatched and no further processing is needed.',SmsContent:'',Subject:'',EmailContent:''},
-    { id: 8, DisplayName: 'Parked', Status: 'parked',UseThisasdefaultstatusforOrders:'0', NotifyCustomersviaEmailandSMS:'0',ShortDescription:'Order is produced and dispatched and no further processing is needed.',SmsContent:'',Subject:'',EmailContent:''},
-    { id: 9, DisplayName: 'Parked', Status: 'parked',UseThisasdefaultstatusforOrders:'1', NotifyCustomersviaEmailandSMS:'1',ShortDescription:'Order is produced and dispatched and no further processing is needed.',SmsContent:'',Subject:'',EmailContent:''},
-    { id: 10, DisplayName: 'Parked', Status: 'parked',UseThisasdefaultstatusforOrders:'1', NotifyCustomersviaEmailandSMS:'0',ShortDescription:'Order is produced and dispatched and no further processing is needed.',SmsContent:'',Subject:'',EmailContent:''},
-  ]);
+  const [data, setData] = useState([]);
+
   // const data = [
-  //   { id: 1, DisplayName: 'Parked', Status: 'parked'},
-  //   { id: 2, DisplayName: 'Parked', Status: 'parked'},
-  //   { id: 3, DisplayName: 'Parked', Status: 'parked'},
-  //   { id: 4, DisplayName: 'Parked', Status: 'parked'},
-  //   { id: 5, DisplayName: 'Parked', Status: 'parked'},
-  //   { id: 6, DisplayName: 'Parked', Status: 'parked'},
-  //   { id: 7, DisplayName: 'Parked', Status: 'parked'},
-  //   { id: 8, DisplayName: 'Parked', Status: 'parked'},
-  //   { id: 9, DisplayName: 'Parked', Status: 'parked'},
-  //   { id: 10, DisplayName: 'Parked', Status: 'parked'},
+  //   { id: 1, DisplayName: 'Parked', Status: 'parked',UseThisasdefaultstatusforOrders:'1', NotifyCustomersviaEmailandSMS:'1',ShortDescription:'Order is produced and dispatched and no further processing is needed.',SmsContent:'',Subject:'',EmailContent:'s'},
+  //   { id: 2, DisplayName: 'Parked', Status: 'parked',UseThisasdefaultstatusforOrders:'0', NotifyCustomersviaEmailandSMS:'0',ShortDescription:'Order is produced and dispatched and no further processing is needed.',SmsContent:'',Subject:'',EmailContent:''},
+  //   { id: 3, DisplayName: 'Parked', Status: 'parked',UseThisasdefaultstatusforOrders:'1', NotifyCustomersviaEmailandSMS:'0',ShortDescription:'Order is produced and dispatched and no further processing is needed.',SmsContent:'',Subject:'',EmailContent:''},
+  //   { id: 4, DisplayName: 'Parked', Status: 'parked',UseThisasdefaultstatusforOrders:'0', NotifyCustomersviaEmailandSMS:'1',ShortDescription:'Order is produced and dispatched and no further processing is needed.',SmsContent:'',Subject:'',EmailContent:''},
+  //   { id: 5, DisplayName: 'Parked', Status: 'parked',UseThisasdefaultstatusforOrders:'1', NotifyCustomersviaEmailandSMS:'1',ShortDescription:'Order is produced and dispatched and no further processing is needed.',SmsContent:'',Subject:'',EmailContent:''},
+  //   { id: 6, DisplayName: 'Parked', Status: 'parked',UseThisasdefaultstatusforOrders:'0', NotifyCustomersviaEmailandSMS:'0',ShortDescription:'Order is produced and dispatched and no further processing is needed.',SmsContent:'',Subject:'',EmailContent:''},
+  //   { id: 7, DisplayName: 'Parked', Status: 'parked',UseThisasdefaultstatusforOrders:'1', NotifyCustomersviaEmailandSMS:'1',ShortDescription:'Order is produced and dispatched and no further processing is needed.',SmsContent:'',Subject:'',EmailContent:''},
+  //   { id: 8, DisplayName: 'Parked', Status: 'parked',UseThisasdefaultstatusforOrders:'0', NotifyCustomersviaEmailandSMS:'0',ShortDescription:'Order is produced and dispatched and no further processing is needed.',SmsContent:'',Subject:'',EmailContent:''},
+  //   { id: 9, DisplayName: 'Parked', Status: 'parked',UseThisasdefaultstatusforOrders:'1', NotifyCustomersviaEmailandSMS:'1',ShortDescription:'Order is produced and dispatched and no further processing is needed.',SmsContent:'',Subject:'',EmailContent:''},
+  //   { id: 10, DisplayName: 'Parked', Status: 'parked',UseThisasdefaultstatusforOrders:'1', NotifyCustomersviaEmailandSMS:'0',ShortDescription:'Order is produced and dispatched and no further processing is needed.',SmsContent:'',Subject:'',EmailContent:''},
   // ];
+
   const tableStyle = {
     // margin: 'auto', 
     // width: '60%',  
@@ -83,7 +74,7 @@ const OrderStatus = () => {
     const fetchData = async () => {
       const token = localStorage.getItem('userToken');
       console.log('token',token);
-      const response = await fetch('https://indiapuleather.com/teamasia/api/public/cities', {
+      const response = await fetch('https://factory.teamasia.in/api/public/orderstatuses', {
         method: 'GET', 
         headers: {
           'Authorization': `Bearer ${token}`
@@ -94,7 +85,8 @@ const OrderStatus = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const result = await response.json();
-      setData(result); 
+      setData(result.orderstatuses); 
+      console.log('result.orderstatuses',result.orderstatuses); 
     };
   
     fetchData();
@@ -129,8 +121,8 @@ const OrderStatus = () => {
               <tbody>
                 {data.map((product) => (
                   <tr key={product.id}>
-                  <td>{product.DisplayName}</td>
-                  <td>{product.Status}</td>
+                  <td>{product.name}</td>
+                  <td>{product.status}</td>
                   <td>
                     {/* Action buttons or icons */}
                       <button type="button" className="btn mybtncustomer btn-secondary btn-sm mr-2" onClick={() => handleEditClick(product)}><i className="bi bi-pencil-fill my-pen-color" /></button>

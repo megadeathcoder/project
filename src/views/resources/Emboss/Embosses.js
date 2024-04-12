@@ -11,18 +11,7 @@ import ComponentCard from '../../../components/ComponentCard';
 
 const Embosses = () => {
   const navigate = useNavigate();
-  const [data, setData] = useState([
-    { id: 1, Name: 'E101'},  
-    { id: 2, Name: 'E102'},  
-    { id: 3, Name: 'E103'},  
-    { id: 4, Name: 'E104'},  
-    { id: 5, Name: 'E105'},  
-    { id: 6, Name: 'E106'},  
-    { id: 7, Name: 'E107'},  
-    { id: 8, Name: 'E108'},  
-    { id: 9, Name: 'E109'},  
-    { id: 10, Name: 'E100'},  
-  ]);
+  const [data, setData] = useState([]);
   // const data = [
   //   { id: 1, Name: 'E-124'},  
   //   { id: 2, Name: 'E-124'},  
@@ -53,17 +42,18 @@ const Embosses = () => {
   const handleDeleteClick = async (itemId) => {
     try {
       // Call your API endpoint to delete the item
-      // const response = await fetch(`your-api-endpoint/${itemId}`, {
-      //   method: 'DELETE',
-      //   headers: {
-      //     // Your headers here (if needed)
-      //   }
-      // });
+      const token = localStorage.getItem('userToken');
+      const response = await fetch(`https://factory.teamasia.in/api/public/embosses/${itemId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
   
       // Check if the request was successful
-      // if (!response.ok) {
-      //   throw new Error(`Error: ${response.statusText}`);
-      // }
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
   
       // Filter out the deleted item from your data state
       const updatedData = data.filter((item) => item.id !== itemId);
@@ -83,7 +73,7 @@ const Embosses = () => {
     const fetchData = async () => {
       const token = localStorage.getItem('userToken');
       console.log('token',token);
-      const response = await fetch('https://indiapuleather.com/teamasia/api/public/cities', {
+      const response = await fetch('https://factory.teamasia.in/api/public/embosses', {
         method: 'GET', 
         headers: {
           'Authorization': `Bearer ${token}`
@@ -94,7 +84,7 @@ const Embosses = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const result = await response.json();
-      setData(result); 
+      setData(result.embosses); 
     };
   
     fetchData();
@@ -127,7 +117,7 @@ const Embosses = () => {
               <tbody>
                 {data.map((product) => (
                   <tr key={product.id}>
-                  <td>{product.Name}</td>
+                  <td>{product.name}</td>
                   <td>
                     {/* Action buttons or icons */}
                       <button type="button" className="btn mybtncustomer btn-secondary btn-sm mr-2" onClick={() => handleEditClick(product)}><i className="bi bi-pencil-fill my-pen-color" /></button>

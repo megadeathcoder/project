@@ -11,16 +11,7 @@ import ComponentCard from '../../../components/ComponentCard';
 
 const AddressTypes = () => {
   const navigate = useNavigate();
-  const [data, setData] = useState([   { id: 1, Name: 'Manufacturing Unit' },
-  { id: 2, Name: 'Registered/Corporate Office' },
-  { id: 3, Name: 'Warehouse/Godown' },
-  { id: 4, Name: 'Manufacturing Unit' },
-  { id: 5, Name: 'Registered/Corporate Office' },
-  { id: 6, Name: 'Warehouse/Godown' },
-  { id: 7, Name: 'Manufacturing Unit' },
-  { id: 8, Name: 'Registered/Corporate Office' },
-  { id: 9, Name: 'Warehouse/Godown' },
-  { id: 10, Name: 'Manufacturing Unit' },]);
+  const [data, setData] = useState([]);
  
   // const data = [
   //   { id: 1, Name: 'Manufacturing Unit' },
@@ -51,13 +42,15 @@ const AddressTypes = () => {
     // Navigate(`/resources/address-types/edit/${itemId}`);
     navigate('/resources/address-types/add');
   };
+  
   const handleDeleteClick = async (itemId) => {
     try {
       // Call your API endpoint to delete the item
-      const response = await fetch(`your-api-endpoint/${itemId}`, {
+      const token = localStorage.getItem('userToken');
+      const response = await fetch(`https://factory.teamasia.in/api/public/addresstypes/${itemId}`, {
         method: 'DELETE',
         headers: {
-          // Your headers here (if needed)
+          'Authorization': `Bearer ${token}`
         }
       });
   
@@ -84,7 +77,7 @@ const AddressTypes = () => {
     const fetchData = async () => {
       const token = localStorage.getItem('userToken');
       console.log('token',token);
-      const response = await fetch('https://indiapuleather.com/teamasia/api/public/cities', {
+      const response = await fetch('https://factory.teamasia.in/api/public/addresstypes', {
         method: 'GET', 
         headers: {
           'Authorization': `Bearer ${token}`
@@ -95,7 +88,8 @@ const AddressTypes = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const result = await response.json();
-      setData(result); 
+      console.log("responsejson",result);
+      setData(result.addresstypes); 
     };
   
     fetchData();
@@ -129,7 +123,7 @@ const AddressTypes = () => {
               <tbody>
                 {data.map((product) => (
                   <tr key={product.id}>
-                  <td>{product.Name}</td>
+                  <td>{product.name}</td>
                   <td>
                     {/* Action buttons or icons */}
                       <button type="button" className="btn mybtncustomer btn-secondary btn-sm mr-2" onClick={() => handleEditClick(product)}><i className="bi bi-pencil-fill my-pen-color" /></button>

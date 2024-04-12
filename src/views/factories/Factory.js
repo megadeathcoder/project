@@ -1,4 +1,4 @@
-import React ,{useState} from 'react';
+import React ,{useState,useEffect} from 'react';
 import {
   Button,
   Col,
@@ -9,10 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import ComponentCard from '../../components/ComponentCard';
 
 const Factory = () => {
-  const [data, setData] = useState([
-    { id: 1, FactoryName: 'TAFP', CompanyName: 'Teamasia Technical Textile Pvt. Ltd. formerly known as team colence textile Pvt. Ltd.',CinNo:'U17299DL2020PPC369861',UamNo:'',ProductionLine:["P1","P1N","P2","P2N","P3","P3N"]},
-    { id: 1, FactoryName: 'TEAM COLENCE', CompanyName: 'Team Colence Technical Textile Private Limited',CinNo:'U17299DL2020PPC369861',UamNo:'',ProductionLine:["P1","P1N","P2","P2N"]},
-  ]);
+  const [data, setData] = useState([]);
 
   // const data = [
   //   { id: 1, FactoryName: 'TAFP', CompanyName: 'Teamasia Technical Textile Pvt. Ltd. formerly known as team colence textile Pvt. Ltd.',CinNo:'U17299DL2020PPC369861',UamNo:'',ProductionLine:["P1","P1N","P2","P2N","P3","P3N"]},
@@ -23,7 +20,7 @@ const Factory = () => {
   const navigate = useNavigate();
 
   const tableStyle = {
-    // margin: 'auto', 
+    // margin: 'auto',
     // width: '60%',  
     // maxWidth: '1000px',
   };
@@ -39,20 +36,22 @@ const Factory = () => {
     // Navigate(`/resources/address-types/edit/${itemId}`);
     navigate('/factories/add');
   };
+
   const handleDeleteClick = async (itemId) => {
     try {
       // Call your API endpoint to delete the item
-      // const response = await fetch(`your-api-endpoint/${itemId}`, {
-      //   method: 'DELETE',
-      //   headers: {
-      //     // Your headers here (if needed)
-      //   }
-      // });
+      const token = localStorage.getItem('userToken');
+      const response = await fetch(`https://factory.teamasia.in/api/public/factories/${itemId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
   
       // Check if the request was successful
-      // if (!response.ok) {
-      //   throw new Error(`Error: ${response.statusText}`);
-      // }
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
   
       // Filter out the deleted item from your data state
       const updatedData = data.filter((item) => item.id !== itemId);
@@ -64,6 +63,31 @@ const Factory = () => {
       console.error('Failed to delete the item', error);
     }
   };
+  
+
+  useEffect(() => {
+    
+    // Fetch the data from the API
+    const fetchData = async () => {
+      const token = localStorage.getItem('userToken');
+      console.log('token',token);
+      const response = await fetch('https://factory.teamasia.in/api/public/factories', {
+        method: 'GET', 
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      console.log('result',response);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const result = await response.json();
+      console.log("responsejson",result);
+      setData(result.factories); 
+    };
+  
+    fetchData();
+  }, []);
 
   return (
     <ComponentCard
@@ -94,8 +118,8 @@ const Factory = () => {
               <tbody>
                 {data.map((product) => (
                   <tr key={product.id}>
-                  <td>{product.FactoryName}</td>
-                  <td>{product.CompanyName}</td>
+                  <td>{product.name}</td>
+                  <td>{product.company_name}</td>
               
                   <td>
                     {/* Action buttons or icons */}

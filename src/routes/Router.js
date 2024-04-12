@@ -26,17 +26,34 @@ const  CustomersAddressAdd= Loadable(lazy(() => import('../views/order/Customer/
 const  CustomersPendingReport= Loadable(lazy(() => import('../views/order/Customer/PendingReport')));
 
 const  Orders= Loadable(lazy(() => import('../views/order/T')));
-const  FactorySurplus= Loadable(lazy(() => import('../views/order/FactoryS/FactorySurplus')));
-const  OrderTemplates= Loadable(lazy(() => import('../views/order/OrderT/OrderTemplates')));
 
-const  ProductionPlan= Loadable(lazy(() => import('../views/operations/ProductionP/ProductionPlan')));
+const  FactorySurplus = Loadable(lazy(() => import('../views/order/FactoryS/FactorySurplus')));
+const  FactorySurplusEdit = Loadable(lazy(() => import('../views/order/FactoryS/Edit')));
+const  FactorySurplusAdd = Loadable(lazy(() => import('../views/order/FactoryS/Add')));
+
+const  OrderTemplates = Loadable(lazy(() => import('../views/order/OrderT/OrderTemplates')));
+const  OrderTemplatesEdit = Loadable(lazy(() => import('../views/order/OrderT/Edit')));
+const  OrderTemplatesAdd = Loadable(lazy(() => import('../views/order/OrderT/Add')));
+const  OrderTemplatesProductAdd = Loadable(lazy(() => import('../views/order/OrderT/productAdd')));
+
+const  ProductionPlan = Loadable(lazy(() => import('../views/operations/ProductionP/ProductionPlan')));
+const  ProductionPlanView = Loadable(lazy(() => import('../views/operations/ProductionP/View')));
+
+
 const  AdditionalTreat= Loadable(lazy(() => import('../views/operations/AdditionalT/AdditionalTreat')));
 const  CustomInvoices= Loadable(lazy(() => import('../views/operations/CustomI/CustomInvoices')));
 const  Dispatch= Loadable(lazy(() => import('../views/operations/Dispatchh/Dispatch')));
 const  FindaRoll= Loadable(lazy(() => import('../views/operations/FindR/FindaRoll')));
+
 const  Invoices= Loadable(lazy(() => import('../views/operations/Invoice/Invoices')));
+const  InvoicesAdd= Loadable(lazy(() => import('../views/operations/Invoice/Add')));
+
+
 const  QaPack= Loadable(lazy(() => import('../views/operations/QaP/QaPack')));
+const  QaPackView = Loadable(lazy(() => import('../views/operations/QaP/View')));
+
 const  StockManagement= Loadable(lazy(() => import('../views/operations/StockM/StockManagement')));
+const  StockManagementOrderView= Loadable(lazy(() => import('../views/operations/StockM/OrderView')));
 
 const  ByOrder = Loadable(lazy(() => import('../views/executive/ByO/ByOrder')));
 const  BySmallRoll = Loadable(lazy(() => import('../views/executive/ByS/BySmallRoll')));
@@ -49,10 +66,20 @@ const  CreditAlerts = Loadable(lazy(() => import('../views/accounts/CreditA/Cred
 const  Ledgers = Loadable(lazy(() => import('../views/accounts/Ledger/Ledgers')));
 const  Payments = Loadable(lazy(() => import('../views/accounts/Payment/Payments')));
 const  ResetAllLedgers = Loadable(lazy(() => import('../views/accounts/ResetA/ResetAllLedgers')));
+
 const  Categories = Loadable(lazy(() => import('../views/inventory/Category/Categories')));
+const  CategoriesEdit = Loadable(lazy(() => import('../views/inventory/Category/Edit')));
+const  CategoriesAdd = Loadable(lazy(() => import('../views/inventory/Category/Add')));
+
 const  FindRawMaterial = Loadable(lazy(() => import('../views/inventory/FindR/FindRawMaterial')));
 const  Purchases = Loadable(lazy(() => import('../views/inventory/Purchase/Purchases')));
+const  PurchasesAdd = Loadable(lazy(() => import('../views/inventory/Purchase/Add')));
+const  PurchasesEdit = Loadable(lazy(() => import('../views/inventory/Purchase/Edit')));
+
 const  RawMaterial = Loadable(lazy(() => import('../views/inventory/RawM/RawMaterial')));
+const  RawMaterialEdit = Loadable(lazy(() => import('../views/inventory/RawM/Edit')));
+const  RawMaterialAdd = Loadable(lazy(() => import('../views/inventory/RawM/Add')));
+
 const  RawMaterialDaily = Loadable(lazy(() => import('../views/inventory/RawMD/RawMaterialDaily')));
 const  StockManagementIn = Loadable(lazy(() => import('../views/inventory/StockM/StockManagement')));
 const  StockManagementHack = Loadable(lazy(() => import('../views/inventory/StockMH/StockManagementHack')));
@@ -257,8 +284,8 @@ const ThemeRoutes = [
     path: '/',
     element: <FullLayout />,
     children: [
-      { path: '/', name: 'Home', element: <Navigate to="/dashboards/minimal" /> },
-      { path: '/dashboards/minimal', name: 'Minimal', exact: true, element: <Minimal /> },
+      { path: '/', name: 'Home', element: <ProtectedRoute> <Navigate to="/dashboards/minimal" />  </ProtectedRoute> },
+      { path: '/dashboards/minimal', name: 'Minimal', exact: true, element:<ProtectedRoute> <Minimal /> </ProtectedRoute>  },
       { path: '/dashboards/analytical', name: 'Analytical', exact: true, element: <ProtectedRoute><Analytical/>   </ProtectedRoute>},
       { path: '/dashboards/demographical', name: 'Demographical', exact: true, element: <ProtectedRoute> <Demographical />  </ProtectedRoute>},
       { path: '/dashboards/modern', name: 'Modern', exact: true, element: <ProtectedRoute><Modern />  </ProtectedRoute>},
@@ -275,39 +302,67 @@ const ThemeRoutes = [
       { path: '/order/customers/address/add', name: 'Modern', exact: true, element: <ProtectedRoute> <CustomersAddressAdd />  </ProtectedRoute>},
       { path: '/order/customers/pending-report', name: 'Modern', exact: true, element: <ProtectedRoute> <CustomersPendingReport />  </ProtectedRoute>},
 
-      { path: '/order/orders', name: 'Modern', exact: true, element: <ProtectedRoute> <Orders />  </ProtectedRoute>},
-      { path: '/order/factory-surplus', name: 'Modern', exact: true, element: <ProtectedRoute> <FactorySurplus />  </ProtectedRoute>},
-      { path: '/order/order-templates', name: 'Modern', exact: true, element: <ProtectedRoute> <OrderTemplates />  </ProtectedRoute> },
 
-      { path: '/operations/production-plans', name: 'Modern', exact: true, element: <ProtectedRoute> <ProductionPlan />  </ProtectedRoute>},
-      { path: '/operations/additional-treatment', name: 'Modern', exact: true, element:<ProtectedRoute>  <AdditionalTreat />  </ProtectedRoute>},
-      { path: '/operations/custom-invoices', name: 'Modern', exact: true, element: <ProtectedRoute> <CustomInvoices />  </ProtectedRoute>},
-      { path: '/operations/dispatch', name: 'Modern', exact: true, element: <ProtectedRoute> <Dispatch />  </ProtectedRoute>},
-      { path: '/operations/find-a-roll', name: 'Modern', exact: true, element: <ProtectedRoute> <FindaRoll />  </ProtectedRoute>},
-      { path: '/operations/invoices', name: 'Modern', exact: true, element: <ProtectedRoute> <Invoices />  </ProtectedRoute>},
-      { path: '/operations/qa-packaging', name: 'Modern', exact: true, element: <ProtectedRoute> <QaPack />  </ProtectedRoute>},
-      { path: '/operations/stock-management', name: 'Modern', exact: true, element: <ProtectedRoute> <StockManagement />  </ProtectedRoute>},
+
+      { path: '/order/orders', name: 'Modern', exact: true, element: <ProtectedRoute> <Orders /> </ProtectedRoute> },
+      { path: '/order/factory-surplus', name: 'Modern', exact: true, element:  <ProtectedRoute><FactorySurplus /></ProtectedRoute>  },
+      { path: '/order/factory-surplus/edit', name: 'Modern', exact: true, element:  <ProtectedRoute><FactorySurplusEdit /></ProtectedRoute>  },
+      { path: '/order/factory-surplus/add', name: 'Modern', exact: true, element: <ProtectedRoute> <FactorySurplusAdd /> </ProtectedRoute> },
+
+      { path: '/order/order-templates', name: 'Modern', exact: true, element: <ProtectedRoute> <OrderTemplates />   </ProtectedRoute>},
+      { path: '/order/order-templates/edit', name: 'Modern', exact: true, element:  <ProtectedRoute><OrderTemplatesEdit /> </ProtectedRoute>  },
+      { path: '/order/order-templates/add', name: 'Modern', exact: true, element: <ProtectedRoute> <OrderTemplatesAdd /> </ProtectedRoute>  },
+      { path: '/order/order-templates/product-add', name: 'Modern', exact: true, element: <ProtectedRoute> <OrderTemplatesProductAdd /> </ProtectedRoute>  },
+
+      { path: '/operations/production-plans', name: 'Modern', exact: true, element:  <ProtectedRoute><ProductionPlan />  </ProtectedRoute>},
+      { path: '/operations/production-plans/view', name: 'Modern', exact: true, element: <ProtectedRoute> <ProductionPlanView /> </ProtectedRoute> },
+      
+
+      { path: '/operations/additional-treatment', name: 'Modern', exact: true, element: <ProtectedRoute> <AdditionalTreat /> </ProtectedRoute> },
+      { path: '/operations/custom-invoices', name: 'Modern', exact: true, element:  <ProtectedRoute><CustomInvoices />  </ProtectedRoute>},
+      { path: '/operations/dispatch', name: 'Modern', exact: true, element: <ProtectedRoute> <Dispatch /> </ProtectedRoute> },
+      { path: '/operations/find-a-roll', name: 'Modern', exact: true, element:  <ProtectedRoute><FindaRoll /> </ProtectedRoute> },
+
+      { path: '/operations/invoices', name: 'Modern', exact: true, element:  <ProtectedRoute><Invoices /> </ProtectedRoute> },
+      { path: '/operations/invoices/add', name: 'Modern', exact: true, element:  <ProtectedRoute><InvoicesAdd /> </ProtectedRoute> },
+      
+      { path: '/operations/qa-packaging', name: 'Modern', exact: true, element:  <ProtectedRoute><QaPack /> </ProtectedRoute> },
+      { path: '/operations/qa-packaging/jumboroll', name: 'Modern', exact: true, element:  <ProtectedRoute><QaPackView /></ProtectedRoute>  },
+
+      { path: '/operations/stock-management', name: 'Modern', exact: true, element: <ProtectedRoute> <StockManagement /></ProtectedRoute>  },
+      { path: '/operations/stock-management/order-view', name: 'Modern', exact: true, element: <ProtectedRoute> <StockManagementOrderView /></ProtectedRoute> },
 
       { path: '/executive/by-order', name: 'Modern', exact: true, element: <ProtectedRoute> <ByOrder />  </ProtectedRoute>},
       { path: '/executive/by-small-roll', name: 'Modern', exact: true, element: <ProtectedRoute> <BySmallRoll />  </ProtectedRoute>},
-      { path: '/executive/production-sales', name: 'Modern', exact: true, element: <ProtectedRoute> <ProductionSalesReport />  </ProtectedRoute>},
-      { path: '/executive/gsm-analysis', name: 'Modern', exact: true, element: <ProtectedRoute> <GsmAnalysisReport />  </ProtectedRoute>},
+      { path: '/executive/production-sales', name: 'Modern', exact: true, element:  <ProtectedRoute><ProductionSalesReport /> </ProtectedRoute> },
+      { path: '/executive/gsm-analysis', name: 'Modern', exact: true, element:  <ProtectedRoute><GsmAnalysisReport /> </ProtectedRoute> },
 
-      { path: '/product/sample-developments', name: 'Modern', exact: true, element: <ProtectedRoute> <SimpleDevelopment />  </ProtectedRoute>},
+      { path: '/product/sample-developments', name: 'Modern', exact: true, element: <ProtectedRoute> <SimpleDevelopment /> </ProtectedRoute> },
 
-      { path: '/accounts/payments', name: 'Modern', exact: true, element: <ProtectedRoute> <Payments />  </ProtectedRoute>},
-      { path: '/accounts/credit-alerts', name: 'Modern', exact: true, element: <ProtectedRoute> <CreditAlerts />  </ProtectedRoute>},
-      { path: '/accounts/ledgers', name: 'Modern', exact: true, element: <ProtectedRoute> <Ledgers />  </ProtectedRoute>},
-      { path: '/accounts/reset-all-ledgers', name: 'Modern', exact: true, element: <ProtectedRoute> <ResetAllLedgers />  </ProtectedRoute>},
+      { path: '/accounts/payments', name: 'Modern', exact: true, element: <ProtectedRoute> <Payments /> </ProtectedRoute> },
+      { path: '/accounts/credit-alerts', name: 'Modern', exact: true, element:  <ProtectedRoute><CreditAlerts />  </ProtectedRoute>},
+      { path: '/accounts/ledgers', name: 'Modern', exact: true, element: <ProtectedRoute> <Ledgers /> </ProtectedRoute> },
+      { path: '/accounts/reset-all-ledgers', name: 'Modern', exact: true, element: <ProtectedRoute> <ResetAllLedgers /> </ProtectedRoute> },
 
-      { path: '/inventory/vendors', name: 'Modern', exact: true, element: <ProtectedRoute> <Vendors />  </ProtectedRoute>},
-      { path: '/inventory/categories', name: 'Modern', exact: true, element: <ProtectedRoute> <Categories />  </ProtectedRoute>},
-      { path: '/inventory/raw-materials', name: 'Modern', exact: true, element: <ProtectedRoute> <RawMaterial />  </ProtectedRoute>},
-      { path: '/inventory/purchases', name: 'Modern', exact: true, element: <ProtectedRoute> <Purchases />  </ProtectedRoute>},
-      { path: '/inventory/stock-management', name: 'Modern', exact: true, element: <ProtectedRoute> <StockManagementIn />  </ProtectedRoute>},
-      { path: '/inventory/find-raw-material', name: 'Modern', exact: true, element: <ProtectedRoute> <FindRawMaterial />  </ProtectedRoute>},
-      { path: '/inventory/raw-material-daily-usage', name: 'Modern', exact: true, element: <ProtectedRoute> <RawMaterialDaily />  </ProtectedRoute>},
-      { path: '/inventory/stock-management-hack', name: 'Modern', exact: true, element: <ProtectedRoute> <StockManagementHack />  </ProtectedRoute>},
+      { path: '/inventory/vendors', name: 'Modern', exact: true, element:  <ProtectedRoute><Vendors /> </ProtectedRoute> },
+      
+      { path: '/inventory/categories', name: 'Modern', exact: true, element:  <ProtectedRoute><Categories />  </ProtectedRoute>},
+      { path: '/inventory/categories/edit', name: 'Modern', exact: true, element:  <ProtectedRoute><CategoriesEdit />  </ProtectedRoute>},
+      { path: '/inventory/categories/add', name: 'Modern', exact: true, element:  <ProtectedRoute><CategoriesAdd />  </ProtectedRoute>},
+      
+      { path: '/inventory/raw-materials', name: 'Modern', exact: true, element:  <ProtectedRoute><RawMaterial /> </ProtectedRoute> },
+      { path: '/inventory/raw-materials/edit', name: 'Modern', exact: true, element:  <ProtectedRoute><RawMaterialEdit /> </ProtectedRoute> },
+      { path: '/inventory/raw-materials/add', name: 'Modern', exact: true, element:  <ProtectedRoute>< RawMaterialAdd /> </ProtectedRoute> },
+
+      { path: '/inventory/purchases', name: 'Modern', exact: true, element:  <ProtectedRoute><Purchases />  </ProtectedRoute>},
+      { path: '/inventory/purchases/add', name: 'Modern', exact: true, element:  <ProtectedRoute><PurchasesAdd />  </ProtectedRoute>},
+      { path: '/inventory/purchases/edit', name: 'Modern', exact: true, element:  <ProtectedRoute><PurchasesEdit />  </ProtectedRoute>},
+     
+     
+      { path: '/inventory/stock-management', name: 'Modern', exact: true, element:  <ProtectedRoute><StockManagementIn />  </ProtectedRoute>},
+      { path: '/inventory/find-raw-material', name: 'Modern', exact: true, element:  <ProtectedRoute><FindRawMaterial /> </ProtectedRoute> },
+      { path: '/inventory/raw-material-daily-usage', name: 'Modern', exact: true, element:  <ProtectedRoute><RawMaterialDaily /></ProtectedRoute>  },
+      { path: '/inventory/stock-management-hack', name: 'Modern', exact: true, element: <ProtectedRoute> <StockManagementHack /> </ProtectedRoute> },
 
       { path: '/factories/factory', name: 'Modern', exact: true, element: <ProtectedRoute> <Factory />  </ProtectedRoute>},
       { path: '/factories/edit', name: 'Modern', exact: true, element: <ProtectedRoute> <FactoryEdit />  </ProtectedRoute>},

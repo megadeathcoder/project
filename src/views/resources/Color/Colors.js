@@ -11,18 +11,7 @@ import ComponentCard from '../../../components/ComponentCard';
 
 const Colors  = () => {
   const navigate = useNavigate();
-  const [data, setData] = useState([
-    { id: 1, Code: 'ASMNBDJHAs', ColorName: 'pumpkin'},
-    { id: 2, Code: 'ASMNBDJHAs', ColorName: 'pumpkin'},
-    { id: 3, Code: 'ASMNBDJHAs', ColorName: 'pumpkin'},
-    { id: 4, Code: 'ASMNBDJHAs', ColorName: 'pumpkin'},
-    { id: 5, Code: 'ASMNBDJHAs', ColorName: 'pumpkin'},
-    { id: 6, Code: 'ASMNBDJHAs', ColorName: 'pumpkin'},
-    { id: 7, Code: 'ASMNBDJHAs', ColorName: 'pumpkin'},
-    { id: 8, Code: 'ASMNBDJHAs', ColorName: 'pumpkin'},
-    { id: 9, Code: 'ASMNBDJHAs', ColorName: 'pumpkin'},
-    { id: 10, Code: 'ASMNBDJHAs', ColorName: 'pumpkin'},
-  ]);
+  const [data, setData] = useState([]);
   // const data = [
   //   { id: 1, Code: 'ASMNBDJHAs', ColorName: 'pumpkin'},
   //   { id: 2, Code: 'ASMNBDJHAs', ColorName: 'pumpkin'},
@@ -53,17 +42,18 @@ const Colors  = () => {
   const handleDeleteClick = async (itemId) => {
     try {
       // Call your API endpoint to delete the item
-      // const response = await fetch(`your-api-endpoint/${itemId}`, {
-      //   method: 'DELETE',
-      //   headers: {
-      //     // Your headers here (if needed)
-      //   }
-      // });
+      const token = localStorage.getItem('userToken');
+      const response = await fetch(`https://factory.teamasia.in/api/public/colors/${itemId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
   
       // Check if the request was successful
-      // if (!response.ok) {
-      //   throw new Error(`Error: ${response.statusText}`);
-      // }
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
   
       // Filter out the deleted item from your data state
       const updatedData = data.filter((item) => item.id !== itemId);
@@ -83,7 +73,7 @@ const Colors  = () => {
     const fetchData = async () => {
       const token = localStorage.getItem('userToken');
       console.log('token',token);
-      const response = await fetch('https://indiapuleather.com/teamasia/api/public/cities', {
+      const response = await fetch('https://factory.teamasia.in/api/public/colors', {
         method: 'GET', 
         headers: {
           'Authorization': `Bearer ${token}`
@@ -94,7 +84,7 @@ const Colors  = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const result = await response.json();
-      setData(result); 
+      setData(result.colors); 
     };
   
     fetchData();
@@ -130,8 +120,8 @@ const Colors  = () => {
               <tbody>
                 {data.map((product) => (
                   <tr key={product.id}>
-                  <td>{product.Code}</td>
-                  <td>{product.ColorName}</td>
+                  <td>{product.code}</td>
+                  <td>{product.name}</td>
                   <td>
                     {/* Action buttons or icons */}
                       <button type="button" className="btn mybtncustomer btn-secondary btn-sm mr-2" onClick={() => handleEditClick(product)}><i className="bi bi-pencil-fill my-pen-color" /></button>

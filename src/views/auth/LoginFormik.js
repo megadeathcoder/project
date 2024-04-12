@@ -30,7 +30,7 @@ const LoginFormik = () => {
         formData.append('email', email);
         formData.append('password', password);
 
-        const response = await fetch("https://indiapuleather.com/teamasia/api/public/api/login", {
+        const response = await fetch("https://factory.teamasia.in/api/public/api/login", {
             method: "POST",
            
             // body: JSON.stringify({
@@ -42,7 +42,7 @@ const LoginFormik = () => {
         const data = await response.json();
         console.log("dataapi",data)
         if (response.ok) {
-             login(data.token);
+             login(data.token,email);
             return data.token; // Assuming the API returns a JSON object with a token field
         } 
             // Handle any errors, such as showing an error message to the user

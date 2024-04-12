@@ -2,12 +2,12 @@ import React from 'react';
 import {
   Button,
   Nav,
-  UncontrolledDropdown,
-  DropdownItem,
-  DropdownToggle,
-  DropdownMenu,
+  // UncontrolledDropdown,
+  // DropdownItem,
+  // DropdownToggle,
+  // DropdownMenu,
 } from 'reactstrap';
-import { User, FileText, Star, Settings, Droplet } from 'react-feather';
+// import { User, FileText, Star, Settings, Droplet } from 'react-feather';
 import { useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import SimpleBar from 'simplebar-react';
@@ -17,7 +17,7 @@ import { ToggleMobileSidebar } from '../../../store/customizer/CustomizerSlice';
 import NavItemContainer from './NavItemContainer';
 import NavSubMenu from './NavSubMenu';
 
-import user1 from '../../../assets/images/users/user4.jpg';
+// import user1 from '../../../assets/images/users/user4.jpg';
 
 const Sidebar = () => {
   const location = useLocation();
@@ -46,7 +46,7 @@ const Sidebar = () => {
           />
         </div>
         {/********Sidebar Content*******/}
-        <div className="py-4 text-center profile-area">
+        {/* <div className="py-4 text-center profile-area">
           <img src={user1} alt="John Deo" width={60} className="rounded-circle mb-2" />
           <UncontrolledDropdown>
             <DropdownToggle caret className="bg-transparent border-0">
@@ -76,9 +76,9 @@ const Sidebar = () => {
               </DropdownItem>
             </DropdownMenu>
           </UncontrolledDropdown>
-        </div>
-          <hr style={{width:"90%",margin:"0 auto"}}/>
-        <div>
+        </div> */}
+          <hr style={{width:"90%",margin:"20px auto"}}/>
+        <div style={{marginBottom:"20px"}}>
           
           <Nav vertical className={activeBg === 'white' ? '' : 'lightText'}>
             {SidebarData.map((navi) => {

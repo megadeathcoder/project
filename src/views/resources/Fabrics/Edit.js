@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React,{useEffect, useState} from 'react';
 
 import {
   Card,
@@ -15,18 +15,40 @@ import {
 
 } from 'reactstrap';
 // import { useParams } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
+import { useLocation,useNavigate  } from 'react-router-dom';
 
 // import ComponentCard from '../../components/ComponentCard';
 
 const Edit = () => {
   const location = useLocation();
-  const {Name,Color} = location.state || {}; // Default to an empty object if state is undefined
-  const [items, setItems] = useState(Color);
+  const navigate = useNavigate();
+  const {id,name:Name,is_trashed:isTrashed,fabriccolors:TestDirection} = location.state || {}; // Default to an empty object if state is undefined
+  const [items, setItems] = useState([]);
  console.log("items",items);
+ console.log("state",location.state);
+            
+
+
+ 
+
+  const [formDatas, setFormDataS] = useState({
+    name:Name,
+    isTrashed,
+    TestDirection
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormDataS(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
+  };
+
   const addItem = () => {
     const newItems = items.slice();
-    newItems.push('')
+    console.log("data",newItems);
+    newItems.push({"fabric_name":''})
     setItems(newItems);
   };
 
@@ -34,14 +56,102 @@ const Edit = () => {
     const newItems = items.slice();
     newItems.splice(index, 1);
     setItems(newItems);
+    setFormDataS(prevState => ({
+      ...prevState,
+      items: newItems
+    }));
   };
 
-  const handleInputChange = (index, event) => {
+  const handleInputChange = (index, e) => {
     const newItems = items.slice();
     console.log("data",index,newItems);
-    newItems[index] =  event.target.value;
+    newItems[index].fabric_name =  e.target.value;
+    console.log('newX',newItems);
+    setFormDataS(prevState => ({
+      ...prevState,
+      items: newItems
+    }));
+
     setItems(newItems);
   };
+
+  async function apiCall() {
+    try {
+        // const formData = new FormData();
+        // formData.append('name', formDatas.name);
+        // formData.append('iso_code', formDatas.isoCode);
+        // formData.append('isd_code', formDatas.isdCode);
+        const filtered = formDatas.items.filter((temp)=>{
+          return temp.fabric_name !== '';
+        })
+
+        console.log('filtered',filtered);
+
+        // console.log('formdata',formData);
+        console.log('json',JSON.stringify({
+          name:formDatas.name,
+          is_trashed:formDatas.isTrashed,
+          fabric_color:filtered
+        }));
+
+        const token = localStorage.getItem('userToken');
+        const response = await fetch(`https://factory.teamasia.in/api/public/fabrics/${id}`, {
+            method: "PUT",
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+           
+            body: JSON.stringify({
+              name:formDatas.name,
+              is_trashed:formDatas.isTrashed,
+              fabric_color:filtered
+            }),
+        });
+
+        const data = await response.json();
+        console.log("dataapi",data)
+        if (response.ok) {
+
+
+          navigate('/resources/fabrics');
+            
+        } 
+            // Handle any errors, such as showing an error message to the user
+            console.error("Authentication failed:", data.message);
+            return null;
+      
+    } catch (error) {
+        console.error("Network error:", error);
+        return null;
+    }
+}
+
+const handleSubmit = async (event) => {
+  event.preventDefault();
+  console.log('event',event);
+  apiCall();
+
+};
+
+  useEffect(()=>{
+    function testDirectionAdd(){
+    const testArray = TestDirection.map((test)=>{
+      return {"fabric_name" : test.name}
+    });
+
+    console.log('testArray',testArray);
+    setFormDataS(prevState => ({
+      ...prevState,
+      items: testArray
+    }));
+    setItems(testArray);
+    }
+
+    console.log('testArray',TestDirection);
+    testDirectionAdd();
+  },[]);
+
   return (
 <div>
      
@@ -55,19 +165,25 @@ const Edit = () => {
              </CardTitle>
            </CardBody>
            <CardBody>
-             <Form>
+             <Form onSubmit={handleSubmit}>
                <Row>
-                 <Col md="8" className='mb-5'>
+                 <Col md="8 mb-4" >
                    <FormGroup>
                      <Label>Fabric Name</Label>
-                     <Input type="text" placeholder ={Name} />
+                     <Input        
+                     type="text" 
+                      name="name" 
+                      id="name" 
+                      placeholder="Enter name" 
+                      value={formDatas.name}
+                      onChange={handleChange} 
+                     />
                      <FormText className="muted"></FormText>
                    </FormGroup>
                  </Col>
-
                  <Row>
                   <Col md="8">
-                      <Button disabled className='btn btn-warning'>Add Items</Button>
+                      <Button disabled className='btn btn-warning'>Colors</Button>
                   </Col>
                   <Col md="2">
                     <Button type="button" className='btn-success' onClick={addItem}>+</Button>
@@ -75,22 +191,21 @@ const Edit = () => {
                 </Row>
 
                  <table className="table">        
-                  <thead>
-                        <tr>
+                  <thead className='nobordertop'>
+                        <tr className='nobordertop'>
                           <Row>
-                            <Col md="3"><th>Name</th></Col>
+                            <Col md="3"><th className='noborder'>Name</th></Col>
                           </Row>
                         </tr>
                       </thead>
           
               <tbody>
               {items.map((item, index) => (
-                  <tr key={item.index}>
+                  <tr key={item}>
                     <Row>
-                      <Col md="8"><Input name="product" value={item} type="text" onChange={e => handleInputChange(index, e)} placeholder="" /></Col>
+                      <Col md="8"><Input name="product" value={item.fabric_name} type="text" onChange={e => handleInputChange(index, e)} placeholder="" /></Col>
                       <Col md="1"><button type="button"  style={{ backgroundColor:"red",marginTop:"5px"}} onClick={() => removeItem(index)}>X</button></Col>
                     </Row>
-                    
                   </tr>
                 ))}
               </tbody>

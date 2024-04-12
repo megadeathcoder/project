@@ -11,18 +11,7 @@ import ComponentCard from '../../../components/ComponentCard';
 
 const Designs = () => {
   const navigate = useNavigate();
-  const [data, setData] = useState([
-    { id: 1, Code: 'P066', CustomerAlias: 'P066', ManuFacturerAlias: 'P066'},
-    { id: 2, Code: 'P067', CustomerAlias: 'P066', ManuFacturerAlias: 'P066'},
-    { id: 3, Code: 'P058', CustomerAlias: 'P066', ManuFacturerAlias: 'P066'},
-    { id: 4, Code: 'Zet Black', CustomerAlias: 'Zet Black', ManuFacturerAlias: 'Zet Black'},
-    { id: 5, Code: 'P066', CustomerAlias: 'P066', ManuFacturerAlias: 'P066'},
-    { id: 6, Code: 'P066', CustomerAlias: 'P066', ManuFacturerAlias: 'P066'},
-    { id: 7, Code: 'P066', CustomerAlias: 'P066', ManuFacturerAlias: 'P066'},
-    { id: 8, Code: 'P066', CustomerAlias: 'P066', ManuFacturerAlias: 'P066'},
-    { id: 9, Code: 'P066', CustomerAlias: 'P066', ManuFacturerAlias: 'P066'},
-    { id: 10, Code: 'P066', CustomerAlias: 'P066', ManuFacturerAlias: 'P066'},
-  ]);
+  const [data, setData] = useState([]);
   // const data = [
   //   { id: 1, Code: 'P066', CustomerAlias: 'P066', ManuFacturerAlias: 'P066'},
   //   { id: 2, Code: 'P067', CustomerAlias: 'P066', ManuFacturerAlias: 'P066'},
@@ -54,17 +43,18 @@ const Designs = () => {
   const handleDeleteClick = async (itemId) => {
     try {
       // Call your API endpoint to delete the item
-      // const response = await fetch(`your-api-endpoint/${itemId}`, {
-      //   method: 'DELETE',
-      //   headers: {
-      //     // Your headers here (if needed)
-      //   }
-      // });
+      const token = localStorage.getItem('userToken');
+      const response = await fetch(`https://factory.teamasia.in/api/public/designs/${itemId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
   
       // Check if the request was successful
-      // if (!response.ok) {
-      //   throw new Error(`Error: ${response.statusText}`);
-      // }
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
   
       // Filter out the deleted item from your data state
       const updatedData = data.filter((item) => item.id !== itemId);
@@ -84,7 +74,7 @@ const Designs = () => {
     const fetchData = async () => {
       const token = localStorage.getItem('userToken');
       console.log('token',token);
-      const response = await fetch('https://indiapuleather.com/teamasia/api/public/cities', {
+      const response = await fetch('https://factory.teamasia.in/api/public/designs', {
         method: 'GET', 
         headers: {
           'Authorization': `Bearer ${token}`
@@ -95,7 +85,7 @@ const Designs = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const result = await response.json();
-      setData(result); 
+      setData(result.designs); 
     };
   
     fetchData();
@@ -130,9 +120,9 @@ const Designs = () => {
               <tbody>
                 {data.map((product) => (
                   <tr key={product.id}>
-                  <td>{product.Code}</td>
-                  <td>{product.CustomerAlias}</td>
-                  <td>{product.ManuFacturerAlias}</td>
+                  <td>{product.code}</td>
+                  <td>{product.customer_alias}</td>
+                  <td>{product.manufacturer_alias}</td>
                   <td>
                     {/* Action buttons or icons */}
                       <button type="button" className="btn mybtncustomer btn-secondary btn-sm mr-2" onClick={() => handleEditClick(product)}><i className="bi bi-pencil-fill my-pen-color" /></button>
