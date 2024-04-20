@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 
 import {
   Button,
+  Input,
+  Label,
   Col,
   Row,
 } from 'reactstrap';
@@ -12,6 +14,7 @@ import ComponentCard from '../../../components/ComponentCard';
 const BomRawMaterial = () => {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
+  const [istrashed, setIstrashed] = useState('0');
   // const data = [
   //   { id: 1, BomRawMaterialCategoryName: 'PVC Paste Resin', SortOrder: '1'},
   //   { id: 2, BomRawMaterialCategoryName: 'Plasticzer', SortOrder: '2'},
@@ -41,7 +44,16 @@ const BomRawMaterial = () => {
     // Navigate(`/resources/address-types/edit/${itemId}`);
     navigate('/resources/bom-raw-material-category/add');
   };
-
+  const handleTrash = ()=>{
+     
+    if(istrashed === '0')
+    {
+      setIstrashed('1')
+    }
+    else{
+      setIstrashed('0')
+    }
+  }
   const handleDeleteClick = async (itemId) => {
     try {
       // Call your API endpoint to delete the item
@@ -76,7 +88,7 @@ const BomRawMaterial = () => {
     const fetchData = async () => {
       const token = localStorage.getItem('userToken');
       console.log('token',token);
-      const response = await fetch('https://factory.teamasia.in/api/public/bomrawmaterialcategories', {
+      const response = await fetch(`https://factory.teamasia.in/api/public/bomrawmaterialcategories/?is_trashed=${istrashed}`, {
         method: 'GET', 
         headers: {
           'Authorization': `Bearer ${token}`
@@ -91,7 +103,7 @@ const BomRawMaterial = () => {
     };
   
     fetchData();
-  }, []);
+  }, [istrashed]);
   
   return (
     <ComponentCard
@@ -107,6 +119,10 @@ const BomRawMaterial = () => {
         <Button className='my-btn-color' style={{ marginBottom: '1rem',marginRight:'10px' }} onClick={() => handleEditAdd()}>
           Add BOM Raw Material Category Master
         </Button>
+      </Col>
+      <Col md="4" className='p-2'>
+          <Input  type="checkbox" style={{marginRight:'5px'}} onClick={()=> handleTrash()}/>
+          <Label style={{fontWeight:'500'}}>Show Trashed Items</Label>
       </Col>
     </Row>
 

@@ -22,8 +22,8 @@ import { useLocation,useNavigate } from 'react-router-dom';
 const Edit = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const {id,name:Name,country_id:countryId,countryName} = location.state || {}; // Default to an empty object if state is undefined
-  const [selectedType, setSelectedType] = useState(countryName|| '');
+  const {id,name:Name,country_id:countryId} = location.state || {}; // Default to an empty object if state is undefined
+  const [selectedType, setSelectedType] = useState(countryId|| '');
 
   
 
@@ -101,7 +101,7 @@ const Edit = () => {
     const fetchData2 = async () => {
       const token = localStorage.getItem('userToken');
       // console.log('token',token);
-      const response = await fetch(`https://factory.teamasia.in/api/public/countries`, {
+      const response = await fetch(`https://factory.teamasia.in/api/public/countries/?is_trashed=0`, {
         method: 'GET', 
         headers: {
           'Authorization': `Bearer ${token}`

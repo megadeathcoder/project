@@ -39,7 +39,7 @@ const Edit = () => {
     try {
         const formData = new FormData();
         formData.append( 'name', formDatas.name);
-        formData.append( "is_trashed", "1");
+        formData.append( "is_trashed", "0");
         // console.log("json",JSON.stringify({
         //   name:formDatas.name,
         //   iso_code:formDatas.isoCode,

@@ -106,28 +106,38 @@ async function apiCall() {
             
         }));
 
-        // const token = localStorage.getItem('userToken');
+        const token = localStorage.getItem('userToken');
 
-        // const response = await fetch(`https://factory.teamasia.in/api/public/invoices`, {
-        //     method: "POST",
-        //     headers: {
-        //       'Content-Type': 'application/json',
-        //       'Authorization': `Bearer ${token}`
-        //     },
+        const response = await fetch(`https://factory.teamasia.in/api/public/custominvoices`, {
+            method: "POST",
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
            
-        //     body: JSON.stringify({}),
-        // });
+            body: JSON.stringify({  
+              invoice_no: formDatas.InvoiceNo,
+              order_id: formDatas.OrderId,
+              item_quantity: formDatas. ItemsCount,
+              invoice_unit: formDatas.InvoiceUnit,
+              vehicle_no: formDatas.VehicleNo,
+              driver_name: formDatas. DriverName,
+              driver_mobile: formDatas.DriverMobile,
+              invoice_date: formDatas.InvoiceDate,              
+              is_trashed:  '0'
+            }),
+        });
 
-        // const dataZ = await response.json();
-        // console.log("dataapi",dataZ)
-        // if (response.ok) {
+        const dataZ = await response.json();
+        console.log("dataapi",dataZ)
+        if (response.ok) {
 
 
           navigate('/operations/invoices');
             
-        // } 
-        //     // Handle any errors, such as showing an error message to the user
-            // console.error("Authentication failed:", dataZ.message);
+        } 
+            // Handle any errors, such as showing an error message to the user
+            console.error("Authentication failed:", dataZ.message);
             return null;
       
     } catch (error) {

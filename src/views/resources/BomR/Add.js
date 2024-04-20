@@ -41,6 +41,8 @@ const Edit = () => {
         const formData = new FormData();
         formData.append('name', formDatas.name);
         formData.append('sort_order' , formDatas.sortOrder);
+        formData.append('is_trashed','0');
+
         console.log('formdata',formData);
 
         const token = localStorage.getItem('userToken');

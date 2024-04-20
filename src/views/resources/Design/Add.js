@@ -43,7 +43,8 @@ const Edit = () => {
         formData.append('code',formDatas.code);
         formData.append('customer_alias',formDatas.customerAlias);
         formData.append('manufacturer_alias',formDatas.manufacturerAlias);
-       
+        formData.append('is_trashed','0');
+
         console.log('formdata',formData);
 
         const token = localStorage.getItem('userToken');

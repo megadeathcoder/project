@@ -1,23 +1,23 @@
-import React from 'react';
+import React, { } from 'react';
+
 
 import ComponentCard from '../../../components/ComponentCard';
 
-const CreditAlerts = () => {
-  const data = [
-    { id: 1, grain: '1037 A', fabric: 'NW.needlepunch_220gsm', quality: 'SURPLUS', color: 'black', quantity: '450 m' },
-    { id: 2, grain: '3001 A', fabric: 'WP.matty_165g_110gsm', quality: 'SURPLUS', color: 'black', quantity: '150 m' },
-    { id: 3, grain: '3001 A', fabric: 'WP.matty_165g_110gsm', quality: 'SURPLUS', color: 'black', quantity: '150 m' },
-    { id: 4, grain: '3001 A', fabric: 'WP.matty_165g_110gsm', quality: 'SURPLUS', color: 'black', quantity: '150 m' },
-    { id: 5, grain: '3001 A', fabric: 'WP.matty_165g_110gsm', quality: 'SURPLUS', color: 'black', quantity: '150 m' },
-    { id: 6, grain: '3001 A', fabric: 'WP.matty_165g_110gsm', quality: 'SURPLUS', color: 'black', quantity: '150 m' },
-    { id: 7, grain: '3001 A', fabric: 'WP.matty_165g_110gsm', quality: 'SURPLUS', color: 'black', quantity: '150 m' },
-    { id: 8, grain: '3001 A', fabric: 'WP.matty_165g_110gsm', quality: 'SURPLUS', color: 'black', quantity: '150 m' },
-    { id: 9, grain: '3001 A', fabric: 'WP.matty_165g_110gsm', quality: 'SURPLUS', color: 'black', quantity: '150 m' },
-    { id: 10, grain: '3001 A', fabric: 'WP.matty_165g_110gsm', quality: 'SURPLUS', color: 'black', quantity: '150 m' },
-    { id: 11, grain: '3001 A', fabric: 'WP.matty_165g_110gsm', quality: 'SURPLUS', color: 'black', quantity: '150 m' },
-    { id: 12, grain: '3001 A', fabric: 'WP.matty_165g_110gsm', quality: 'SURPLUS', color: 'black', quantity: '150 m' },
-    { id: 13, grain: '3001 A', fabric: 'WP.matty_165g_110gsm', quality: 'SURPLUS', color: 'black', quantity: '150 m' },
-  
+const Ledgers = () => {
+
+  const ledgerEntries = [
+    {
+      Customer: 'Shreeram Textile',
+      CreditAlerts: ['Invoice TCINV/22-23/0660 of  689,108.00 on 03 Jun, 2022 has been overdue  268,897.78 for more than 90 days','Invoice TCINV/22-23/0660 of  689,108.00 on 03 Jun, 2022 has been overdue  268,897.78 for more than 90 days','Invoice TCINV/22-23/0660 of  689,108.00 on 03 Jun, 2022 has been overdue  268,897.78 for more than 90 days','Invoice TCINV/22-23/0660 of  689,108.00 on 03 Jun, 2022 has been overdue  268,897.78 for more than 90 days'],
+      
+    },
+    {
+      Customer: 'Shreeram Textile',
+      CreditAlerts: ['Invoice TCINV/22-23/0660 of  689,108.00 on 03 Jun, 2022 has been overdue  268,897.78 for more than 90 days','Invoice TCINV/22-23/0660 of  689,108.00 on 03 Jun, 2022 has been overdue  268,897.78 for more than 90 days','Invoice TCINV/22-23/0660 of  689,108.00 on 03 Jun, 2022 has been overdue  268,897.78 for more than 90 days','Invoice TCINV/22-23/0660 of  689,108.00 on 03 Jun, 2022 has been overdue  268,897.78 for more than 90 days'],
+      
+    },
+    
+    // ... more dummy ledger entry objects
   ];
   const tableStyle = {
     // margin: 'auto', 
@@ -25,44 +25,38 @@ const CreditAlerts = () => {
     // maxWidth: '1000px',
   };
 
+
   return (
     <ComponentCard
-    title="Project Listing"
+    title=""
     subtitle={
       <p>
-        Overview of the projects
+        {/* Overview of the projects */}
       </p>
     }
   >
+    
+   
+
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
       <table className="table" style={tableStyle}>
               <thead>
               <tr>
-            <th>Grain</th>
-            <th>Fabric</th>
-            <th>Quality</th>
-            <th>Color</th>
-            <th>Quantity</th>
-            <th>Actions</th>
-          </tr>
+                  <th>Customer</th>
+                  <th>Credit Alerts</th>
+              </tr>
               </thead>
               <tbody>
-                {data.map((product) => (
-                  <tr key={product.id}>
-                  <td>{product.grain}</td>
-                  <td>{product.fabric}</td>
-                  <td>{product.quality}</td>
-                  <td>{product.color}</td>
-                  <td>{product.quantity}</td>
-                  <td>
-                    {/* Action buttons or icons */}
-                    <button type="button" className="btn mybtncustomer btn-secondary btn-sm mr-2" ><i className="bi bi-pencil-fill my-pen-color" /></button>
-                      <button type="button" className="btn mybtncustomer btn-secondary btn-sm mr-2"><i className="bi bi-eye-fill my-eye-color" /></button>
-                      <button type="button" className="btn mybtncustomer btn-secondary btn-sm mr-2"> <i className="bi bi-geo-alt-fill my-geo-color" /> </button>
-                      <button type="button" className="btn mybtncustomer btn-secondary btn-sm mr-2"><i className="bi bi-list my-list-color" /></button>
-                      <button type="button" className="btn mybtncustomer btn-secondary btn-sm mr-2"><i className="bi bi-trash-fill my-trash-color" /></button>
-                  </td>
-                </tr>
+              {ledgerEntries.map((entry) => (
+                  <tr key={entry.netBalance}>
+                    <td>{entry.Customer}</td>
+                    <td>
+                      {entry.CreditAlerts.map((item)=>(
+                        <tr>{item}</tr>
+                      ))}
+                    
+                    </td>
+                  </tr>
                 ))}
               </tbody>
             </table>
@@ -76,4 +70,4 @@ const CreditAlerts = () => {
   );
 };
 
-export default CreditAlerts;
+export default Ledgers;

@@ -15,17 +15,15 @@ import {
 
 } from 'reactstrap';
 // import { useParams } from 'react-router-dom';
-import { useLocation,useNavigate } from 'react-router-dom';
+import {useNavigate } from 'react-router-dom';
 
 // import ComponentCard from '../../components/ComponentCard';
 
 const Edit = () => {
-  const location = useLocation();
   const navigate = useNavigate();
-  const {name:Name,code} = location.state || {};  // Default to an empty object if state is undefined
   const [formDatas, setFormDataS] = useState({
-    name:Name,
-    code,
+    name:'',
+    code:'',
   });
 
   const handleChange = (e) => {
@@ -41,7 +39,8 @@ const Edit = () => {
         const formData = new FormData();
         formData.append('name', formDatas.name);
         formData.append('code',formDatas.code);
-       
+        formData.append('is_trashed','0');
+
         console.log('formdata',formData);
 
         const token = localStorage.getItem('userToken');

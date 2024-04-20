@@ -45,7 +45,7 @@ const PrivateRoute = ({ children }) => {
       }
 
       try {
-        const response = await fetch('https://factory.teamasia.in/api/public/addresstypes', {
+        const response = await fetch(`https://factory.teamasia.in/api/public/addresstypes/?is_trashed=0`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${authToken}`

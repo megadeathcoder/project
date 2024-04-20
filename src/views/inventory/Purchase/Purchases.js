@@ -21,6 +21,8 @@ const Purchases = () => {
   const navigate = useNavigate();
   const [collapse, setCollapse] = useState(false);
   const [data, setData] = useState([]);
+  const [data1, setData1] = useState([]);
+  const [dataToShow,setdatatoshow] =useState([]);
   // const data = [
    
   //   { id: 1, Vendor: '1037 A', PurchaseDate: 'NW.needlepunch_220gsm', CreatedBy: 'SURPLUS', color: 'black', quantity: '450 m' },
@@ -57,8 +59,25 @@ const Purchases = () => {
     navigate('/inventory/purchases/edit', { state: item });
   };
 
-  useEffect(() => {
+  const findVendorById = (vendorId)=>{
+    const Name = data1.find((item)=> item.id === vendorId);
+    return Name ? Name.company_name : 'Vendor Name'
+  }
+
+  useEffect(()=>{
+   
+
+    const newdata = data.map((purchase)=>{
+      return {
+        ...purchase,
+        vendorName: findVendorById(purchase.vendor_id)
+      }
+    })
     
+    setdatatoshow(newdata);
+  },[data,data1])
+
+  useEffect(() => {
     // Fetch the data from the API
     const fetchData = async () => {
       const token = localStorage.getItem('userToken');
@@ -77,7 +96,26 @@ const Purchases = () => {
       setData(result.purchases); 
       console.log('result.orderstatuses',result.purchases); 
     };
+    const fetchData1 = async () => {
+      const token = localStorage.getItem('userToken');
+      console.log('token',token);
+      const response = await fetch('https://factory.teamasia.in/api/public/vendors', {
+        method: 'GET', 
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      console.log('result',response);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const result = await response.json();
+      setData1(result.vendor); 
+      console.log('result',data1,result.vendor);
+    };
   
+    fetchData1();
     fetchData();
   }, []);
 
@@ -149,9 +187,9 @@ const Purchases = () => {
           </tr>
               </thead>
               <tbody>
-                {data.map((product) => (
+                {dataToShow.map((product) => (
                   <tr key={product.id}>
-                  <td>{product.vendor_id}</td>
+                  <td>{product.vendorName}</td>
                   <td>{product.purchase_date}</td>
                   <td>{product.CreatedBy}</td>
                   <td>

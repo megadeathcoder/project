@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 
 import {
   Button,
+  Input,
+  Label,
   Col,
   Row,
 } from 'reactstrap';
@@ -12,6 +14,7 @@ import ComponentCard from '../../../components/ComponentCard';
 const Severities = () => {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
+  const [istrashed, setIstrashed] = useState('0');
   // const data = [
   //   { id: 1, Name: 'High'},
   //   { id: 2, Name: 'High'},
@@ -39,7 +42,16 @@ const Severities = () => {
     // Navigate(`/resources/address-types/edit/${itemId}`);
     navigate('/resources/severities/add');
   };
-
+  const handleTrash = ()=>{
+     
+    if(istrashed === '0')
+    {
+      setIstrashed('1')
+    }
+    else{
+      setIstrashed('0')
+    }
+  }
   const handleDeleteClick = async (itemId) => {
     try {
       // Call your API endpoint to delete the item
@@ -74,7 +86,7 @@ const Severities = () => {
     const fetchData = async () => {
       const token = localStorage.getItem('userToken');
       console.log('token',token);
-      const response = await fetch('https://factory.teamasia.in/api/public/severities', {
+      const response = await fetch(`https://factory.teamasia.in/api/public/severities/?is_trashed=${istrashed}`, {
         method: 'GET', 
         headers: {
           'Authorization': `Bearer ${token}`
@@ -89,7 +101,7 @@ const Severities = () => {
     };
   
     fetchData();
-  }, []);
+  }, [istrashed]);
 
   return (
     <ComponentCard
@@ -105,6 +117,10 @@ const Severities = () => {
         <Button className='my-btn-color' style={{ marginBottom: '1rem',marginRight:'10px' }} onClick={() => handleEditAdd()}>
           Add Severity
         </Button>
+      </Col>
+      <Col md="4" className='p-2'>
+          <Input  type="checkbox" style={{marginRight:'5px'}} onClick={()=> handleTrash()}/>
+          <Label style={{fontWeight:'500'}}>Show Trashed Items</Label>
       </Col>
     </Row>
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>

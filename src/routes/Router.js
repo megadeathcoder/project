@@ -25,7 +25,7 @@ const  CustomersAddressEdit= Loadable(lazy(() => import('../views/order/Customer
 const  CustomersAddressAdd= Loadable(lazy(() => import('../views/order/Customer/AddressAdd')));
 const  CustomersPendingReport= Loadable(lazy(() => import('../views/order/Customer/PendingReport')));
 
-const  Orders= Loadable(lazy(() => import('../views/order/T')));
+const  Orders= Loadable(lazy(() => import('../views/order/Order/Order')));
 
 const  FactorySurplus = Loadable(lazy(() => import('../views/order/FactoryS/FactorySurplus')));
 const  FactorySurplusEdit = Loadable(lazy(() => import('../views/order/FactoryS/Edit')));
@@ -64,7 +64,13 @@ const  SimpleDevelopment = Loadable(lazy(() => import('../views/product/SimpleD/
 
 const  CreditAlerts = Loadable(lazy(() => import('../views/accounts/CreditA/CreditAlerts')));
 const  Ledgers = Loadable(lazy(() => import('../views/accounts/Ledger/Ledgers')));
+
 const  Payments = Loadable(lazy(() => import('../views/accounts/Payment/Payments')));
+const  PaymentsEdit = Loadable(lazy(() => import('../views/accounts/Payment/Edit')));
+const  PaymentsAdd = Loadable(lazy(() => import('../views/accounts/Payment/Add')));
+const  PaymentsUpload = Loadable(lazy(() => import('../views/accounts/Payment/Upload')));
+const  PaymentsView = Loadable(lazy(() => import('../views/accounts/Payment/View')));
+
 const  ResetAllLedgers = Loadable(lazy(() => import('../views/accounts/ResetA/ResetAllLedgers')));
 
 const  Categories = Loadable(lazy(() => import('../views/inventory/Category/Categories')));
@@ -83,7 +89,16 @@ const  RawMaterialAdd = Loadable(lazy(() => import('../views/inventory/RawM/Add'
 const  RawMaterialDaily = Loadable(lazy(() => import('../views/inventory/RawMD/RawMaterialDaily')));
 const  StockManagementIn = Loadable(lazy(() => import('../views/inventory/StockM/StockManagement')));
 const  StockManagementHack = Loadable(lazy(() => import('../views/inventory/StockMH/StockManagementHack')));
+
 const  Vendors = Loadable(lazy(() => import('../views/inventory/Vendor/Vendors')));
+const  VendorsEdit= Loadable(lazy(() => import('../views/inventory/Vendor/Edit')));
+const  VendorsAdd= Loadable(lazy(() => import('../views/inventory/Vendor/Add')));
+const  VendorsAddress= Loadable(lazy(() => import('../views/inventory/Vendor/Address')));
+const  VendorsAddressEdit= Loadable(lazy(() => import('../views/inventory/Vendor/AddressEdit')));
+const  VendorsAddressAdd= Loadable(lazy(() => import('../views/inventory/Vendor/AddressAdd')));
+const  VendorsPendingReport= Loadable(lazy(() => import('../views/inventory/Vendor/PendingReport')));
+
+
 
 const  Factory = Loadable(lazy(() => import('../views/factories/Factory')));
 const  FactoryEdit = Loadable(lazy(() => import('../views/factories/Edit')));
@@ -339,12 +354,23 @@ const ThemeRoutes = [
 
       { path: '/product/sample-developments', name: 'Modern', exact: true, element: <ProtectedRoute> <SimpleDevelopment /> </ProtectedRoute> },
 
-      { path: '/accounts/payments', name: 'Modern', exact: true, element: <ProtectedRoute> <Payments /> </ProtectedRoute> },
+      { path: '/accounts/payments', name: 'Modern', exact: true, element: <ProtectedRoute> <Payments/> </ProtectedRoute> },
+      { path: '/accounts/payments/edit', name: 'Modern', exact: true, element: <ProtectedRoute> <PaymentsEdit /> </ProtectedRoute> },
+      { path: '/accounts/payments/add', name: 'Modern', exact: true, element: <ProtectedRoute> <PaymentsAdd /> </ProtectedRoute> },
+      { path: '/accounts/payments/upload-file', name: 'Modern', exact: true, element: <ProtectedRoute> <PaymentsUpload /> </ProtectedRoute> },
+      { path: '/accounts/payments/payment-details', name: 'Modern', exact: true, element: <ProtectedRoute> <PaymentsView /> </ProtectedRoute> },
+
       { path: '/accounts/credit-alerts', name: 'Modern', exact: true, element:  <ProtectedRoute><CreditAlerts />  </ProtectedRoute>},
       { path: '/accounts/ledgers', name: 'Modern', exact: true, element: <ProtectedRoute> <Ledgers /> </ProtectedRoute> },
       { path: '/accounts/reset-all-ledgers', name: 'Modern', exact: true, element: <ProtectedRoute> <ResetAllLedgers /> </ProtectedRoute> },
 
       { path: '/inventory/vendors', name: 'Modern', exact: true, element:  <ProtectedRoute><Vendors /> </ProtectedRoute> },
+      { path: '/inventory/vendors/edit', name: 'Modern', exact: true, element:  <ProtectedRoute><VendorsEdit /> </ProtectedRoute> },
+      { path: '/inventory/vendors/add', name: 'Modern', exact: true, element:  <ProtectedRoute><VendorsAdd /> </ProtectedRoute> },
+      { path: '/inventory/vendors/address', name: 'Modern', exact: true, element:  <ProtectedRoute><VendorsAddress /> </ProtectedRoute> },
+      { path: '/inventory/vendors/address/edit', name: 'Modern', exact: true, element:  <ProtectedRoute><VendorsAddressEdit /> </ProtectedRoute> },
+      { path: '/inventory/vendors/address/add', name: 'Modern', exact: true, element:  <ProtectedRoute><VendorsAddressAdd /> </ProtectedRoute> },
+      { path: '/inventory/vendors/pending-report', name: 'Modern', exact: true, element:  <ProtectedRoute><VendorsPendingReport /> </ProtectedRoute> },
       
       { path: '/inventory/categories', name: 'Modern', exact: true, element:  <ProtectedRoute><Categories />  </ProtectedRoute>},
       { path: '/inventory/categories/edit', name: 'Modern', exact: true, element:  <ProtectedRoute><CategoriesEdit />  </ProtectedRoute>},

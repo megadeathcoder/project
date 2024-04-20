@@ -53,7 +53,7 @@ const Edit = () => {
         formData.append('display_name',formDatas.DisplayName);
         formData.append('type',selectedType);
         formData.append('value',formDatas.Value);
-
+        formData.append('is_trashed','0');
         // console.log("json",JSON.stringify({
         //   display_name:formDatas.DisplayName,
         //   name:formDatas.ConfigName,

@@ -50,7 +50,7 @@ const Edit = () => {
         const formData = new FormData();
         formData.append('name', formDatas.name);
         formData.append('department',selectedType,);
-        formData.append( "is_trashed", "1");
+        formData.append( "is_trashed", "0");
         console.log('formdata',selectedType);
 
         const token = localStorage.getItem('userToken');

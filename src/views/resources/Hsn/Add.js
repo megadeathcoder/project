@@ -41,7 +41,8 @@ const Edit = () => {
         const formData = new FormData();
         formData.append('name', formDatas.name);
         formData.append('hsn_code',formDatas.hsnCode);
-        
+        formData.append('is_trashed','0');
+
         console.log('formdata',formData);
 
         const token = localStorage.getItem('userToken');

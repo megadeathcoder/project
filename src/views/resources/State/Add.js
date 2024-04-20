@@ -22,16 +22,15 @@ import { useLocation,useNavigate } from 'react-router-dom';
 const Edit = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const {name:Name,country_id:countryId,countryName} = location.state || {}; // Default to an empty object if state is undefined
-  const [selectedType, setSelectedType] = useState(countryName|| '');
+  const [selectedType, setSelectedType] = useState('');
 
   
 
     const [data2, setData2] = useState([]);
 
     const [formDatas, setFormDataS] = useState({
-      name:Name,
-      countryId
+      name:'',
+      countryId:''
     });
 
     console.log("formdata",location.state);
@@ -57,6 +56,7 @@ const Edit = () => {
           const formData = new FormData();
           formData.append('name', formDatas.name);
           formData.append('country_id', formDatas.countryId);
+          formData.append('is_trashed','0');
           console.log('formdataX',formDatas.countryId)
           const token = localStorage.getItem('userToken');
           const response = await fetch(`https://factory.teamasia.in/api/public/states`, {
@@ -109,11 +109,19 @@ const Edit = () => {
       }
       const result = await response.json();
       console.log("responsejson2",result);
-      setData2(result.countries); 
-      setFormDataS(prevState => ({
-        ...prevState,
-        countryId: result.countries[0].id
-      }));
+      
+      setData2(result.countries);
+      
+      if(result.countries.length > 0)
+      {
+        setFormDataS(prevState => ({
+          ...prevState,
+          countryId: result.countries[0].id
+        }));
+      }
+      
+
+
     };
 
   

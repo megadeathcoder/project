@@ -110,10 +110,10 @@ const handleSubmit = async (event) => {
                      <Label>Fault Code</Label>
                      <Input        
                      type="text" 
-                      name="name" 
+                      name="code" 
                       id="name" 
                       placeholder="Enter name" 
-                      value={formDatas.name}
+                      value={formDatas.code}
                       onChange={handleChange} 
                      />
                      <FormText className="muted"></FormText>
@@ -124,10 +124,10 @@ const handleSubmit = async (event) => {
                      <Label>Fault Name</Label>
                      <Input        
                      type="text" 
-                      name="code" 
+                      name="name" 
                       id="name" 
                       placeholder="Enter name" 
-                      value={formDatas.code}
+                      value={formDatas.name}
                       onChange={handleChange} 
                      />
                      <FormText className="muted"></FormText>

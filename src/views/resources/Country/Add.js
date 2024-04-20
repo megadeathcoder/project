@@ -40,6 +40,8 @@ const Add = () => {
         formData.append('name', formDatas.name);
         formData.append('iso_code', formDatas.isoCode);
         formData.append('isd_code', formDatas.isdCode);
+        formData.append('is_trashed','0');
+
         const token = localStorage.getItem('userToken');
         const response = await fetch("https://factory.teamasia.in/api/public/countries", {
             method: "POST",

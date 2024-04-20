@@ -24,7 +24,7 @@ const Edit = () => {
   const navigate = useNavigate();
   const {name:Name} = location.state || {}; // Default to an empty object if state is undefined
   const [items, setItems] = useState([]);
-  const isTrashed = '1'
+  const isTrashed = '0'
   const TestDirection = []
  console.log("items",items);
  console.log("state",location.state);

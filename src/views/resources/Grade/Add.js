@@ -60,6 +60,7 @@ const Edit = () => {
         formData.append('name', formDatas.name);
         formData.append('discount_percent',formDatas.DiscountPercentage);
         formData.append('is_factory_stock',formDatas.DefaultToFactoryStock);
+        formData.append('is_trashed','0');
         // console.log("json",JSON.stringify({
         //   name:formDatas.name,
         //   discount_percent:formDatas.DiscountPercentage,

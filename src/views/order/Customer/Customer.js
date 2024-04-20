@@ -115,7 +115,7 @@ const Customer = () => { // Removed the empty object pattern
     <Button className='my-btn-color'  style={{ marginBottom: '1rem',marginRight:'10px' }} onClick={() => handleEditAdd()}>
            Add Customer
             </Button>
-      <Button className='my-btn-color' onClick={toggle.bind(null)} style={{ marginBottom: '1rem' }}>
+      <Button className='my-btn-color' onClick={toggle.bind(null)} style={{ marginBottom: '1rem'}}>
               Search
             </Button>
             <Collapse isOpen={collapse}>

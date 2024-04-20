@@ -22,10 +22,9 @@ import { useLocation,useNavigate } from 'react-router-dom';
 const Edit = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const {name:CityName,country_id:CountryId,countryName,state_id:StateId,StateName} = location.state || {}; // Default to an empty object if state is undefined
 
-  const [selectedType, setSelectedType] = useState(countryName|| '');
-  const [selectedType1, setSelectedType1] = useState(StateName|| '');
+  const [selectedType, setSelectedType] = useState('');
+  const [selectedType1, setSelectedType1] = useState('');
 
   
 
@@ -33,9 +32,9 @@ const Edit = () => {
   const [data3, setData3] = useState([]);
 
   const [formDatas, setFormDataS] = useState({
-    name:CityName,
-    CountryId,
-    StateId
+    name:'',
+    CountryId:'',
+    StateId:''
   });
 
   console.log("formdata",location.state);
@@ -74,9 +73,10 @@ const Edit = () => {
         formData.append('name', formDatas.name);
         formData.append('country_id', formDatas.CountryId);
         formData.append('state_id', formDatas.StateId);
+        formData.append('is_trashed','0');
         const token = localStorage.getItem('userToken');
         console.log('country_id',formDatas)
-        const response = await fetch(`https://factory.teamasia.in/api/public/cities`, {
+        const response = await fetch(`https://factory.teamasia.in/api/public/cities/?is_trashed=0`, {
             method: "POST",
             headers: {
               'Authorization': `Bearer ${token}`
@@ -114,7 +114,7 @@ useEffect(() => {
   const fetchData2 = async () => {
     const token = localStorage.getItem('userToken');
     // console.log('token',token);
-    const response = await fetch(`https://factory.teamasia.in/api/public/countries`, {
+    const response = await fetch(`https://factory.teamasia.in/api/public/countries/?is_trashed=0`, {
       method: 'GET', 
       headers: {
         'Authorization': `Bearer ${token}`
@@ -136,7 +136,7 @@ useEffect(() => {
   const fetchData3 = async () => {
     const token = localStorage.getItem('userToken');
     // console.log('token',token);
-    const response = await fetch('https://factory.teamasia.in/api/public/states', {
+    const response = await fetch(`https://factory.teamasia.in/api/public/states/?is_trashed=0`, {
       method: 'GET', 
       headers: {
         'Authorization': `Bearer ${token}`

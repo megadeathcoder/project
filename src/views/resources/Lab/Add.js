@@ -100,7 +100,8 @@ const Edit = () => {
             body: JSON.stringify({
               name:formDatas.name,
               method_name:formDatas.Method,
-              lab_test_direction:filtered
+              lab_test_direction:filtered,
+              is_trashed:'0',
             }),
         });
         

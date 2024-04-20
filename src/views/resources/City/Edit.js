@@ -116,7 +116,7 @@ useEffect(() => {
   const fetchData2 = async () => {
     const token = localStorage.getItem('userToken');
     // console.log('token',token);
-    const response = await fetch(`https://factory.teamasia.in/api/public/countries`, {
+    const response = await fetch(`https://factory.teamasia.in/api/public/countries/?is_trashed=0`, {
       method: 'GET', 
       headers: {
         'Authorization': `Bearer ${token}`
@@ -134,7 +134,7 @@ useEffect(() => {
   const fetchData3 = async () => {
     const token = localStorage.getItem('userToken');
     // console.log('token',token);
-    const response = await fetch('https://factory.teamasia.in/api/public/states', {
+    const response = await fetch(`https://factory.teamasia.in/api/public/states/?is_trashed=0`, {
       method: 'GET', 
       headers: {
         'Authorization': `Bearer ${token}`

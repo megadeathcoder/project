@@ -42,6 +42,8 @@ const Edit = () => {
         const formData = new FormData();
         console.log('formdataX',formDatas.name)
         formData.append('name', formDatas.name);
+        formData.append('is_trashed','0');
+
         const token = localStorage.getItem('userToken');
         const response = await fetch(`https://factory.teamasia.in/api/public/shades` ,{
             method: "POST",

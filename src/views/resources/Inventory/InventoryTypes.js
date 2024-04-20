@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 
 import {
   Button,
+  Input,
+  Label,
   Col,
   Row,
 } from 'reactstrap';
@@ -12,6 +14,7 @@ import ComponentCard from '../../../components/ComponentCard';
 const InventoryTypes = () => {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
+  const [istrashed, setIstrashed] = useState('0');
   // const data = [
   //   { id: 1, Name: 'Bag'},
   //   { id: 2, Name: 'Bag'},
@@ -40,6 +43,16 @@ const InventoryTypes = () => {
     // Navigate(`/resources/address-types/edit/${itemId}`);
     navigate('/resources/inventorytypes/add');
   };
+  const handleTrash = ()=>{
+     
+    if(istrashed === '0')
+    {
+      setIstrashed('1')
+    }
+    else{
+      setIstrashed('0')
+    }
+  }
   const handleDeleteClick = async (itemId) => {
     try {
       // Call your API endpoint to delete the item
@@ -74,7 +87,7 @@ const InventoryTypes = () => {
     const fetchData = async () => {
       const token = localStorage.getItem('userToken');
       console.log('token',token);
-      const response = await fetch('https://factory.teamasia.in/api/public/inventorytypes', {
+      const response = await fetch(`https://factory.teamasia.in/api/public/inventorytypes/?is_trashed=${istrashed}`, {
         method: 'GET', 
         headers: {
           'Authorization': `Bearer ${token}`
@@ -89,7 +102,7 @@ const InventoryTypes = () => {
     };
   
     fetchData();
-  }, []);
+  }, [istrashed]);
 
   return (
     <ComponentCard
@@ -105,6 +118,10 @@ const InventoryTypes = () => {
         <Button className='my-btn-color' style={{ marginBottom: '1rem',marginRight:'10px' }} onClick={() => handleEditAdd()}>
           Add InventoryType
         </Button>
+      </Col>
+      <Col md="4" className='p-2'>
+          <Input  type="checkbox" style={{marginRight:'5px'}} onClick={()=> handleTrash()}/>
+          <Label style={{fontWeight:'500'}}>Show Trashed Items</Label>
       </Col>
     </Row>
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>

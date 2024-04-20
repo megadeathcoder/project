@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 
 import {
   Button,
+  Input,
+  Label,
   Col,
   Row,
 } from 'reactstrap';
@@ -13,6 +15,7 @@ import ComponentCard from '../../../components/ComponentCard';
 const BomCoding = () => {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
+  const [istrashed, setIstrashed] = useState('0');
   // const data = [
   //   { id: 1, BomCodingName: 'Apparel', CategoryCode: 'APP' },
   //   { id: 2, BomCodingName: 'Automotive', CategoryCode: 'AUT' },
@@ -42,6 +45,17 @@ const BomCoding = () => {
     // Navigate(`/resources/address-types/edit/${itemId}`);
     navigate('/resources/bom-coding-category/add');
   };
+
+  const handleTrash = ()=>{
+     
+    if(istrashed === '0')
+    {
+      setIstrashed('1')
+    }
+    else{
+      setIstrashed('0')
+    }
+  }
 
   const handleDeleteClick = async (itemId) => {
     try {
@@ -77,7 +91,7 @@ const BomCoding = () => {
     const fetchData = async () => {
       const token = localStorage.getItem('userToken');
       console.log('token',token);
-      const response = await fetch('https://factory.teamasia.in/api/public/bomcodingcategories', {
+      const response = await fetch(`https://factory.teamasia.in/api/public/bomcodingcategories//?is_trashed=${istrashed}`, {
         method: 'GET', 
         headers: {
           'Authorization': `Bearer ${token}`
@@ -93,7 +107,7 @@ const BomCoding = () => {
     };
   
     fetchData();
-  }, []);
+  }, [istrashed]);
 
   return (
     <ComponentCard
@@ -109,6 +123,10 @@ const BomCoding = () => {
         <Button className='my-btn-color' style={{ marginBottom: '1rem',marginRight:'10px' }} onClick={() => handleEditAdd()}>
           Add BOM Coding Category Master
         </Button>
+      </Col>
+      <Col md="4" className='p-2'>
+          <Input  type="checkbox" style={{marginRight:'5px'}} onClick={()=> handleTrash()}/>
+          <Label style={{fontWeight:'500'}}>Show Trashed Items</Label>
       </Col>
     </Row>
 

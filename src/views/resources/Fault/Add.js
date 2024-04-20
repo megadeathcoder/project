@@ -15,19 +15,19 @@ import {
 
 } from 'reactstrap';
 // import { useParams } from 'react-router-dom';
-import { useLocation,useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 // import ComponentCard from '../../components/ComponentCard';
 
 const Edit = () => {
-  const location = useLocation();
   const navigate = useNavigate();
-  const {id,name:Name,iso_code : isoCode,isd_code : isdCode} = location.state || {};  // Default to an empty object if state is undefined
   const [formDatas, setFormDataS] = useState({
-    name:Name,
-    isoCode,
-    isdCode
+    name:'',
+    code:'',
+    description:'',
+    isTrashed : '0'
   });
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -39,27 +39,33 @@ const Edit = () => {
 
   async function apiCall() {
     try {
-        const formData = new FormData();
-        formData.append('name', formDatas.name);
-        formData.append('iso_code', formDatas.isoCode);
-        formData.append('isd_code', formDatas.isdCode);
-        console.log("json",JSON.stringify({
-          name:formDatas.name,
-          iso_code:formDatas.isoCode,
-          isd_code:formDatas.isdCode
-        }));
-        console.log('formdata',formData);
+        // const formData = new FormData();
+        // formData.append('name', formDatas.name);
+        // formData.append('iso_code', formDatas.isoCode);
+        // formData.append('isd_code', formDatas.isdCode);
+        // console.log("json",JSON.stringify({
+        //   name:formDatas.name,
+        //   iso_code:formDatas.isoCode,
+        //   isd_code:formDatas.isdCode
+        // }));
+        console.log('formdata',formDatas);
 
         const token = localStorage.getItem('userToken');
-        const response = await fetch(`https://factory.teamasia.in/api/public/faults/${id}`, {
-            method: "PUT",
+        const response = await fetch(`https://factory.teamasia.in/api/public/faults`, {
+            method: "POST",
             headers: {
               'Content-Type': 'application/json',
               'Authorization': `Bearer ${token}`
             },
            
-            body: formData,
+            body: JSON.stringify({
+              name:formDatas.name,
+              code:formDatas.code,
+              description:formDatas.description,
+              is_trashed:formDatas.isTrashed,
+            }),
         });
+       
         const data = await response.json();
         console.log("dataapi",data)
         if (response.ok) {
@@ -82,8 +88,8 @@ const handleSubmit = async (event) => {
   event.preventDefault();
   console.log('event',event);
   apiCall();
-
 };
+
   return (
 <div>
      
@@ -104,10 +110,10 @@ const handleSubmit = async (event) => {
                      <Label>Fault Code</Label>
                      <Input        
                      type="text" 
-                      name="name" 
+                      name="code" 
                       id="name" 
                       placeholder="Enter name" 
-                      value={formDatas.name}
+                      value={formDatas.code}
                       onChange={handleChange} 
                      />
                      <FormText className="muted"></FormText>
@@ -116,14 +122,14 @@ const handleSubmit = async (event) => {
                  <Col md="4">
                    <FormGroup>
                      <Label>Fault Name</Label>
-                     <Input        
-                     type="text" 
-                      name="name" 
-                      id="name" 
-                      placeholder="Enter name" 
-                      value={formDatas.name}
-                      onChange={handleChange} 
-                     />
+                      <Input        
+                      type="text" 
+                        name="name" 
+                        id="name" 
+                        placeholder="Enter name" 
+                        value={formDatas.name}
+                        onChange={handleChange} 
+                      />
                      <FormText className="muted"></FormText>
                    </FormGroup>
                  </Col>
@@ -132,10 +138,10 @@ const handleSubmit = async (event) => {
                      <Label>Description</Label>
                      <Input        
                      type="text" 
-                      name="name" 
+                      name="description" 
                       id="name" 
                       placeholder="Enter name" 
-                      value={formDatas.name}
+                      value={formDatas.description}
                       onChange={handleChange} 
                      />
                      <FormText className="muted"></FormText>

@@ -17,7 +17,9 @@ import {
 import {useLocation, useNavigate} from 'react-router-dom';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-import { convertFromRaw } from 'draft-js';
+import { EditorState } from 'draft-js';
+import draftToHtml from 'draftjs-to-html';
+import { stateFromHTML } from 'draft-js-import-html';
 import './editor.scss';
 import DashCard from '../../../components/dashboard/dashboardCards/DashCard';
 // import ComponentCard from '../../components/ComponentCard';
@@ -33,49 +35,65 @@ const [data4, setData4] = useState([]);
 const [errors, setErrors] = useState({});
 const [items2, setItems2] = useState(purchaserawmaterials);
 const [categoryText, setCategoryText] = useState([]);
-  const content = {
-    "blocks": [
-      {
-          "key": "4oo9e",
-          "text": " jhbjmb,jjmn jftujtf",
-          "type": "header-five",
-          "depth": 0,
-          "inlineStyleRanges": [
-              {
-                  "offset": 0,
-                  "length": 20,
-                  "style": "color-rgb(97,189,109)"
-              },
-              {
-                  "offset": 0,
-                  "length": 20,
-                  "style": "fontfamily-Times New Roman"
-              },
-              {
-                  "offset": 0,
-                  "length": 20,
-                  "style": "SUPERSCRIPT"
-              },
-              {
-                  "offset": 0,
-                  "length": 20,
-                  "style": "STRIKETHROUGH"
-              },
-              {
-                  "offset": 0,
-                  "length": 20,
-                  "style": "fontsize-96"
-              }
-          ],
-          "entityRanges": [],
-          "data": {}
-      }
-  ],
-  "entityMap": {}
-  };
+
+  // const content = {
+  //   "blocks": [
+  //     {
+  //         "key": "4oo9e",
+  //         "text": " jhbjmb,jjmn jftujtf",
+  //         "type": "header-five",
+  //         "depth": 0,
+  //         "inlineStyleRanges": [
+  //             {
+  //                 "offset": 0,
+  //                 "length": 20,
+  //                 "style": "color-rgb(97,189,109)"
+  //             },
+  //             {
+  //                 "offset": 0,
+  //                 "length": 20,
+  //                 "style": "fontfamily-Times New Roman"
+  //             },
+  //             {
+  //                 "offset": 0,
+  //                 "length": 20,
+  //                 "style": "SUPERSCRIPT"
+  //             },
+  //             {
+  //                 "offset": 0,
+  //                 "length": 20,
+  //                 "style": "STRIKETHROUGH"
+  //             },
+  //             {
+  //                 "offset": 0,
+  //                 "length": 20,
+  //                 "style": "fontsize-96"
+  //             }
+  //         ],
+  //         "entityRanges": [],
+  //         "data": {}
+  //     }
+  // ],
+  // "entityMap": {}
+  // };
+
+  const content = `
+  <h5 style="color: rgb(97, 189, 109); font-family: 'Times New Roman'; font-size: 96px;">
+    Your text with <s>strikethrough</s> and <sup>superscript</sup>.
+  </h5>
+`;
+
+// Convert HTML to Draft.js ContentState
+const contentFromHTML = stateFromHTML(content);
 
   const [compdoc, setCompdoc] = useState(purchaseadditionaldocuments);
-  const [contentState, setEditorState] = useState(convertFromRaw(content));
+  console.log('convertFromRaw(content)',contentFromHTML);
+  const [contentState, setEditorState] = useState(EditorState.createWithContent(contentFromHTML));
+  const [htmlContent, sethtmlContent] = useState('');
+
+
+
+  
   const [formDatas, setFormDataS] = useState({
     vendorId,
     addressId,
@@ -89,6 +107,12 @@ const [categoryText, setCategoryText] = useState([]);
   
   const onContentStateChange = (c) => {
     console.log('contentState',c);
+    const htmlContent1 = draftToHtml(c);
+    console.log('html',htmlContent1);
+    console.log('htmlcontent',htmlContent);
+
+    sethtmlContent(htmlContent1);
+
     setEditorState(c);
   };
 
@@ -169,7 +193,10 @@ const addItem2 = () => {
 const removeItem2 = index => {
   const newItems = items2.slice();
   newItems.splice(index, 1);
+  const newCategoryText= categoryText.slice();
+  newCategoryText.splice(index,1);
   setItems2(newItems);
+  setCategoryText(newCategoryText);
 };
 
 
@@ -275,7 +302,7 @@ const removeItem2 = index => {
         }));
 
         const token = localStorage.getItem('userToken');
-        const response = await fetch(`https://factory.teamasia.in/api/public/productss`, {
+        const response = await fetch(`https://factory.teamasia.in/api/public/products`, {
             method: "POST",
             headers: {
               'Content-Type': 'application/json',
@@ -386,13 +413,38 @@ const handleSubmit = async (event) => {
     console.log('e',e.target.value);
   };
 
+  useEffect(()=>{
+
+    const Itemsetter = async() =>{
+      const newCategory = items2.map((d)=>{
+        console.log('d',d);
+        console.log('data4',data4);
+        const a1 = data4.find(item => item.id === d.raw_material_id);
+        console.log('a1',a1);
+        const category = data2.find(item=> item.id === a1.category_id);
+        console.log('category',category);
+        const subcategory =category.subcategories.find(item => item.id === a1.sub_category); 
+        console.log('subcategory',subcategory);
+        const catsub = `${category.name}/${subcategory.name}`
+        console.log('catsub',catsub);
+         return catsub;
+      })
+
+      console.log('newcatgory',newCategory);
+      setCategoryText(newCategory);
+    }
+    if(data2.length > 0 && data4.length >0){
+      Itemsetter();
+    }  
+  },[data2,data4])
+
   useEffect(() => {
     
     // Fetch the data from the API
     const fetchData1 = async () => {
       const token = localStorage.getItem('userToken');
       // console.log('token',token);
-      const response = await fetch('https://factory.teamasia.in/api/public/grains', {
+      const response = await fetch('https://factory.teamasia.in/api/public/vendors', {
         method: 'GET', 
         headers: {
           'Authorization': `Bearer ${token}`
@@ -403,9 +455,9 @@ const handleSubmit = async (event) => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const result = await response.json();
-      console.log("responsejson1",result);
-      const resultX = result.grains.slice();
-      resultX.push({id:'x',name:'Choose'});
+      console.log("data1 vendor",result.vendor);
+      const resultX = result.vendor.slice();
+      resultX.push({id:'x',company_name:'Choose'});
       setData1(resultX); 
     };
     const fetchData2 = async () => {
@@ -422,7 +474,7 @@ const handleSubmit = async (event) => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const result = await response.json();
-      console.log("responsejson20",result);
+      console.log("data2 category",result.categories);
       // const resultX = result.fabrics.slice();
       // resultX.push({id:'x',name:'Choose'});
       setData2(result.categories);
@@ -430,7 +482,7 @@ const handleSubmit = async (event) => {
     const fetchData3 = async () => {
       const token = localStorage.getItem('userToken');
       // console.log('token',token);
-      const response = await fetch('https://factory.teamasia.in/api/public/qualities', {
+      const response = await fetch('https://factory.teamasia.in/api/public/addresses', {
         method: 'GET', 
         headers: {
           'Authorization': `Bearer ${token}`
@@ -441,8 +493,8 @@ const handleSubmit = async (event) => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const result = await response.json();
-      console.log("responsejson3",result);
-      const resultX = result.qualities.slice();
+      console.log("data3 addresses",result.addresses);
+      const resultX = result.addresses.slice();
       resultX.push({id:'x',name:'Choose'});
       setData3(resultX);
     };
@@ -461,7 +513,7 @@ const handleSubmit = async (event) => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const result = await response.json();
-      console.log("responsejson3",result);
+      console.log("data4 rawmaterials",result.rawmaterials);
       // const resultX = result.qualities.slice();
       // resultX.push({id:'x',name:'Choose'});
       setData4(result.rawmaterials);
@@ -504,7 +556,7 @@ const handleSubmit = async (event) => {
                         >
                            {data1.map((item)=>{
    
-                             return <option key={item.id} value={item.id}>{item.name}</option>
+                             return <option key={item.id} value={item.id}>{item.company_name}</option>
                            })}
                       </Input>
                       {errors.grain && (
@@ -577,13 +629,17 @@ const handleSubmit = async (event) => {
                   <Col md="12">
                     <DashCard title="Additional Documents" >
                         <Editor
+                          defaultEditorState={contentState}
                           wrapperClassName="demo-wrapper mb-0"
                           editorClassName="demo-editor border mb-4 edi-height"
                           onContentStateChange={onContentStateChange}
                         />
-                        <Input type="textarea" raw={4} disabled value={JSON.stringify(contentState, null, 4)} />
+                        {/* <Input type="textarea" raw={4} disabled value={JSON.stringify(contentState, null, 4)} /> */}
                     </DashCard>
                   </Col>
+                  {/* <Col md="12">
+                    <div className="editor-content" dangerouslySetInnerHTML={{ __html: htmlContent }} />
+                  </Col> */}
                 </Row>
 
                 <Row>
