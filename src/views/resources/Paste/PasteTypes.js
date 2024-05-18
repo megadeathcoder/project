@@ -14,6 +14,7 @@ import ComponentCard from '../../../components/ComponentCard';
 const PasteTypes = () => {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
+  const [validationData, setValidationData] = useState([]);
   const [istrashed, setIstrashed] = useState('0');
   // const data = [
   //   { id: 1, grain: '1037 A', fabric: 'NW.needlepunch_220gsm', quality: 'SURPLUS', color: 'black', quantity: '450 m' },
@@ -38,12 +39,13 @@ const PasteTypes = () => {
   const handleEditClick = (item) => {
     // Navigate to the edit page with the item's id
     // Navigate(`/resources/address-types/edit/${itemId}`);
-    navigate('/resources/paste-types/edit', { state: item });
+    const validationDataArray = validationData.filter(ex => ex !== item.name);
+    navigate('/resources/paste-types/edit', { state: {item, validationDataArray} });
   };
   const handleEditAdd = () => {
     // Navigate to the edit page with the item's id
     // Navigate(`/resources/address-types/edit/${itemId}`);
-    navigate('/resources/paste-types/add');
+    navigate('/resources/paste-types/add',{state:validationData});
   };
   const handleTrash = ()=>{
      
@@ -100,7 +102,11 @@ const PasteTypes = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const result = await response.json();
-      setData(result.pasteteams); 
+      setData(result.pasteteams);
+      const addresstypesItems =result.pasteteams.map((a)=>{
+        return a.name
+       });
+     setValidationData(addresstypesItems);
     };
   
     fetchData();

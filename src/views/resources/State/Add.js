@@ -22,24 +22,35 @@ import { useLocation,useNavigate } from 'react-router-dom';
 const Edit = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const validationData = location.state || []
+  const [errors,setErrors] = useState({});
   const [selectedType, setSelectedType] = useState('');
+  const [data2, setData2] = useState([]);
+  const [formDatas, setFormDataS] = useState({
+    name:'',
+    countryId:''
+  });
+  console.log(validationData);
 
-  
-
-    const [data2, setData2] = useState([]);
-
-    const [formDatas, setFormDataS] = useState({
-      name:'',
-      countryId:''
-    });
-
-    console.log("formdata",location.state);
     const handleChange = (e) => {
       const { name, value } = e.target;
       setFormDataS(prevState => ({
         ...prevState,
         [name]: value
       }));
+      switch (name){
+        case 'name':
+              if (validationData.some(item => item.toLowerCase() === value.toLowerCase().trim())) {
+                setErrors((prev)=>({...prev,"name": "This name has already been used"}));
+            } else {
+                setErrors((prev)=>({...prev,"name": ""}));
+            }
+            break;
+  
+        
+        default:
+              break;
+          }
     };
 
     const handleTypeChange = (e) => {
@@ -85,12 +96,29 @@ const Edit = () => {
       }
   }
 
+const validateForm=()=>{
+  let formIsValid =true;
+  const errors1 ={};
+  
+  if(formDatas.name === '') {
+    formIsValid = false;
+    // eslint-disable-next-line dot-notation
+    errors1["name"] = "Required";
+  } 
+  setErrors(errors1);
+  return formIsValid;
+  }
+  
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log('event',event);
-    apiCall();
-
+    if(validateForm()) {
+      console.log('Form is valid, proceed with API call');
+      apiCall();
+    } else {
+      console.log('Form is invalid, do not submit');
+    }
   };
+
 
   useEffect(() => {
 
@@ -154,8 +182,9 @@ const Edit = () => {
                         placeholder="Enter name" 
                         value={formDatas.name}
                         onChange={handleChange} 
-                        />
-                     <FormText className="muted"></FormText>
+                        className={errors.name ? "is-invalid":""}
+                      />
+                      {errors.name &&  <FormText className="text-danger">{errors.name}</FormText>}
                    </FormGroup>
                  </Col>
                  <Col md="4">
@@ -180,7 +209,11 @@ const Edit = () => {
                  </Col>
                  <Col md="4">
                    <FormGroup>
-                    <Button type="submit" className="btn my-btn-color" style={{marginTop:"28px"}}>
+                    <Button type="submit"
+                            className="btn my-btn-color"
+                            style={{marginTop:"28px"}}
+                            disabled={errors.name}
+                      >
                         Submit
                     </Button>
                    </FormGroup>

@@ -22,10 +22,13 @@ import { useLocation,useNavigate } from 'react-router-dom';
 const Edit = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const {name:Name} = location.state || {};  // Default to an empty object if state is undefined
+  const validationData = location.state || []; 
+  const [errors,setErrors] = useState({});
   const [formDatas, setFormDataS] = useState({
-    name:Name
+    name:''
   });
+  
+  console.log(validationData);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -33,33 +36,33 @@ const Edit = () => {
       ...prevState,
       [name]: value
     }));
+    if (validationData.some(item => item.toLowerCase() === value.toLowerCase().trim())) {
+      setErrors({"name": "This name has already been used"});
+  } else {
+      setErrors({});
+  }
   };
   async function apiCall() {
     try {
         const formData = new FormData();
-        formData.append('name', formDatas.name);
+        formData.append('name', formDatas.name.trim());
         formData.append('is_trashed','0');
         console.log("json",JSON.stringify({
           name:formDatas.name
         }));
         console.log('formdata',formData);
-
         const token = localStorage.getItem('userToken');
         const response = await fetch(`https://factory.teamasia.in/api/public/addresstypes`, {
             method: "POST",
             headers: {
               'Authorization': `Bearer ${token}`
             },
-           
             body: formData,
         });
         const data = await response.json();
         console.log("dataapi",data)
         if (response.ok) {
-
-
           navigate('/resources/address-types');
-            
         } 
             // Handle any errors, such as showing an error message to the user
             console.error("Authentication failed:", data.message);
@@ -71,16 +74,33 @@ const Edit = () => {
     }
 }
 
+const validateForm=()=>{
+let formIsValid =true;
+const errors1 ={};
+
+if(formDatas.name === '') {
+  formIsValid = false;
+  // eslint-disable-next-line dot-notation
+  errors1["name"] = "Required";
+}
+
+setErrors(errors1);
+return formIsValid;
+
+}
+
 const handleSubmit = async (event) => {
   event.preventDefault();
-  console.log('event',event);
-  apiCall();
-
+  if(validateForm()) {
+    console.log('Form is valid, proceed with API call');
+    apiCall();
+  } else {
+    console.log('Form is invalid, do not submit');
+  }
 };
 
   return (
 <div>
-     
      <Row>
        <Col md="12">
          <Card>
@@ -99,17 +119,23 @@ const handleSubmit = async (event) => {
                      <Input        
                      type="text" 
                       name="name" 
-                      id="name" 
+                      id="name"
                       placeholder="Enter name" 
                       value={formDatas.name}
-                      onChange={handleChange} 
+                      onChange={handleChange}
+                      className={errors.name ? "is-invalid":""}
                      />
-                     <FormText className="muted"></FormText>
+                     {errors.name &&  <FormText className="text-danger">{errors.name}</FormText>}
+                    
                    </FormGroup>
                  </Col>
                  <Col md="4">
                    <FormGroup>
-                    <Button type="submit" className="btn my-btn-color" style={{marginTop:"28px"}}>
+                   <Button type="submit" 
+                            className="btn my-btn-color" 
+                            style={{marginTop:"28px"}}
+                            disabled={errors.name}
+                    >
                         Submit
                     </Button>
                    </FormGroup>

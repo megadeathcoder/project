@@ -71,7 +71,7 @@ const Factory = () => {
     const fetchData = async () => {
       const token = localStorage.getItem('userToken');
       console.log('token',token);
-      const response = await fetch('https://factory.teamasia.in/api/public/factories', {
+      const response = await fetch('https://factory.teamasia.in/api/public/factories?is_trashed=0', {
         method: 'GET', 
         headers: {
           'Authorization': `Bearer ${token}`

@@ -22,12 +22,15 @@ import { useLocation,useNavigate } from 'react-router-dom';
 const Edit = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const {code,customer_alias : customerAlias,manufacturer_alias : manufacturerAlias} = location.state || {};  // Default to an empty object if state is undefined
+  const validationData = location.state || [];
+  const [errors,setErrors] = useState({});
   const [formDatas, setFormDataS] = useState({
-    code,
-    customerAlias,
-    manufacturerAlias
+    code:'',
+    customerAlias:'',
+    manufacturerAlias:''
   });
+
+  console.log(validationData);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -35,6 +38,33 @@ const Edit = () => {
       ...prevState,
       [name]: value
     }));
+
+    switch (name){
+      case 'code':
+            if (validationData.some(item => item.code.toLowerCase() === value.toLowerCase().trim())) {
+              setErrors((prev)=>({...prev,"code": "This code has already been used"}));
+          } else {
+              setErrors((prev)=>({...prev,"code": ""}));
+          }
+          break;
+
+      case 'customerAlias':
+            if (validationData.some(item => item.customerAlias.toLowerCase() === value.toLowerCase().trim())) {
+              setErrors((prev)=>({...prev,"customerAlias": "This name has already been used"}));
+          } else {
+              setErrors((prev)=>({...prev,"customerAlias": ""}));
+          }
+          break;
+      
+      default:
+        if (validationData.some(item => item.manufacturerAlias.toLowerCase() === value.toLowerCase().trim())) {
+              setErrors((prev)=>({...prev,"manufacturerAlias": "Please use characters only"}));
+          } else {
+              setErrors((prev)=>({...prev,"manufacturerAlias": ""}));
+          }
+            break;
+    
+        }
   };
 
   async function apiCall() {
@@ -74,12 +104,39 @@ const Edit = () => {
     }
 }
 
-const handleSubmit = async (event) => {
-  event.preventDefault();
-  console.log('event',event);
-  apiCall();
-
-};
+const validateForm=()=>{
+  let formIsValid =true;
+  const errors1 ={};
+  
+  if(formDatas.manufacturerAlias === '') {
+    formIsValid = false;
+    // eslint-disable-next-line dot-notation
+    errors1["manufacturerAlias"] = "Required";
+  }
+  if(formDatas.code === '') {
+    formIsValid = false;
+    // eslint-disable-next-line dot-notation
+    errors1["code"] = "Required";
+  }
+  if(formDatas.customerAlias === ''){
+    formIsValid = false;
+    // eslint-disable-next-line dot-notation
+    errors1["customerAlias"] = "Required";
+  }
+  
+  setErrors(errors1);
+  return formIsValid;
+  }
+  
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if(validateForm()) {
+      console.log('Form is valid, proceed with API call');
+      apiCall();
+    } else {
+      console.log('Form is invalid, do not submit');
+    }
+  };
 
   return (
 <div>
@@ -106,8 +163,9 @@ const handleSubmit = async (event) => {
                       placeholder="Enter name" 
                       value={formDatas.code}
                       onChange={handleChange} 
-                     />   
-                     <FormText className="muted"></FormText>
+                      className={errors.code ? "is-invalid":""}
+                      />
+                      {errors.code &&  <FormText className="text-danger">{errors.code}</FormText>}
                    </FormGroup>
                  </Col>
                  <Col md="4">
@@ -120,8 +178,9 @@ const handleSubmit = async (event) => {
                       placeholder="Enter name" 
                       value={formDatas.customerAlias}
                       onChange={handleChange} 
-                     />
-                     <FormText className="muted"></FormText>
+                      className={errors.customerAlias ? "is-invalid":""}
+                      />
+                      {errors.customerAlias &&  <FormText className="text-danger">{errors.customerAlias}</FormText>}
                    </FormGroup>
                  </Col>
                  <Col md="4">
@@ -134,13 +193,18 @@ const handleSubmit = async (event) => {
                       placeholder="Enter name" 
                       value={formDatas.manufacturerAlias}
                       onChange={handleChange} 
-                     />
-                     <FormText className="muted"></FormText>
+                      className={errors.manufacturerAlias ? "is-invalid":""}
+                      />
+                      {errors.manufacturerAlias &&  <FormText className="text-danger">{errors.manufacturerAlias}</FormText>}
                    </FormGroup>
                  </Col>
                  <Col md="4">
                    <FormGroup>
-                    <Button type="submit" className="btn my-btn-color" style={{marginTop:"28px"}}>
+                   <Button type="submit" 
+                            className="btn my-btn-color" 
+                            style={{marginTop:"28px"}}
+                            disabled={errors.code || errors.customerAlias || errors.manufacturerAlias}
+                    >
                         Submit
                     </Button>
                    </FormGroup>

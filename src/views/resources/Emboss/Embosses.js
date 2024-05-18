@@ -14,6 +14,7 @@ import ComponentCard from '../../../components/ComponentCard';
 const Embosses = () => {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
+  const [validationData, setValidationData] = useState([]);
   const [istrashed, setIstrashed] = useState('0');
   // const data = [
   //   { id: 1, Name: 'E-124'},  
@@ -35,12 +36,13 @@ const Embosses = () => {
   const handleEditClick = (item) => {
     // Navigate to the edit page with the item's id
     // Navigate(`/resources/address-types/edit/${itemId}`);
-    navigate('/resources/embosses/edit', { state: item });
+    const validationDataArray = validationData.filter(ex => ex !== item.name);
+    navigate('/resources/embosses/edit', { state: {item, validationDataArray} });
   };
   const handleEditAdd = () => {
     // Navigate to the edit page with the item's id
     // Navigate(`/resources/address-types/edit/${itemId}`);
-    navigate('/resources/embosses/add');
+    navigate('/resources/embosses/add',{state:validationData});
   };
   const handleTrash = ()=>{
      
@@ -97,7 +99,12 @@ const Embosses = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const result = await response.json();
-      setData(result.embosses); 
+      setData(result.embosses);
+      console.log(result.embosses);
+      const addresstypesItems =result.embosses.map((a)=>{
+        return a.name
+       });
+     setValidationData(addresstypesItems); 
     };
   
     fetchData();

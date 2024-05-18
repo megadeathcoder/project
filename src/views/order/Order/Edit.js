@@ -1,9 +1,4 @@
-import React,{useEffect, useState} from 'react';
-import { useLocation,useNavigate } from 'react-router-dom';
-import Select, { components } from 'react-select';
-import TagsInput from 'react-tagsinput';
-import 'react-tagsinput/react-tagsinput.css';
-import './tagselect.scss';
+import React,{useEffect,useState} from 'react';
 import {
   Card,
   CardBody,
@@ -16,197 +11,189 @@ import {
   Input,
   FormText,
   Button,
-
+  
 } from 'reactstrap';
 // import { useParams } from 'react-router-dom';
-import ComponentCard from '../../../components/ComponentCard2';
-
+import {useNavigate} from 'react-router-dom';
+import { Editor } from 'react-draft-wysiwyg';
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import { EditorState } from 'draft-js';
+import draftToHtml from 'draftjs-to-html';
+import { stateFromHTML } from 'draft-js-import-html';
+import Product from './Products';
+import './editor.scss';
+import DashCard from '../../../components/dashboard/dashboardCards/DashCard';
 // import ComponentCard from '../../components/ComponentCard';
 
-const Edit= () => {
-  const location = useLocation();
+const Add = () => {
   const navigate= useNavigate();
-  const {id,company_name:companyName,factory_ids:Factory,labels:AddLabels,company_description:CompanyDescription,
-    day_limit:LimitforDaysAllowed,credit_limit:LimitforCreditAllowed,
-    customercompanyrepresentatives:CompanyRepresentatives,
-    customercompanydocuments:CompanyDocuments} = location.state || {}; // Default to an empty object if state is undefined
-    const [items, setItems] = useState(CompanyRepresentatives);
-    const [compdoc, setCompdoc] = useState(CompanyDocuments);
-    const [FactoryArray, setFactoryArray] = useState([]);
-    const [regularTags, setRegularTags] = useState([]);
-    const [factorydata, setFactoryData] = useState([]);
+const [data1, setData1] = useState([]);
+const [firstcheck, setFirstCheck] = useState(false);
+const [secondcheck, setSecondCheck] = useState(false);
 
-console.log('AddLabels',location.state);
+
+  // const content = {
+  //   "blocks": [
+  //     {
+  //         "key": "4oo9e",
+  //         "text": " jhbjmb,jjmn jftujtf",
+  //         "type": "header-five",
+  //         "depth": 0,
+  //         "inlineStyleRanges": [
+  //             {
+  //                 "offset": 0,
+  //                 "length": 20,
+  //                 "style": "color-rgb(97,189,109)"
+  //             },
+  //             {
+  //                 "offset": 0,
+  //                 "length": 20,
+  //                 "style": "fontfamily-Times New Roman"
+  //             },
+  //             {
+  //                 "offset": 0,
+  //                 "length": 20,
+  //                 "style": "SUPERSCRIPT"
+  //             },
+  //             {
+  //                 "offset": 0,
+  //                 "length": 20,
+  //                 "style": "STRIKETHROUGH"
+  //             },
+  //             {
+  //                 "offset": 0,
+  //                 "length": 20,
+  //                 "style": "fontsize-96"
+  //             }
+  //         ],
+  //         "entityRanges": [],
+  //         "data": {}
+  //     }
+  // ],
+  // "entityMap": {}
+  // };
+
+  const content = `
+  <h5 style="color: rgb(97, 189, 109); font-family: 'Times New Roman'; font-size: 96px;">
+    Your text with <s>strikethrough</s> and <sup>superscript</sup>.
+  </h5>
+`;
+
+// Convert HTML to Draft.js ContentState
+const contentFromHTML = stateFromHTML(content);
+
+  console.log('convertFromRaw(content)',contentFromHTML);
+  const [contentState, setEditorState] = useState(EditorState.createWithContent(contentFromHTML));
+  const [htmlContent, sethtmlContent] = useState('');
+
+
 
   
-const [formDatas, setFormDataS] = useState({
-  companyName,
-  Factory,
-  AddLabels,
-  CompanyDescription,
-  LimitforDaysAllowed,
-  LimitforCreditAllowed,
-  CompanyRepresentatives,
-  CompanyDocuments,
-  items,
-  compdoc
-});
+  const [formDatas, setFormDataS] = useState({
+    customerId:'x',
+    billingAddressId:'x',
+    deliveryAddressId:'x',
+    orderNotes:'',
+    severityId:'x',
+    expectedDeliveryDate:'',
+    purchaseOrder:'',
+    representativeId:'x',
+  });
+  
+  const onContentStateChange = (c) => {
+    console.log('contentState',c);
+    const htmlContent1 = draftToHtml(c);
+    console.log('html',htmlContent1);
+    console.log('htmlcontent',htmlContent);
 
+    sethtmlContent(htmlContent1);
 
+    setEditorState(c);
+  };
 
-const [selectedOptions, setSelectedOptions] = useState(Factory);
+  // const [data2, setData2] = useState([
+  //   {
+  //     id:'1',
+  //     name:'black'
+  //   },
+  //   {
+  //     id:'2',
+  //     name:'white'
+  //   }
+  // ]);
+
+// const [selectedType, setSelectedType] = useState('');
 
 const handleChange = (e) => {
   const { name, value } = e.target;
+  console.log('hi')
   setFormDataS(prevState => ({
     ...prevState,
     [name]: value
   }));
 };
 
-const handleChangeLabel = (e) => {
-  // const { name, value } = e.target;
-  console.log('label',e);
-  setSelectedOptions(e);
-  // setFormDataS(prevState => ({
-  //   ...prevState,
-  //   [name]: value
-  // }));
+
+const checkboxclick1 = () => {
+  console.log('check',firstcheck);
+  setFirstCheck(!firstcheck);
+};
+const checkboxclick2 = () => {
+  console.log('check',secondcheck);
+  setSecondCheck(!secondcheck);
 };
 
- const IndicatorsContainer = (props) => {
-  return (
-    <div style={{ background: '#00B8D9' }}>
-      <components.IndicatorsContainer {...props} />
-    </div>
-  );
-};
-
-  const addItem = () => {
-    console.log('mega',items);
-    const newItems = items.slice();
-    newItems.push({name:'',designation:'',email:'',country_code:'',mobile:'',whatsapp_invoice_dispatch:'',whatsapp_ledger:'',whatsapp_pending_payment:'',whatsapp_proforma_invoice:'',email_invoice_dispatch:'',email_ledger:'',email_pending_payment:'',email_proforma_invoice:''})
-    console.log('mega',newItems);
-    setItems(newItems);
-  };
-
-  const removeItem = index => {
-    const newItems = items.slice();
-    newItems.splice(index, 1);
-    setItems(newItems);
-    setFormDataS(prevState => ({
-      ...prevState,
-      items: newItems
-    }));
-  };
-
-  const handleInputChange = (index, e) => {
-    const { name , value} = e.target;
-    const newItems = items.slice();
-    console.log("data",index,name,value,newItems);
-    newItems[index][name] = value;
-    console.log('newX',newItems);
-    setFormDataS(prevState => ({
-      ...prevState,
-      items: newItems
-    }));
-
-    setItems(newItems);
-  };
-
-  const addCompdoc= () => {
-    const newItems = compdoc.slice();
-    newItems.push({name:'',file_path:''})
-    setCompdoc(newItems);
-    setFormDataS(prevState => ({
-      ...prevState,
-      CompanyDocuments: newItems
-    }));
-  };
-
-  const removeCompdoc = index => {
-    const newItems = compdoc.slice();
-    newItems.splice(index, 1);
-    setCompdoc(newItems);
-    setFormDataS(prevState => ({
-      ...prevState,
-      CompanyDocuments: newItems
-    }));
-  };
-
-  const handleCompdoc = (index, e) => {
-    const { name , value} = e.target;
-    const newItems = compdoc.slice();
-    console.log("data",index,newItems);
-    newItems[index][name] = value;
-    setCompdoc(newItems);
-    setFormDataS(prevState => ({
-      ...prevState,
-      CompanyDocuments: newItems
-    }));
-  };
-
-  const handleEditAddress = ()=>{
-    
-   console.log('address',location.state.companyName);
-    navigate('/order/customers/address',{state:id});
-  }
 
   async function apiCall() {
     try {
-        // const formData = new FormData();
-        // formData.append('name', formDatas.name);
-        // formData.append('iso_code', formDatas.isoCode);
-        // formData.append('isd_code', formDatas.isdCode);
-        const csvString = selectedOptions.map(item => item.value).join(', ');
-        console.log('csvString',csvString);
-
-        const csvString1 = regularTags.map(item => item).join(', ');
-        console.log(csvString1);
-
-        console.log('dataX',formDatas);
-        const filtered =formDatas.items.filter((temp)=>{
-          return temp.name !== '';
-        });
-
-        const filtered1 = formDatas.CompanyDocuments.filter((temp)=>{
-          return temp.name !== '';
-        });
-
-        console.log('filtered',filtered);
+      
+       
 
         console.log('formdataX',formDatas);
+        console.log('final', JSON.stringify({
+          customer_id:formDatas.customerId,
+          billing_address_id:formDatas.billingAddressId,
+          delivery_address_id:formDatas.deliveryAddressId,
+          order_notes:formDatas.orderNotes,
+          severity_id:formDatas.severityId,
+          expected_delivery_date:formDatas.expectedDeliveryDate,
+          purchase_order:formDatas.purchaseOrder,
+          representative_id:formDatas.representativeId,
+          is_trashed:0,
+              // product_additional_treatment: filtered2,
+        }));
 
         const token = localStorage.getItem('userToken');
-        const response = await fetch(`https://factory.teamasia.in/api/public/customers/${id}`, {
-            method: "PUT",
+        const response = await fetch(`https://factory.teamasia.in/api/public/products`, {
+            method: "POST",
             headers: {
               'Content-Type': 'application/json',
               'Authorization': `Bearer ${token}`
             },
            
             body: JSON.stringify({
-              company_name: formDatas.companyName,
-              factory_ids: csvString,
-              labels: csvString1,
-              company_description: formDatas.CompanyDescription,
-              day_limit: formDatas.LimitforDaysAllowed,
-              credit_limit: formDatas.LimitforCreditAllowed,
-              customer_company_representative: filtered,
-              customer_company_document:filtered1
+              customer_id:formDatas.customerId,
+              billing_address_id:formDatas.billingAddressId,
+              delivery_address_id:formDatas.deliveryAddressId,
+              order_notes:formDatas.orderNotes,
+              severity_id:formDatas.severityId,
+              expected_delivery_date:formDatas.expectedDeliveryDate,
+              purchase_order:formDatas.purchaseOrder,
+              representative_id:formDatas.representativeId,
+              is_trashed:0,
             }),
         });
 
-        const data = await response.json();
-        console.log("dataapi",data)
+        const dataZ = await response.json();
+        console.log("dataapi",dataZ)
         if (response.ok) {
 
 
-          navigate('/order/customers');
+          navigate('/order/factory-surplus');
             
         } 
             // Handle any errors, such as showing an error message to the user
-            console.error("Authentication failed:", data.message);
+            console.error("Authentication failed:", dataZ.message);
             return null;
       
     } catch (error) {
@@ -215,88 +202,61 @@ const handleChangeLabel = (e) => {
     }
 }
 
+
+
+
 const handleSubmit = async (event) => {
   event.preventDefault();
-  console.log('event',event);
-  apiCall();
+  
+    apiCall();
+ 
 
 };
 
-  useEffect(()=>{
-    if(AddLabels)
-      {
-        setFormDataS(item =>(
-          {
-            ...item,
-            AddLabels:AddLabels.split(',')
-          }
-          ));
-        setRegularTags(AddLabels.split(','));
-      }
-
-      const fetchData = async () => {
-        const token = localStorage.getItem('userToken');
-        console.log('token',token);
-        const response = await fetch('https://factory.teamasia.in/api/public/factories', {
-          method: 'GET', 
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-        console.log('result',response);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const result = await response.json();
-        console.log("responsejson",result);
-        setFactoryData(result.factories); 
-      };
+  const handleTypeChange = (e) => {
+    const { name, value } = e.target;
+    // setSelectedType(e.target.value);
+      setFormDataS(prevState => ({
+        ...prevState,
+        [name]: value
+      }));
+   
     
-      fetchData();
-  },[]);
-
-  useEffect(()=>{
-    const companyOptions = ()=>{
-      
-      // const newFactoryArray = Factory.split(',');
-      const obj = factorydata.map((factoryitem)=>{
-        return {
-          value:factoryitem.id,
-          label:factoryitem.name,
-          color: '#00B8D9'
-        }
-      })
-      setFactoryArray(obj);
-
-      const newFactoryArray = Factory.split(',');
-      const ids = newFactoryArray.map(Number);
-      console.log('newFactoryArray', newFactoryArray); // Log to check the ids you want to filter by
-      console.log('newFactoryArray', ids); // Log to check the ids you want to filter by
-      console.log('factorydata', factorydata);
-
-      const filteredArray = factorydata.filter(item => ids.includes(Number(item.id)));
-      console.log('filteredArray',filteredArray);
-
-      const obj1 =filteredArray.map((factoryitem)=>{
-        return {
-          value:factoryitem.id,
-          label:factoryitem.name,
-          color: '#00B8D9'
-        }
-      })
-      
-
-      console.log('obj1',obj1);
-      setSelectedOptions(obj1);
-  }
-  companyOptions();
-  console.log('factoryarray',FactoryArray);
-  },[factorydata]);
-
-  const handleRegularTags = (tags) => {
-    console.log('tags',tags);
-    setRegularTags(tags);
+    // console.log('e',e.target.options[e.target.selectedIndex].text);
+    console.log('e',e.target.value);
   };
+
+
+  useEffect(() => {
+    
+    // Fetch the data from the API
+    const fetchData1 = async () => {
+      const token = localStorage.getItem('userToken');
+      // console.log('token',token);
+      const response = await fetch('https://factory.teamasia.in/api/public/customers', {
+        method: 'GET', 
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      // console.log('result',response);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const result = await response.json();
+      console.log("data1 customers",result.customers);
+      const resultX = result.customers.slice();
+      resultX.push({id:'x',company_name:'Choose'});
+      setData1(resultX); 
+    };
+
+    fetchData1();
+
+  },[]);
+  
+
+
+
 
   return (
 <div>
@@ -308,204 +268,274 @@ const handleSubmit = async (event) => {
            </CardTitle>
            <CardBody className="bg-light">
              <CardTitle tag="h4" className="mb-0">
-              <Row>
-                <Col md="8">
-                  <div className='' style={{ marginRight:'10px',marginTop:'10px'}}>
-                     Edit Customer
-                  </div>
-                </Col>
-                <Col md="4">
-                  <Button className='my-btn-color' style={{ marginRight:'10px' }} onClick={() => handleEditAddress()}>
-                    Manage Address
-                  </Button>
-                </Col>
-              </Row>
-             
              </CardTitle>
            </CardBody>
-           <CardBody>
+           <CardBody style={{background:'#edf1f5'}}>
              <Form onSubmit={handleSubmit}>
                <Row>
-                 <Col md="6" className=''>
-                   <FormGroup>
-                     <Label>Company Name</Label>
-                     <Input  
-                      type="text" 
-                      name="companyName" 
-                      id="name" 
-                      placeholder="Enter name" 
-                      value={formDatas.companyName}
-                      onChange={handleChange}
-                      />
-                     <FormText className="muted"></FormText>
-                   </FormGroup>
-                 </Col>
-                 <Col md="6" className=''>
-                  <ComponentCard title="Factory">
-                      <Select
-                        closeMenuOnSelect={false}
-                        components={{ IndicatorsContainer }}
-                        isMulti
-                        options={FactoryArray}
-                        onChange={handleChangeLabel}
-                        value={selectedOptions}
-                      />
-                    </ComponentCard>
-                   
-                 </Col>
-                 <Col md="12" className=''>
-                   <FormGroup>
-                     <Label>Add Labels</Label>
-                     <TagsInput
-                          value={regularTags}
-                          onChange={(tags) => handleRegularTags(tags)}
-                          tagProps={{
-                            className: 'react-tagsinput-tag bg-info text-white rounded',
-                          }}
-                        />
-                   </FormGroup>
-                 </Col>
-                 <Col md="6" className=''>
-                   <FormGroup>
-                     <Label>Company Description</Label>
-                     <Input  
-                      type="textarea" 
-                      name="CompanyDescription" 
-                      id="name" 
-                      placeholder="Enter name" 
-                      value={formDatas.CompanyDescription}
-                      onChange={handleChange}
-                      />
-
-                     
-                     <FormText className="muted"></FormText>
-                   </FormGroup>
-                 </Col>
-                 <Col md="6" className=''>
-                   <FormGroup>
-                     <Label>Limit for Days Allowed</Label>
-                     <Input  
-                      type="text" 
-                      name="LimitforDaysAllowed" 
-                      id="name" 
-                      placeholder="Enter name" 
-                      value={formDatas.LimitforDaysAllowed}
-                      onChange={handleChange}
-                      />
-                     <FormText className="muted"></FormText>
-                   </FormGroup>
-                 </Col>
-                 <Col md="6" className=''>
-                   <FormGroup>
-                     <Label>Limit for Credit Allowed</Label>
-                     
-                     <Input  
-                      type="text" 
-                      name="LimitforCreditAllowed" 
-                      id="name" 
-                      placeholder="Enter name" 
-                      value={formDatas.LimitforCreditAllowed}
-                      onChange={handleChange}
-                      />
-                     <FormText className="muted"></FormText>
-                   </FormGroup>
-                 </Col>
-
-                 
-                 <Row className='mt-4 mb-3'>
-                          <Col md="11">
-                              <span className='table-title'>Company Representatives</span>
-                          </Col>
-                  </Row>
-                 <table className="table">        
-                  <thead>
-                        <tr>
-                        <Row className='mt-4'>
-                          <Col md="2">
-                              <td >Name</td>
-                          </Col>
-                          <Col md="2">
-                              <td>Designation</td>
-                          </Col>
-                          <Col md="2">
-                              <td >	Email</td>
-                          </Col>
-                          <Col md="2">
-                              <td >Country code</td>
-                          </Col>
-                          <Col md="2">
-                              <td >Mobile</td>
-                          </Col>
-                          <Col md="2">
-                            <Button type="button" className='btn-success' onClick={addItem}>+</Button>
-                          </Col>
-                        </Row>
-                        </tr>
-                      </thead>
+                   <Col md="12">
+                      <DashCard title="Address" >
+                        <Col md="10" className=''>
+                            <FormGroup>
+                              <Label>Customer Details</Label>
+                              <Input type="select" 
+                                name="customerId" 
+                                value={formDatas.customerId}
+                                onChange={handleTypeChange}
+                                >
+                                  {data1.map((item)=>{
           
-              <tbody>
-              {items.map((item, index) => (
-                  <tr key={item.index}>
-                    <Row>
-                      <Col md="2"><Input name="name" value={item.name} type="text" onChange={e => handleInputChange(index, e)} placeholder="" /></Col>
-                      <Col md="2"><Input name="designation" value={item.designation} type="text" onChange={e => handleInputChange(index, e)} placeholder="" /></Col>
-                      <Col md="2"><Input name="email" value={item.email} type="text" onChange={e => handleInputChange(index, e)} placeholder="" /></Col>
-                      <Col md="2"><Input name="country_code" value={item.country_code} type="text" onChange={e => handleInputChange(index, e)} placeholder="" /></Col>
-                      <Col md="2"><Input name="mobile" value={item.mobile} type="text" onChange={e => handleInputChange(index, e)} placeholder="" /></Col>
-                      <Col md="1"><button type="button"  style={{ backgroundColor:"red",marginTop:"5px"}} onClick={() => removeItem(index)}>X</button></Col>
-                    </Row>
-                    
-                  </tr>
-                ))}
-                
-              </tbody>
-            </table>
-
-            <Row className='mt-4 mb-3'>
-                          <Col md="11">
-                              <span className='table-title'>Company Documents</span>
+                                    return <option key={item.id} value={item.id}>{item.company_name}</option>
+                                  })}
+                              </Input>
+                            
+                                <FormText className="text-danger"></FormText>
+                              
+                              
+                            </FormGroup>
                           </Col>
-           </Row>  
+                      </DashCard>
+                   </Col>
+                </Row>
+
+
                   
-            <table className="table">        
-                  <thead>
-                   
-                        <tr>
-                        <Row className='mt-4'>
-                          <Col md="11">
-                              <td>Upload Document</td>
-                          </Col>
-                          <Col md="1">
-                            <Button type="button" className='btn-success' onClick={addCompdoc}>+</Button>
-                          </Col>
-                        </Row>
-                        </tr>
-                      </thead>
-          
-              <tbody>
-              {compdoc.map((item, index) => (
-                  <tr key={item.id}>
-                    <Row>
-                      <Col md="4"><Input name="name" value={item.name} type="text" onChange={e => handleCompdoc(index, e)} placeholder="" /></Col>
-                      <Col md="7"><Input name="file_path"  type="file" onChange={e => handleCompdoc(index, e)} placeholder="" /></Col>
-                      <Col md="1"><button type="button"  style={{ backgroundColor:"red",marginTop:"5px"}} onClick={() => removeCompdoc(index)}>X</button></Col>
-                    </Row>
-                    
-                  </tr>
-                ))}
-       
-              </tbody>
-            </table>
-
-                 <Col md="4">
+                 
+                  <Row style={{}}>
+                    <Col md="12">
+                      <DashCard title="Address" >
+                      <Col md="10">
+                        <FormGroup>
+                          <Label>Billing Address</Label>
+                          <Input type="select" 
+                            name="addressId" 
+                            value={formDatas.addressId}
+                            onChange={handleTypeChange}
+                            >
+                              {data1.map((item)=>{
+                              
+      
+                                return <option key={item.id} value={item.id}>{item.name}</option>
+                              })}
+                          </Input>
+                          
+                            <FormText className="text-danger"></FormText>
+                          
+                        </FormGroup>
+                  </Col>
+                  <Col md="10">
                    <FormGroup>
-                    <Button type="submit" className="btn my-btn-color" style={{marginTop:"28px"}}>
-                        Submit
-                    </Button>
+                     {/* <Input type="checkbox" checked={ DefaultToFactoryStock === '1'} onChange={checkboxclick()}  /> */}
+                     <Input type="checkbox" checked={ firstcheck} onChange={checkboxclick1}  />
+                     <Label className='mx-1'> Delivery Address is same as Billing Address</Label>
+                     <FormText className="muted"></FormText>
                    </FormGroup>
                  </Col>
-               </Row>
-               
+
+                 {firstcheck?null:<><Col md="10">
+                   <FormGroup>
+                     {/* <Input type="checkbox" checked={ DefaultToFactoryStock === '1'} onChange={checkboxclick()}  /> */}
+                     <Input type="checkbox" checked={secondcheck} onChange={checkboxclick2}  />
+                     <Label className='mx-1'> Deliver the order to another Company</Label>
+                     <FormText className="muted"></FormText>
+                   </FormGroup>
+                 </Col>
+                 {secondcheck?<>
+                         <Col md="10" className=''>
+                            <FormGroup>
+                              <Label>Customer </Label>
+                              <Input type="select" 
+                                name="customerId" 
+                                value={formDatas.customerId}
+                                onChange={handleTypeChange}
+                                >
+                                  {data1.map((item)=>{
+          
+                                    return <option key={item.id} value={item.id}>{item.company_name}</option>
+                                  })}
+                              </Input>
+                            
+                                <FormText className="text-danger"></FormText>
+                              
+                              
+                            </FormGroup>
+                          </Col>
+                 </>:null}
+                 
+                     
+                 <Col md="10">
+                    <FormGroup>
+                      <Label>Delivery Address</Label>
+                      <Input type="select" 
+                         name="addressId" 
+                         value={formDatas.addressId}
+                        onChange={handleTypeChange}
+                        >
+                           {data1.map((item)=>{
+                          
+   
+                             return <option key={item.id} value={item.id}>{item.name}</option>
+                           })}
+                      </Input>
+                      
+                        <FormText className="text-danger"></FormText>
+                      
+                    </FormGroup>
+                  </Col></>}
+                     
+                      </DashCard>
+
+                    </Col>
+                  </Row> 
+                <Row>
+                  <Col md="12">
+                    <DashCard title="Additional Documents" >
+                        <Editor
+                          defaultEditorState={contentState}
+                          wrapperClassName="demo-wrapper mb-0"
+                          editorClassName="demo-editor border mb-4 edi-height"
+                          onContentStateChange={onContentStateChange}
+                        />
+                        {/* <Input type="textarea" raw={4} disabled value={JSON.stringify(contentState, null, 4)} /> */}
+                    </DashCard>
+                  </Col>
+                  {/* <Col md="12">
+                    <div className="editor-content" dangerouslySetInnerHTML={{ __html: htmlContent }} />
+                  </Col> */}
+                </Row>
+
+                
+                <Row style={{borderTop:'1px solid black',marginTop:'10px'}}>
+                  <Col md="12">
+                    <DashCard title="Other Information" >
+                    <Col md="8">
+                        <FormGroup>
+                          <Label>Priority</Label>
+                          <Input type="text" 
+                          name="purchaseNumber" 
+                          id="name"
+                          placeholder="Enter name" 
+                          value={formDatas.purchaseNumber}
+                          onChange={handleChange}
+                            />
+                          <FormText className="muted"></FormText>
+                        </FormGroup>
+                   </Col>
+                    <Col md="8">
+                        <FormGroup>
+                          <Label>Expected Delivery Date</Label>
+                          <Input type="date" 
+                          name="purchaseDocumentFilePath" 
+                          id="name"
+                          placeholder="Enter name" 
+                          onChange={handleChange} 
+                            />
+                          <FormText className="muted"></FormText>
+                        </FormGroup>
+                   </Col>
+                    <Col md="8">
+                        <FormGroup>
+                          <Label>Purchase Order</Label>
+                          <Input type="text" 
+                          name="vendorInvoiceNumber" 
+                          id="name"
+                          placeholder="Enter name" 
+                          value={formDatas.vendorInvoiceNumber}
+                          onChange={handleChange} 
+                            />
+                          <FormText className="muted"></FormText>
+                        </FormGroup>
+                   </Col>
+                    <Col md="8">
+                        <FormGroup>
+                          <Label>Purchase Order Document</Label>
+                          <Input type="file" 
+                          name="vendorInvoiceFilePath" 
+                          id="name"
+                          placeholder="Enter name" 
+                          onChange={handleChange} 
+                            />
+                          <FormText className="muted"></FormText>
+                        </FormGroup>
+                   </Col>
+                    </DashCard>
+                  </Col>
+
+                  <Col md="12">
+                    <DashCard title="Representative Details" >
+                        <Col md="8">
+                            <FormGroup>
+                              <Input type="select" 
+                                name="vendorId" 
+                                value={formDatas.vendorId}
+                                onChange={handleTypeChange}
+                                >
+                                  {data1.map((item)=>{
+          
+                                    return <option key={item.id} value={item.id}>{item.company_name}</option>
+                                  })}
+                              </Input>
+                             
+                                <FormText className="text-danger"></FormText>
+                              
+                              
+                            </FormGroup>
+                        </Col>
+                    </DashCard>
+                  </Col>
+                  <Col md="12">
+                    <DashCard>
+                      <Row>
+                        <Col md="6">
+                            Order Date <br></br>
+                            17 Dec,2021
+                          </Col>
+                          <Col md="6">
+                            Order No <br></br>
+                            #572
+                          </Col>
+                      </Row>
+                      <Row style={{marginTop:'10px'}}>
+                        <Col md="8">
+                              <FormGroup>
+                                <Label>Status</Label>
+                                <Input type="select" 
+                                  name="vendorId" 
+                                  value={formDatas.vendorId}
+                                  onChange={handleTypeChange}
+                                  >
+                                    {data1.map((item)=>{
+            
+                                      return <option key={item.id} value={item.id}>{item.company_name}</option>
+                                    })}
+                                </Input>
+                              
+                                  <FormText className="text-danger"></FormText>
+                              
+                                
+                              </FormGroup>
+                          </Col>
+                          <Col md="4">
+                            <FormGroup>
+                              <Button type="submit" className="btn my-btn-color" style={{marginTop:"28px"}}>
+                                  Update
+                              </Button>
+                            </FormGroup>
+                          </Col>
+                      </Row>
+                        
+                    </DashCard>
+                  </Col>
+                </Row>
+                 
+                 
+                 <Row style={{marginTop:'10px'}}>
+                  <Col md="12">
+                    
+                        <Product/>
+                    
+                  </Col>
+                </Row>
               
              </Form>
              
@@ -524,4 +554,4 @@ const handleSubmit = async (event) => {
   );
 };
 
-export default Edit
+export default Add;

@@ -24,6 +24,11 @@ const FactorySurplus = () => {
     // Navigate(`/resources/address-types/edit/${itemId}`);
     navigate('/order/factory-surplus/edit', { state: item });
   };
+  const handleView = () => {
+    // Navigate to the edit page with the item's id
+    // Navigate(`/resources/address-types/edit/${itemId}`);
+    navigate('/order/factory-surplus/view');
+  };
   
   const handleEditAdd = () => {
     // Navigate to the edit page with the item's id
@@ -61,25 +66,25 @@ const FactorySurplus = () => {
   function getGrainNameById(grainId) {
     const Name = data1.find(item => item.id === grainId);
     console.log('a1',Name);
-    return Name ? Name.name : 'Unknown Country';
+    return Name ? Name.name : 'Unknown grain';
   }
 
   function getFabricNameById(fabricId) {
     const Name = data2.find(item => item.id === fabricId);
     console.log('a1',Name);
-    return Name ? Name.name : 'Unknown State';
+    return Name ? Name.name : 'Unknown fabric';
   }
 
   function getQualityNameById(qualityId) {
     const Name = data3.find(item => item.id === qualityId);
     console.log('a1',Name);
-    return Name ? Name.name : 'Unknown State';
+    return Name ? Name.name : 'Unknown quality';
   }
 
   function getColorNameById(colorId) {
     const Name = data4.find(item => item.id === colorId);
     console.log('a1',Name);
-    return Name ?  Name.name : 'Unknown State';
+    return Name ?  Name.name : 'Unknown color';
   }
 
   
@@ -98,7 +103,7 @@ const FactorySurplus = () => {
     const fetchData = async () => {
       const token = localStorage.getItem('userToken');
       // console.log('token',token);
-      const response = await fetch('https://factory.teamasia.in/api/public/products', {
+      const response = await fetch('https://factory.teamasia.in/api/public/products/?is_trashed=1', {
         method: 'GET', 
         headers: {
           'Authorization': `Bearer ${token}`
@@ -116,7 +121,7 @@ const FactorySurplus = () => {
     const fetchData1 = async () => {
       const token = localStorage.getItem('userToken');
       // console.log('token',token);
-      const response = await fetch('https://factory.teamasia.in/api/public/grains', {
+      const response = await fetch('https://factory.teamasia.in/api/public/grains/?is_trashed=0', {
         method: 'GET', 
         headers: {
           'Authorization': `Bearer ${token}`
@@ -133,7 +138,7 @@ const FactorySurplus = () => {
     const fetchData2 = async () => {
       const token = localStorage.getItem('userToken');
       // console.log('token',token);
-      const response = await fetch('https://factory.teamasia.in/api/public/fabrics', {
+      const response = await fetch('https://factory.teamasia.in/api/public/fabrics/?is_trashed=0', {
         method: 'GET', 
         headers: {
           'Authorization': `Bearer ${token}`
@@ -150,7 +155,7 @@ const FactorySurplus = () => {
     const fetchData3 = async () => {
       const token = localStorage.getItem('userToken');
       // console.log('token',token);
-      const response = await fetch('https://factory.teamasia.in/api/public/qualities', {
+      const response = await fetch('https://factory.teamasia.in/api/public/qualities/?is_trashed=0', {
         method: 'GET', 
         headers: {
           'Authorization': `Bearer ${token}`
@@ -167,7 +172,7 @@ const FactorySurplus = () => {
     const fetchData4 = async () => {
       const token = localStorage.getItem('userToken');
       // console.log('token',token);
-      const response = await fetch('https://factory.teamasia.in/api/public/colors', {
+      const response = await fetch('https://factory.teamasia.in/api/public/colors/?is_trashed=0', {
         method: 'GET', 
         headers: {
           'Authorization': `Bearer ${token}`
@@ -225,7 +230,7 @@ const FactorySurplus = () => {
                   <td>
                     {/* Action buttons or icons */}
                       <button type="button" className="btn mybtncustomer btn-secondary btn-sm mr-2" onClick={() => handleEditClick(product)}><i className="bi bi-pencil-fill my-pen-color" /></button>
-                      <button type="button" className="btn mybtncustomer btn-secondary btn-sm mr-2"><i className="bi bi-eye-fill my-eye-color" /></button>
+                      <button type="button" className="btn mybtncustomer btn-secondary btn-sm mr-2" onClick={() => handleView(product)}><i className="bi bi-eye-fill my-eye-color" /></button>
                       <button type="button" className="btn mybtncustomer btn-secondary btn-sm mr-2" onClick={() => handleDeleteClick(product.id)}><i className="bi bi-trash-fill my-trash-color" /></button>
                   </td>
                 </tr>

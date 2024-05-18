@@ -83,12 +83,12 @@ const Customer = () => {
   
 
       <table className="table" style={tableStyle}>
-              <thead>
+              {/* <thead>
                 <tr>
                   <th scope="col">Company Name</th>
                   <th scope="col">Actions </th>
                 </tr>
-              </thead>
+              </thead> */}
               <tbody>
                 {data.map((customer) => (
                   <>

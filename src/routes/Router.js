@@ -24,12 +24,20 @@ const  CustomersAddress= Loadable(lazy(() => import('../views/order/Customer/Add
 const  CustomersAddressEdit= Loadable(lazy(() => import('../views/order/Customer/AddressEdit')));
 const  CustomersAddressAdd= Loadable(lazy(() => import('../views/order/Customer/AddressAdd')));
 const  CustomersPendingReport= Loadable(lazy(() => import('../views/order/Customer/PendingReport')));
+const  CustomersView= Loadable(lazy(() => import('../views/order/Customer/View')));
 
 const  Orders= Loadable(lazy(() => import('../views/order/Order/Order')));
+const  OrdersAdd= Loadable(lazy(() => import('../views/order/Order/Add')));
+const  OrdersEdit= Loadable(lazy(() => import('../views/order/Order/Edit')));
+const  OrdersView= Loadable(lazy(() => import('../views/order/Order/View')));
+const  OrdersProductAdd= Loadable(lazy(() => import('../views/order/Order/productAdd')));
 
 const  FactorySurplus = Loadable(lazy(() => import('../views/order/FactoryS/FactorySurplus')));
 const  FactorySurplusEdit = Loadable(lazy(() => import('../views/order/FactoryS/Edit')));
 const  FactorySurplusAdd = Loadable(lazy(() => import('../views/order/FactoryS/Add')));
+const  FactorySurplusView = Loadable(lazy(() => import('../views/order/FactoryS/View')));
+const  FactorySurplusSmallRollAdd = Loadable(lazy(() => import('../views/order/FactoryS/SmallRoll')));
+const  FactorySurplusSmallRollEdit = Loadable(lazy(() => import('../views/order/FactoryS/SmallRollEdit')));
 
 const  OrderTemplates = Loadable(lazy(() => import('../views/order/OrderT/OrderTemplates')));
 const  OrderTemplatesEdit = Loadable(lazy(() => import('../views/order/OrderT/Edit')));
@@ -110,6 +118,8 @@ const  UserEdit = Loadable(lazy(() => import('../views/users/Edit')));
 const  UserAdd = Loadable(lazy(() => import('../views/users/Add')));
 
 const  Role = Loadable(lazy(() => import('../views/roles/Role')));
+const  RoleAdd = Loadable(lazy(() => import('../views/roles/Add')));
+const  RoleEdit = Loadable(lazy(() => import('../views/roles/Edit')));
 
 const  AddressTypes = Loadable(lazy(() => import('../views/resources/AddressT/AddressTypes')));
 const  AddressTypesEdit = Loadable(lazy(() => import('../views/resources/AddressT/Edit')));
@@ -316,13 +326,22 @@ const ThemeRoutes = [
       { path: '/order/customers/address/edit', name: 'Modern', exact: true, element: <ProtectedRoute> <CustomersAddressEdit />  </ProtectedRoute>},
       { path: '/order/customers/address/add', name: 'Modern', exact: true, element: <ProtectedRoute> <CustomersAddressAdd />  </ProtectedRoute>},
       { path: '/order/customers/pending-report', name: 'Modern', exact: true, element: <ProtectedRoute> <CustomersPendingReport />  </ProtectedRoute>},
+      { path: '/order/customers/view', name: 'Modern', exact: true, element: <ProtectedRoute> <CustomersView />  </ProtectedRoute>},
 
 
 
       { path: '/order/orders', name: 'Modern', exact: true, element: <ProtectedRoute> <Orders /> </ProtectedRoute> },
+      { path: '/order/orders/add', name: 'Modern', exact: true, element: <ProtectedRoute> <OrdersAdd /> </ProtectedRoute> },
+      { path: '/order/orders/edit', name: 'Modern', exact: true, element: <ProtectedRoute> <OrdersEdit /> </ProtectedRoute> },
+      { path: '/order/orders/view', name: 'Modern', exact: true, element: <ProtectedRoute> <OrdersView /> </ProtectedRoute> },
+      { path: '/order/orders/product-add', name: 'Modern', exact: true, element: <ProtectedRoute> <OrdersProductAdd /> </ProtectedRoute> },
+
       { path: '/order/factory-surplus', name: 'Modern', exact: true, element:  <ProtectedRoute><FactorySurplus /></ProtectedRoute>  },
       { path: '/order/factory-surplus/edit', name: 'Modern', exact: true, element:  <ProtectedRoute><FactorySurplusEdit /></ProtectedRoute>  },
       { path: '/order/factory-surplus/add', name: 'Modern', exact: true, element: <ProtectedRoute> <FactorySurplusAdd /> </ProtectedRoute> },
+      { path: '/order/factory-surplus/view', name: 'Modern', exact: true, element: <ProtectedRoute> <FactorySurplusView /> </ProtectedRoute> },
+      { path: '/order/factory-surplus/small-roll-create', name: 'Modern', exact: true, element: <ProtectedRoute> <FactorySurplusSmallRollAdd /> </ProtectedRoute> },
+      { path: '/order/factory-surplus/small-roll-edit', name: 'Modern', exact: true, element: <ProtectedRoute> <FactorySurplusSmallRollEdit /> </ProtectedRoute> },
 
       { path: '/order/order-templates', name: 'Modern', exact: true, element: <ProtectedRoute> <OrderTemplates />   </ProtectedRoute>},
       { path: '/order/order-templates/edit', name: 'Modern', exact: true, element:  <ProtectedRoute><OrderTemplatesEdit /> </ProtectedRoute>  },
@@ -400,6 +419,8 @@ const ThemeRoutes = [
       { path: '/users/add', name: 'Modern', exact: true, element: <ProtectedRoute> <UserAdd />  </ProtectedRoute>},
 
       { path: '/roles/role', name: 'Modern', exact: true, element: <ProtectedRoute> <Role />  </ProtectedRoute>},
+      { path: '/roles/add', name: 'Modern', exact: true, element: <ProtectedRoute> <RoleAdd />  </ProtectedRoute>},
+      { path: '/roles/edit', name: 'Modern', exact: true, element: <ProtectedRoute> <RoleEdit />  </ProtectedRoute>},
 
       { path: '/resources/address-types', name: 'Modern', exact: true, element: <ProtectedRoute> <AddressTypes />  </ProtectedRoute>},
       { path: '/resources/address-types/edit', name: 'Modern', exact: true, element: <ProtectedRoute> <AddressTypesEdit />  </ProtectedRoute>},

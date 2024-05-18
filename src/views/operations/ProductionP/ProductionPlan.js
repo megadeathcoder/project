@@ -52,7 +52,6 @@ const ProductionPlan = () => {
     // Navigate(`/resources/address-types/edit/${itemId}`);
     navigate('/operations/production-plans/view', { state: item });
   };
-
   return (
     <ComponentCard
     title=""

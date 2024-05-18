@@ -15,22 +15,25 @@ import {
 
 } from 'reactstrap';
 // import { useParams } from 'react-router-dom';
-import { useLocation,useNavigate } from 'react-router-dom';
+import {useLocation, useNavigate } from 'react-router-dom';
 
 // import ComponentCard from '../../components/ComponentCard';
 
 const Edit = () => {
-  const location = useLocation();
   const navigate = useNavigate();
-  const {name:Name,discount_percent : DiscountPercentage,is_factory_stock: DefaultToFactoryStock} = location.state || {}; // Default to an empty object if state is undefined
-  const [check,setCheck] = useState(DefaultToFactoryStock === '1')
-  
+  const location =useLocation();
+  const [check,setCheck] = useState(false);
+
+  const validationData = location.state || [];
+  const [errors,setErrors] = useState({});
+
   const [formDatas, setFormDataS] = useState({
-    name:Name,
-    DiscountPercentage,
-    DefaultToFactoryStock
+    name:'',
+    DiscountPercentage:'',
+    DefaultToFactoryStock:'0'
   });
   
+  console.log(validationData);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -38,6 +41,19 @@ const Edit = () => {
       ...prevState,
       [name]: value
     }));
+
+    switch(name){
+      case 'name':
+            if (validationData.some(item => item.toLowerCase() === value.toLowerCase().trim())) {
+              setErrors((prev)=>({...prev,"name": "This name has already been used"}));
+          } else {
+              setErrors((prev)=>({...prev,"name": ""}));
+          }
+          break;
+
+      default:
+            break;
+        }
   };
   const checkboxclick = ()=>{
     let value;
@@ -61,12 +77,13 @@ const Edit = () => {
         formData.append('discount_percent',formDatas.DiscountPercentage);
         formData.append('is_factory_stock',formDatas.DefaultToFactoryStock);
         formData.append('is_trashed','0');
-        // console.log("json",JSON.stringify({
-        //   name:formDatas.name,
-        //   discount_percent:formDatas.DiscountPercentage,
-        //   is_factory_stock:formDatas.DefaultToFactoryStock
-        // }));
-        // console.log('formdata',formData);
+
+        console.log("json",JSON.stringify({
+          name:formDatas.name,
+          is_factory_stock:formDatas.DefaultToFactoryStock,
+          discount_percent:formDatas.DiscountPercentage,
+        }));
+        console.log('formdata',formDatas.DefaultToFactoryStock);
 
         const token = localStorage.getItem('userToken');
         const response = await fetch(`https://factory.teamasia.in/api/public/grades`, {
@@ -95,12 +112,36 @@ const Edit = () => {
     }
 }
 
-const handleSubmit = async (event) => {
-  event.preventDefault();
-  console.log('event',event);
-  apiCall();
+const validateForm=()=>{
+  let formIsValid =true;
+  const errors1 ={};
+  
+  if(formDatas.name === '') {
+    formIsValid = false;
+    // eslint-disable-next-line dot-notation
+    errors1["name"] = "Required";
+  }
+  if(formDatas.DiscountPercentage === '') {
+    formIsValid = false;
+    // eslint-disable-next-line dot-notation
+    errors1["DiscountPercentage"] = "Required";
+  }
+ 
+  
+  setErrors(errors1);
+  return formIsValid;
+  }
+  
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if(validateForm()) {
+      console.log('Form is valid, proceed with API call');
+      apiCall();
+    } else {
+      console.log('Form is invalid, do not submit');
+    }
+  };
 
-};
   return (
 <div>
      <Row>
@@ -125,8 +166,9 @@ const handleSubmit = async (event) => {
                      placeholder="Enter name" 
                      value={formDatas.name}
                      onChange={handleChange} 
+                      className={errors.name ? "is-invalid":""}
                       />
-                     <FormText className="muted"></FormText>
+                      {errors.name &&  <FormText className="text-danger">{errors.name}</FormText>}
                    </FormGroup>
                  </Col>
                  <Col md="8">
@@ -139,8 +181,9 @@ const handleSubmit = async (event) => {
                       placeholder="Enter name" 
                       value={formDatas.DiscountPercentage}
                       onChange={handleChange} 
+                      className={errors.DiscountPercentage ? "is-invalid":""}
                       />
-                     <FormText className="muted"></FormText>
+                      {errors.DiscountPercentage &&  <FormText className="text-danger">{errors.DiscountPercentage}</FormText>}
                    </FormGroup>
                  </Col>
                  <Col md="8">
@@ -155,7 +198,11 @@ const handleSubmit = async (event) => {
                  </Col>
                  <Col md="4">
                    <FormGroup>
-                    <Button type="submit" className="btn my-btn-color" style={{marginTop:"28px"}}>
+                   <Button type="submit" 
+                            className="btn my-btn-color" 
+                            style={{marginTop:"28px"}}
+                            disabled={errors.name}
+                    >
                         Submit
                     </Button>
                    </FormGroup>

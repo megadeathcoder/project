@@ -14,6 +14,7 @@ import ComponentCard from '../../../components/ComponentCard';
 const Shades = () => {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
+  const [validationData, setValidationData] = useState([]);
   const [istrashed, setIstrashed] = useState('0');
   // const data = [
   //   { id: 1, Name: 'Dark'},  
@@ -35,12 +36,13 @@ const Shades = () => {
   const handleEditClick = (item) => {
     // Navigate to the edit page with the item's id
     // Navigate(`/resources/address-types/edit/${itemId}`);
-    navigate('/resources/shades/edit', { state: item });
+    const validationDataArray = validationData.filter(ex => ex !== item.name);
+    navigate('/resources/shades/edit', { state: {item, validationDataArray} });
   };
   const handleEditAdd = () => {
     // Navigate to the edit page with the item's id
     // Navigate(`/resources/address-types/edit/${itemId}`);
-    navigate('/resources/shades/add');
+    navigate('/resources/shades/add',{state:validationData});
   };
   const handleTrash = ()=>{
      
@@ -99,7 +101,11 @@ const Shades = () => {
       }
       const result = await response.json();
       console.log('in shades',result);
-      setData(result.shades); 
+      setData(result.shades);
+      const addresstypesItems =result.shades.map((a)=>{
+        return a.name
+       });
+     setValidationData(addresstypesItems);
     };
   
     fetchData();

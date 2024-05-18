@@ -22,7 +22,7 @@ const Edit = () => {
   const location = useLocation();
   const navigate= useNavigate();
 // const {grain, fabric, quality, color,hsnCode,PricePerUnit,Thickness,TaxRate,deliveryDate,CustomerItemRefernce,quantity} = location.state || {}; // Default to an empty object if state is undefined 
-  const {id,grain_id:grain,fabric_id:fabricId,fabric_color_id:fabricColorId,quality_id:qualityId,color_id:colorId,hsn_id:hsnId,price:PricePerUnit,thickness:Thickness,tax_rate:TaxRate,delivery_date:deliveryDate,customer_item_reference:CustomerItemRefernce,quantity,productprints,productadditionaltreatments} = location.state || {}; 
+  const {id,order_id :orderId, template_id:templateId, topcoat,grain_id:grain,fabric_id:fabricId,fabric_color_id:fabricColorId,quality_id:qualityId,color_id:colorId,hsn_id:hsnId,price:PricePerUnit,thickness:Thickness,tax_rate:TaxRate,delivery_date:deliveryDate,customer_item_reference:CustomerItemRefernce,quantity,productprints,productadditionaltreatments} = location.state || {}; 
   const [items, setItems] = useState([{id:'2'}]);
   const [items1, setItems1] = useState(productprints);
   const [items2, setItems2] = useState(productadditionaltreatments);
@@ -37,6 +37,9 @@ const Edit = () => {
   const [dataX, setDataX] = useState([]);
  
   const [formDatas, setFormDataS] = useState({
+    orderId,
+    templateId,
+    topcoat,
     grain,
     fabricId,
     fabricColorId,
@@ -51,7 +54,7 @@ const Edit = () => {
     quantity
   });
 
-
+console.log('loc',location.state);
   // const [data2, setData2] = useState([
   //   {
   //     id:'1',
@@ -186,6 +189,9 @@ const removeItem2 = index => {
             },
            
             body: JSON.stringify({
+              order_id: formDatas.orderId,
+              template_id: formDatas.templateId,
+              topcoat: formDatas.topcoat,
               grain_id: formDatas.grain,
               fabric_id: formDatas.fabricId,
               fabric_color_id: formDatas.fabricColorId,

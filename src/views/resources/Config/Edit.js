@@ -23,19 +23,23 @@ const Edit = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const {id,display_name:DisplayName, name:ConfigName, type:SearchType,value:Value} = location.state || {}; // Default to an empty object if state is undefined
- 
+  const {id,display_name:DisplayName, name:ConfigName, type:SearchType,value:Value,is_trashed:isTrashed} = location.state.item || {}; // Default to an empty object if state is undefined
+  const validationData = location.state.validationDataArray || []; 
+  const [errors,setErrors] = useState({});
   const [selectedType, setSelectedType] = useState(SearchType || '0');
 
   const handleTypeChange = (e) => {
     console.log('selectedType',e.target.value);
     setSelectedType(e.target.value);
   };
- 
+
+  console.log(validationData);
+
   const [formDatas, setFormDataS] = useState({
     DisplayName,
     ConfigName,
-    Value
+    Value,
+    isTrashed
   });
   
 
@@ -45,6 +49,28 @@ const Edit = () => {
       ...prevState,
       [name]: value
     }));
+
+    switch (name){
+      case 'DisplayName':
+            if (validationData.some(item => item.displayName.toLowerCase() === value.toLowerCase().trim())) {
+              setErrors((prev)=>({...prev,"DisplayName": "This name has already been used"}));
+          } else {
+              setErrors((prev)=>({...prev,"DisplayName": ""}));
+          }
+          break;
+
+      case 'ConfigName':
+            if (validationData.some(item => item.name.toLowerCase() === value.toLowerCase().trim())) {
+              setErrors((prev)=>({...prev,"ConfigName": "This name has already been used"}));
+          } else {
+              setErrors((prev)=>({...prev,"ConfigName": ""}));
+          }
+          break;
+
+      default:
+            break;
+        }
+
   };
 
   async function apiCall() {
@@ -73,7 +99,8 @@ const Edit = () => {
               display_name:formDatas.DisplayName,
               name:formDatas.ConfigName,
               type:selectedType,
-              value:formDatas.Value
+              value:formDatas.Value,
+              is_trashed:formDatas.isTrashed
             }),
         });
         const data = await response.json();
@@ -94,11 +121,34 @@ const Edit = () => {
     }
 }
 
-const handleSubmit = async (event) => {
-  event.preventDefault();
-  console.log('event',event);
-  apiCall();
-};
+const validateForm=()=>{
+  let formIsValid =true;
+  const errors1 ={};
+  
+  if(formDatas.DisplayName === '') {
+    formIsValid = false;
+    // eslint-disable-next-line dot-notation
+    errors1["DisplayName"] = "Required";
+  }
+  if(formDatas.Value === '') {
+    formIsValid = false;
+    // eslint-disable-next-line dot-notation
+    errors1["Value"] = "Required";
+  }
+
+  setErrors(errors1);
+  return formIsValid;
+  }
+  
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if(validateForm()) {
+      console.log('Form is valid, proceed with API call');
+      apiCall();
+    } else {
+      console.log('Form is invalid, do not submit');
+    }
+  };
 
   return (
 <div>
@@ -124,8 +174,9 @@ const handleSubmit = async (event) => {
                       placeholder="Enter name" 
                       value={formDatas.DisplayName}
                       onChange={handleChange} 
-                     />
-                     <FormText className="muted"></FormText>
+                      className={errors.DisplayName ? "is-invalid":""}
+                      />
+                      {errors.DisplayName &&  <FormText className="text-danger">{errors.DisplayName}</FormText>}
                    </FormGroup>
                  </Col>
                  <Col md="3">
@@ -167,13 +218,18 @@ const handleSubmit = async (event) => {
                       placeholder="Enter name" 
                       value={formDatas.Value}
                       onChange={handleChange} 
-                     />
-                     <FormText className="muted"></FormText>
+                      className={errors.Value ? "is-invalid":""}
+                      />
+                      {errors.Value &&  <FormText className="text-danger">{errors.Value}</FormText>}
                    </FormGroup>
                  </Col>
                  <Col md="4">
                    <FormGroup>
-                    <Button type="submit" className="btn my-btn-color" style={{marginTop:"28px"}}>
+                   <Button type="submit" 
+                            className="btn my-btn-color" 
+                            style={{marginTop:"28px"}}
+                            disabled={errors.DisplayName || errors.ConfigName}
+                    >
                         Submit
                     </Button>
                    </FormGroup>

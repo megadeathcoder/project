@@ -14,6 +14,7 @@ import ComponentCard from '../../../components/ComponentCard';
 const Colors  = () => {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
+  const [validationData, setValidationData] = useState([]);
   const [istrashed, setIstrashed] = useState('0');
   // const data = [
   //   { id: 1, Code: 'ASMNBDJHAs', ColorName: 'pumpkin'},
@@ -35,12 +36,14 @@ const Colors  = () => {
   const handleEditClick = (item) => {
     // Navigate to the edit page with the item's id
     // Navigate(`/resources/address-types/edit/${itemId}`);
-    navigate('/resources/colors/edit', { state: item });
+    const validationDataArray = validationData.filter(ex => ex.name !== item.name);
+    console.log('validation',validationDataArray)
+    navigate('/resources/colors/edit', { state: {item, validationDataArray} });
   };
   const handleEditAdd = () => {
     // Navigate to the edit page with the item's id
     // Navigate(`/resources/address-types/edit/${itemId}`);
-    navigate('/resources/colors/add');
+    navigate('/resources/colors/add',{state:validationData});
   };
   const handleTrash = ()=>{
      
@@ -97,7 +100,13 @@ const Colors  = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const result = await response.json();
-      setData(result.colors); 
+      setData(result.colors);
+      console.log('result.colors',result.colors);
+
+      const addresstypesItems =result.colors.map((a)=>{
+        return {name:a.name,code:a.code}
+       }); 
+     setValidationData(addresstypesItems); 
     };
   
     fetchData();

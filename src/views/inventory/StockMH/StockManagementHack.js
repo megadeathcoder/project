@@ -140,7 +140,7 @@ const  StockManagementHack= () => {
                   <tr key={product.id}>
                   <td>{index}</td>
                   <td>{product.Name}</td>
-                  <td>{product.OpeningBalance}</td>
+                  <td title={product.OpeningBalance}>{product.OpeningBalance}</td>
                   <td>
                     {/* Action buttons or icons */}
                       <button type="button" className="btn mybtncustomer btn-secondary btn-sm mr-2" ><i className="bi bi-plus-circle-fill" /></button>

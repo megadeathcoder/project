@@ -15,6 +15,7 @@ const States = () => {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [data2, setData2] = useState([]);
+  const [validationData, setValidationData] = useState([]);
   const [istrashed, setIstrashed] = useState('0');
 
   const tableStyle = {
@@ -25,12 +26,13 @@ const States = () => {
   const handleEditClick = (item) => {
     // Navigate to the edit page with the item's id
     // Navigate(`/resources/address-types/edit/${itemId}`);
-    navigate('/resources/states/edit', { state: item});
+    const validationDataArray = validationData.filter(ex => ex !== item.name);
+    navigate('/resources/states/edit', { state: {item, validationDataArray} });
   };
   const handleEditAdd = () => {
     // Navigate to the edit page with the item's id
     // Navigate(`/resources/address-types/edit/${itemId}`);
-    navigate('/resources/states/add');
+    navigate('/resources/states/add',{state:validationData});
   };
   const handleTrash = ()=>{
      
@@ -99,8 +101,12 @@ const States = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const result = await response.json();
-      console.log("responsejson in country",result);
-      setData(result.states); 
+      console.log("responsejson in country",result.states);
+      setData(result.states);
+      const addresstypesItems =result.states.map((a)=>{
+        return a.name
+       });
+     setValidationData(addresstypesItems);
     };
     const fetchData2 = async () => {
       const token = localStorage.getItem('userToken');
@@ -116,7 +122,7 @@ const States = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const result = await response.json();
-      console.log("responsejson2",result);
+      console.log("responsejson2",result.countries);
       setData2(result.countries); 
     };
     fetchData2();

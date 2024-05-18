@@ -22,8 +22,9 @@ import { useLocation,useNavigate } from 'react-router-dom';
 const Edit = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const {id,name:CityName,country_id:CountryId,state_id:StateId} = location.state || {}; // Default to an empty object if state is undefined
-
+  const {id,name:CityName,country_id:CountryId,state_id:StateId,is_trashed:isTrashed} = location.state.item || {}; // Default to an empty object if state is undefined
+  const validationData = location.state.validationDataArray || [];
+  const [errors,setErrors] = useState({});
   const [selectedType, setSelectedType] = useState(CountryId|| '');
   const [selectedType1, setSelectedType1] = useState(StateId|| '');
 
@@ -35,7 +36,8 @@ const Edit = () => {
   const [formDatas, setFormDataS] = useState({
     name:CityName,
     CountryId,
-    StateId
+    StateId,
+    isTrashed
   });
 
   console.log("formdata",location.state);
@@ -46,6 +48,19 @@ const Edit = () => {
       ...prevState,
       [name]: value
     }));
+
+    switch (name){
+      case 'name':
+            if (validationData.some(item => item.toLowerCase() === value.toLowerCase().trim())) {
+              setErrors((prev)=>({...prev,"name": "This name has already been used"}));
+          } else {
+              setErrors((prev)=>({...prev,"name": ""}));
+          }
+          break;
+      default:
+            break;
+    
+        }
   };
 
   const handleTypeChange = (e) => {
@@ -84,6 +99,7 @@ const Edit = () => {
               name:formDatas.name,
               country_id:formDatas.CountryId,
               state_id:formDatas.StateId,
+              is_trashed:formDatas.isTrashed
             }),
         });
         const data = await response.json();
@@ -104,12 +120,29 @@ const Edit = () => {
     }
 }
 
-const handleSubmit = async (event) => {
-  event.preventDefault();
-  console.log('event',event);
-  apiCall();
-
-};
+const validateForm=()=>{
+  let formIsValid =true;
+  const errors1 ={};
+  
+  if(formDatas.name === '') {
+    formIsValid = false;
+    // eslint-disable-next-line dot-notation
+    errors1["name"] = "Required";
+  }
+  
+  setErrors(errors1);
+  return formIsValid;
+  }
+  
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if(validateForm()) {
+      console.log('Form is valid, proceed with API call');
+      apiCall();
+    } else {
+      console.log('Form is invalid, do not submit');
+    }
+  };
 
 useEffect(() => {
 
@@ -179,8 +212,9 @@ useEffect(() => {
                      placeholder="Enter name" 
                      value={formDatas.name}
                      onChange={handleChange} 
-                      />
-                     <FormText className="muted"></FormText>
+                     className={errors.name ? "is-invalid":""}
+                     />
+                     {errors.name &&  <FormText className="text-danger">{errors.name}</FormText>}
                    </FormGroup>
                  </Col>
                  <Col md="6">
@@ -215,7 +249,11 @@ useEffect(() => {
                   </Col>
                  <Col md="4">
                    <FormGroup>
-                    <Button type="submit" className="btn my-btn-color" style={{marginTop:"28px"}}>
+                   <Button type="submit" 
+                            className="btn my-btn-color" 
+                            style={{marginTop:"28px"}}
+                            disabled={errors.name}
+                    >
                         Submit
                     </Button>
                    </FormGroup>

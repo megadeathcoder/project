@@ -30,7 +30,10 @@ const Edit = () => {
 
   const [data2, setData2] = useState([]);
   const [data3, setData3] = useState([]);
-
+  const validationData = location.state || [];
+  const [errors,setErrors] = useState({});
+  console.log(validationData);
+  
   const [formDatas, setFormDataS] = useState({
     name:'',
     CountryId:'',
@@ -45,6 +48,18 @@ const Edit = () => {
       ...prevState,
       [name]: value
     }));
+    switch (name){
+      case 'name':
+            if (validationData.some(item => item.toLowerCase() === value.toLowerCase().trim())) {
+              setErrors((prev)=>({...prev,"name": "This name has already been used"}));
+          } else {
+              setErrors((prev)=>({...prev,"name": ""}));
+          }
+          break;
+      default:
+            break;
+    
+        }
   };
 
   const handleTypeChange = (e) => {
@@ -76,7 +91,7 @@ const Edit = () => {
         formData.append('is_trashed','0');
         const token = localStorage.getItem('userToken');
         console.log('country_id',formDatas)
-        const response = await fetch(`https://factory.teamasia.in/api/public/cities/?is_trashed=0`, {
+        const response = await fetch(`https://factory.teamasia.in/api/public/cities?is_trashed=0`, {
             method: "POST",
             headers: {
               'Authorization': `Bearer ${token}`
@@ -102,12 +117,28 @@ const Edit = () => {
     }
 }
 
-const handleSubmit = async (event) => {
-  event.preventDefault();
-  console.log('event',event);
-  apiCall();
-
-};
+const validateForm=()=>{
+  let formIsValid =true;
+  const errors1 ={};
+  
+  if(formDatas.name === '') {
+    formIsValid = false;
+    // eslint-disable-next-line dot-notation
+    errors1["name"] = "Required";
+  }  
+  setErrors(errors1);
+  return formIsValid;
+  }
+  
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if(validateForm()) {
+      console.log('Form is valid, proceed with API call');
+      apiCall();
+    } else {
+      console.log('Form is invalid, do not submit');
+    }
+  };
 
 useEffect(() => {
 
@@ -186,8 +217,9 @@ useEffect(() => {
                      placeholder="Enter name" 
                      value={formDatas.name}
                      onChange={handleChange} 
-                      />
-                     <FormText className="muted"></FormText>
+                     className={errors.name ? "is-invalid":""}
+                     />
+                     {errors.name &&  <FormText className="text-danger">{errors.name}</FormText>}
                    </FormGroup>
                  </Col>
                  <Col md="6">
@@ -222,7 +254,11 @@ useEffect(() => {
                   </Col>
                  <Col md="4">
                    <FormGroup>
-                    <Button type="submit" className="btn my-btn-color" style={{marginTop:"28px"}}>
+                   <Button type="submit" 
+                            className="btn my-btn-color" 
+                            style={{marginTop:"28px"}}
+                            disabled={errors.name}
+                    >
                         Submit
                     </Button>
                    </FormGroup>

@@ -14,6 +14,7 @@ import ComponentCard from '../../../components/ComponentCard';
 const Grades = () => {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
+  const [validationData, setValidationData] = useState([]);
   const [istrashed, setIstrashed] = useState('0');
   // const data = [
   //   { id: 1, GradeName: 'CP', DiscountPercentage: '0', DefaultToFactoryStock: 'yes'},
@@ -30,12 +31,13 @@ const Grades = () => {
   const handleEditClick = (item) => {
     // Navigate to the edit page with the item's id
     // Navigate(`/resources/address-types/edit/${itemId}`);
-    navigate('/resources/grades/edit', { state: item });
+    const validationDataArray = validationData.filter(ex => ex.name !== item.name);
+    navigate('/resources/grades/edit', { state: {item, validationDataArray} });
   };
   const handleEditAdd = () => {
     // Navigate to the edit page with the item's id
     // Navigate(`/resources/address-types/edit/${itemId}`);
-    navigate('/resources/grades/add');
+    navigate('/resources/grades/add',{state:validationData});
   };
   const handleTrash = ()=>{
      
@@ -86,12 +88,16 @@ const Grades = () => {
           'Authorization': `Bearer ${token}`
         }
       });
-      console.log('result',response);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const result = await response.json();
-      setData(result.grades); 
+      console.log('result',result.grades);
+      setData(result.grades);
+      const addresstypesItems =result.grades.map((a)=>{
+        return a.name
+       });
+     setValidationData(addresstypesItems);
     };
   
     fetchData();

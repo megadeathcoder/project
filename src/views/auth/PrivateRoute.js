@@ -40,12 +40,13 @@ const PrivateRoute = ({ children }) => {
   useEffect(() => {
     const validateToken = async () => {
       if (!authToken) {
+        console.log('token is not present')
         setStatus('unauthorized');
         return;
       }
 
       try {
-        const response = await fetch(`https://factory.teamasia.in/api/public/addresstypes/?is_trashed=0`, {
+        const response = await fetch(`https://factory.teamasia.in/api/public/addresstypes?is_trashed=0`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${authToken}`
@@ -53,9 +54,11 @@ const PrivateRoute = ({ children }) => {
         });
 
         if (response.ok) {
+          console.log('token is present and authorized')
           setStatus('authorized');
         } else {
           // If the token is not valid or expired
+          console.log('token is present and unauthorized')
           setStatus('unauthorized');
         }
       } catch (error) {

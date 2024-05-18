@@ -14,13 +14,14 @@ import {
 
 } from 'reactstrap';
 // import { useParams } from 'react-router-dom';
-import {useNavigate} from 'react-router-dom';
+import {useLocation, useNavigate} from 'react-router-dom';
 
 // import ComponentCard from '../../components/ComponentCard';
 
 const Add = () => {
-  const navigate= useNavigate();
-// const {grain, fabric, quality, color,hsnCode,PricePerUnit,Thickness,TaxRate,deliveryDate,CustomerItemRefernce,quantity} = location.state || {}; // Default to an empty object if state is undefined 
+    const location = useLocation();
+    const id  = location.state || {}; // Default to an empty object if state is undefined 
+    const navigate= useNavigate();
   const [items, setItems] = useState([]);
   const [items1, setItems1] = useState([]);
   const [items2, setItems2] = useState([]);
@@ -33,7 +34,8 @@ const Add = () => {
   const [data7, setData7] = useState([]);
   const [data8, setData8] = useState([]);
   const [dataX, setDataX] = useState([]);
- 
+  const [errors, setErrors] = useState({});
+
   const [formDatas, setFormDataS] = useState({
     grain:'x',
     fabricId:'x',
@@ -44,9 +46,16 @@ const Add = () => {
     PricePerUnit:'',
     Thickness:'',
     TaxRate:'',
-    deliveryDate:'',
-    CustomerItemRefernce:'',
-    quantity:''
+    Topcoat:'',
+    FoamI:'',
+    FillerInFoamI:'',
+    FoamII:'',
+    FillerInFoamII:'',
+    Adhesive:'',
+    FillerInAdhesive:'',
+    FinalGsm:'',
+    quantity:'',
+
   });
   
   // const [data2, setData2] = useState([
@@ -150,6 +159,8 @@ const removeItem2 = index => {
         console.log('item',items);
         console.log('item1',items1);
         console.log('item2',items2);
+
+        console.log('XXXXX',id);
         // console.log('dataX',formDatas);
         const filtered = items.filter((temp)=>{
           return temp.id !== 'z';
@@ -184,7 +195,7 @@ const removeItem2 = index => {
            
             body: JSON.stringify({
               order_id:'2',
-              template_id:'2',
+              template_id:id,
               grain_id: formDatas.grain,
               fabric_id: formDatas.fabricId,
               fabric_color_id: formDatas.fabricColorId.id,
@@ -195,8 +206,16 @@ const removeItem2 = index => {
               price: formDatas.PricePerUnit,
               thickness: formDatas.Thickness,
               tax_rate: formDatas.TaxRate,
-              delivery_date: formDatas.deliveryDate,
-              customer_item_reference: formDatas.CustomerItemRefernce,
+
+              topcoat: formDatas.Topcoat,
+              foam_1: formDatas.FoamI,
+              filler_in_foam_1: formDatas.FillerInFoamI,
+              foam_2: formDatas.FoamII,
+              filler_in_foam_2: formDatas.FillerInFoamII,
+              adhesive: formDatas.Adhesive,
+              filler_in_adhesive: formDatas.FillerInAdhesive,
+              final_gsm: formDatas.FinalGsm,
+
               is_factory_surplus_product: '1',
               is_online_product: '0',
               is_trashed:  '0',
@@ -224,10 +243,54 @@ const removeItem2 = index => {
     }
 }
 
+const validateForm = () => {
+  let formIsValid = true;
+  const errors1 = {};
+
+  if(formDatas.grain === 'x') {
+    formIsValid = false;
+    // eslint-disable-next-line dot-notation
+    errors1["grain"] = "Please select a grain.";
+  }
+
+  if(formDatas.fabricId === 'x') {
+    formIsValid = false;
+    // eslint-disable-next-line dot-notation
+    errors1["fabricId"] = "Please select a fabric.";
+  }
+  if(formDatas.qualityId === 'x') {
+    formIsValid = false;
+    // eslint-disable-next-line dot-notation
+    errors1["qualityId"] = "Please select a quality.";
+  }
+  if(formDatas.colorId === 'x') {
+    formIsValid = false;
+    // eslint-disable-next-line dot-notation
+    errors1["colorId"] = "Please select a color.";
+  }
+  if(formDatas.hsnId === 'x') {
+    formIsValid = false;
+    // eslint-disable-next-line dot-notation
+    errors1["hsnId"] = "Please select a hsn.";
+  }
+  
+
+
+  // ... repeat for other fields ...
+
+  setErrors(errors1);
+  return formIsValid;
+};
+
+
 const handleSubmit = async (event) => {
   event.preventDefault();
-  console.log('event',event);
-  apiCall();
+  if(validateForm()) {
+    console.log('Form is valid, proceed with API call');
+    apiCall();
+  } else {
+    console.log('Form is invalid, do not submit');
+  }
 
 };
 
@@ -444,14 +507,18 @@ const handleSubmit = async (event) => {
                       <Input type="select" 
                          name="grain" 
                          value={formDatas.grain}
-                        onChange={handleTypeChange}>
+                        onChange={handleTypeChange}
+                        className={errors.grain ? "is-invalid" : ""}
+                        >
                            {data1.map((item)=>{
    
                              return <option key={item.id} value={item.id}>{item.name}</option>
                            })}
                       </Input>
-
-                      <FormText className="muted"></FormText>
+                      {errors.grain && (
+                        <FormText className="text-danger">{errors.grain}</FormText>
+                      )}
+                      
                     </FormGroup>
                   </Col>
 
@@ -461,13 +528,17 @@ const handleSubmit = async (event) => {
                       <Input type="select" 
                          name="fabricId" 
                          value={formDatas.fabricId}
-                        onChange={handleTypeChange}>
+                        onChange={handleTypeChange}
+                        className={errors.fabricId ? "is-invalid" : ""}
+                        >
                            {data2.map((item)=>{
    
                              return <option key={item.id} value={item.id}>{item.name}</option>
                            })}
                       </Input>
-                      {/* <FormText className="muted">Popular Dates</FormText> */}
+                      {errors.fabricId && (
+                        <FormText className="text-danger">{errors.fabricId}</FormText>
+                      )}
                     </FormGroup>
                   </Col>
                   <Col md="5">
@@ -476,12 +547,14 @@ const handleSubmit = async (event) => {
                       <Input type="select" 
                          name="fabricColorId" 
                          value={formDatas.fabricColorId}
-                        onChange={handleTypeChange}>
+                        onChange={handleTypeChange}
+                       
+                        >
                            {dataX.map((item)=>{
                              return <option key={item.id} value={item.id}>{item.name}</option>
                            })}
                       </Input>
-                      {/* <FormText className="muted">Popular Dates</FormText> */}
+                      
                     </FormGroup>
                   </Col>
 
@@ -491,13 +564,17 @@ const handleSubmit = async (event) => {
                       <Input type="select" 
                          name="qualityId" 
                          value={formDatas.qualityId}
-                        onChange={handleTypeChange}>
+                        onChange={handleTypeChange}
+                        className={errors.qualityId ? "is-invalid" : ""}
+                        >
                            {data3.map((item)=>{
    
                              return <option key={item.id} value={item.id}>{item.name}</option>
                            })}
                       </Input>
-                      {/* <FormText className="muted">Popular Dates</FormText> */}
+                      {errors.qualityId && (
+                        <FormText className="text-danger">{errors.qualityId}</FormText>
+                      )}
                     </FormGroup>
                   </Col>
 
@@ -507,13 +584,17 @@ const handleSubmit = async (event) => {
                       <Input type="select" 
                          name="colorId" 
                          value={formDatas.colorId}
-                        onChange={handleTypeChange}>
+                        onChange={handleTypeChange}
+                        className={errors.colorId ? "is-invalid" : ""}
+                        >
                            {data4.map((item)=>{
    
                              return <option key={item.id} value={item.id}>{item.name}</option>
                            })}
                       </Input>
-                      {/* <FormText className="muted">Popular Dates</FormText> */}
+                      {errors.colorId && (
+                        <FormText className="text-danger">{errors.colorId}</FormText>
+                      )}
                     </FormGroup>
                   </Col>
 
@@ -523,13 +604,17 @@ const handleSubmit = async (event) => {
                       <Input type="select" 
                          name="hsnId" 
                          value={formDatas.hsnId}
-                        onChange={handleTypeChange}>
+                        onChange={handleTypeChange}
+                        className={errors.hsnId ? "is-invalid" : ""}
+                        >
                            {data5.map((item)=>{
    
                              return <option key={item.id} value={item.id}>{item.name}</option>
                            })}
                       </Input>
-                      {/* <FormText className="muted">Popular Dates</FormText> */}
+                      {errors.hsnId && (
+                        <FormText className="text-danger">{errors.hsnId}</FormText>
+                      )}
                     </FormGroup>
                   </Col>
 
@@ -589,12 +674,12 @@ const handleSubmit = async (event) => {
                  </Col>
                  <Col md="10" >
                    <FormGroup>
-                     <Label>Delivery Date</Label>
+                     <Label>Topcoat</Label>
                      <Input type="text" 
-                     name="deliveryDate" 
+                     name="Topcoat" 
                      id="name"
                      placeholder="Enter name" 
-                     value={formDatas.deliveryDate}
+                     value={formDatas.Topcoat}
                      onChange={handleChange} 
                       />
                      <FormText className="muted"></FormText>
@@ -602,17 +687,97 @@ const handleSubmit = async (event) => {
                  </Col>
                  <Col md="10" >
                    <FormGroup>
-                     <Label>Customer Item Reference</Label>
+                     <Label>Foam I</Label>
                      <Input type="text" 
-                     name="CustomerItemRefernce" 
+                     name="FoamI" 
                      id="name"
                      placeholder="Enter name" 
-                     value={formDatas.CustomerItemRefernce}
+                     value={formDatas.FoamI}
                      onChange={handleChange} 
                       />
                      <FormText className="muted"></FormText>
                    </FormGroup>
                  </Col>
+                 <Col md="10" >
+                   <FormGroup>
+                     <Label>Filler In Foam I</Label>
+                     <Input type="text" 
+                     name="FillerInFoamI" 
+                     id="name"
+                     placeholder="Enter name" 
+                     value={formDatas.FillerInFoamI}
+                     onChange={handleChange} 
+                      />
+                     <FormText className="muted"></FormText>
+                   </FormGroup>
+                 </Col>
+                 <Col md="10" >
+                   <FormGroup>
+                     <Label>Foam II</Label>
+                     <Input type="text" 
+                     name="FoamII" 
+                     id="name"
+                     placeholder="Enter name" 
+                     value={formDatas.FoamII}
+                     onChange={handleChange} 
+                      />
+                     <FormText className="muted"></FormText>
+                   </FormGroup>
+                 </Col>
+                 <Col md="10" >
+                   <FormGroup>
+                     <Label>Filler In Foam II</Label>
+                     <Input type="text" 
+                     name="FillerInFoamII" 
+                     id="name"
+                     placeholder="Enter name" 
+                     value={formDatas.FillerInFoamII}
+                     onChange={handleChange} 
+                      />
+                     <FormText className="muted"></FormText>
+                   </FormGroup>
+                 </Col>
+                 <Col md="10" >
+                   <FormGroup>
+                     <Label>Adhesive</Label>
+                     <Input type="text" 
+                     name="Adhesive" 
+                     id="name"
+                     placeholder="Enter name" 
+                     value={formDatas.Adhesive}
+                     onChange={handleChange} 
+                      />
+                     <FormText className="muted"></FormText>
+                   </FormGroup>
+                 </Col>
+                 <Col md="10" >
+                   <FormGroup>
+                     <Label>Filler In Adhesive</Label>
+                     <Input type="text" 
+                     name="FillerInAdhesive" 
+                     id="name"
+                     placeholder="Enter name" 
+                     value={formDatas.FillerInAdhesive}
+                     onChange={handleChange} 
+                      />
+                     <FormText className="muted"></FormText>
+                   </FormGroup>
+                 </Col>
+
+                 <Col md="10" >
+                   <FormGroup>
+                     <Label>Final Gsm</Label>
+                     <Input type="text" 
+                     name="FinalGsm" 
+                     id="name"
+                     placeholder="Enter name" 
+                     value={formDatas.FinalGsm}
+                     onChange={handleChange} 
+                      />
+                     <FormText className="muted"></FormText>
+                   </FormGroup>
+                 </Col>
+                 
 
                  <Row>
                   <Col md="8">

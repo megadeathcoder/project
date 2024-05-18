@@ -34,6 +34,7 @@ const Edit = () => {
   //   { id: 1, grain: '1037 A', fabric: 'NW.needlepunch_220gsm', quality: 'SURPLUS', color: 'black',hsnCode:'56039400',PricePerUnit:'274.4',Thickness:'1.5',TaxRate:'12',deliveryDate:'2021-06-19',CustomerItemRefernce:'', quantity: '450 m' },
   // { id: 2, grain: '3001 A', fabric: 'WP.matty_165g_110gsm', quality: 'SURPLUS', color: 'black',hsnCode:'56039400',PricePerUnit:'274.4',Thickness:'1.5',TaxRate:'12',deliveryDate:'2021-06-19',CustomerItemRefernce:'', quantity: '150 m' },
   // ]
+  console.log('final',location.state);
 
 
   const [formDatas, setFormDataS] = useState({

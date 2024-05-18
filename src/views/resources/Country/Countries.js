@@ -14,6 +14,7 @@ import ComponentCard from '../../../components/ComponentCard';
 const Countries = () => {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
+  const [validationData, setValidationData] = useState([]);
   const [istrashed, setIstrashed] = useState('0');
   // const data = [
   //   { id: 1, CountryName: 'Aaland Islands',IsoCode:'AX',IsdCode:'358'},
@@ -36,13 +37,14 @@ const Countries = () => {
   const handleEditClick = (item) => {
     // Navigate to the edit page with the item's id
     // Navigate(`/resources/address-types/edit/${itemId}`);
-    navigate('/resources/countries/edit', { state: item });
+    const validationDataArray = validationData.filter(ex => ex.name !== item.name);
+    navigate('/resources/countries/edit', { state: {item, validationDataArray} });
   };
 
   const handleEditAdd = () => {
     // Navigate to the edit page with the item's id
     // Navigate(`/resources/address-types/edit/${itemId}`);
-    navigate('/resources/countries/add');
+    navigate('/resources/countries/add',{state:validationData});
   };
   const handleTrash = ()=>{
      
@@ -100,7 +102,11 @@ const Countries = () => {
       }
       const result = await response.json();
       console.log("responsejson in country",result);
-      setData(result.countries); 
+      setData(result.countries);
+      const addresstypesItems =result.countries.map((a)=>{
+        return {name:a.name,isdCode:a.isd_code,isoCode:a.iso_code}
+       });
+     setValidationData(addresstypesItems); 
     };
   
     fetchData();

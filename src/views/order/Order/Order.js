@@ -8,7 +8,7 @@ import ComponentCard from '../../../components/ComponentCard';
 const MyTooltip = ({children,text})=>{
 
   return (<div className="tooltip-container">
-      {console.log('children',children)}
+      {/* {console.log('children',children)} */}
       {children}
       <span className="my-tooltip">{text}</span>
   </div>)
@@ -19,9 +19,20 @@ const JumbotronComponent = () => {
       const [collapse, setCollapse] = useState(false);
       const navigate = useNavigate();
 
+     
+
       const toggle = () => setCollapse(!collapse);
       const handleEditAdd = () => {
-        navigate('/resources/address-types/add');
+        navigate('/order/orders/add');
+      };
+
+      const  editOrder = () => {
+        navigate('/order/orders/edit');
+      };
+
+      const  viewOrder = () => {
+        console.log('hi');
+        navigate('/order/orders/view');
       };
 
       useEffect(()=>{
@@ -63,7 +74,7 @@ const JumbotronComponent = () => {
                     Parked
                   </Button>
                 </Col>
-                <Col md="4" className=''>
+                <Col md="8" style={{textAlign:'right'}}>
                    <Button className='my-btn-color-red' style={{ marginBottom: '1rem',marginRight:'10px' }} onClick={() => handleEditAdd()}>
                      Print
                   </Button>
@@ -181,66 +192,59 @@ const JumbotronComponent = () => {
                 <Table className='table-margin-zero-temp responsive table-size-x' size="sm">
                   <thead>
                     <tr>
-                      <th >Order Details</th>
+                      <th>Order Details</th>
                       <th>Order and Exp Date</th>
                       <th>
-                        <div style={{display:'flex'}} className='my-table'>
-                              <div colSpan={2}>Grain</div>
-                              <div colSpan={2}>Quality</div>
-                              <div colSpan={2}>THKNS</div>
-                              <div colSpan={2}>Color</div>
-                              <div colSpan={2}>T.Qty</div>
-                              <div colSpan={2}>2PLN</div>
-                              <div >MFG</div>
-                              <div colSpan={2}> DISP</div>
-                              <div colSpan={2}>DISP OT</div>
-                              <div colSpan={2}>Actual Pending</div>
-                        </div>
+                        <Table>
+                           <tbody>
+                            <tr>
+                            <td>         Grain </td>
+                            <td>       Quality </td>
+                            <td>         THKNS </td>
+                            <td>         Color </td>
+                            <td>         T.Qty </td>
+                            <td>          2PLN </td>
+                            <td>           MFG </td>
+                            <td>          DISP </td>
+                            <td>       DISP OT </td>
+                            <td>Actual Pending </td>
+                            </tr>
+                           </tbody>
+                        </Table>
                       </th>
-                      
-                      
                     </tr>
                   </thead>
                   <tbody >
                     {/* Repeat this block for each set of order details */}
                     <tr >
-                      <td rowSpan="1" className='table-size-x-button'>
-                        <Row>
-                          <Col md='4'>
-                            <a  href="https://factory.teamcolence.com/admin/orders/572"> #572</a>
-                          </Col>
-                          <Col md='8'>
-                               <div className="fix-wid"> 
-                                  Aqualite Industries Pvt. Ltd.
-                              </div>
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col md='4'>
-                             Confirmed
-                          </Col>
-                          <Col md='8'>
-                            <Row>
-                              <Col md='2'>
-                                      <button type="button" className="btn mybtncustomer btn-secondary  mr-1"><i className="bi bi-pencil-fill my-pen-color" /></button>
-                                </Col>
-                                <Col md='2'>
-                                      <button type="button" className="btn mybtncustomer btn-secondary  mr-1"><i className="bi bi-eye-fill my-list-color" /></button>
-                                </Col>
-                                <Col md='2'>
-                                      <button type="button" className="btn mybtncustomer btn-secondary  mr-1"><i className="bi bi-files my-eye-color" /></button>
-                                </Col>
-                                <Col md='2'>
-                                      <button type="button" className="btn mybtncustomer btn-secondary  mr-1"><i className="bi bi-file-earmark-check-fill my-eye-color" /></button>
-                                </Col>
-                                <Col md='2'>
-                                      <button type="button" className="btn mybtncustomer btn-secondary  mr-1"><i className="bi bi-person-fill my-trash-color" /></button>
-                                </Col>
-                            </Row>
-                          </Col>
-                        </Row>
+                      <td>
+                        <Table className="order-page-table" size="sm">
+                          <thead>
+                            <tr>
+                              <th>
+                                 #572
+                              </th>
+                              <th title='Aqualite  aaaaaa aaaaaaaaaaa Industries Pvt. Ltd.'>
+                                 Aqualite  aaaaaa aaaaaaaaaaa Industries Pvt. Ltd.
+                              </th>
+                            </tr>
+                            <tr>
+                              <th>
+                                 Confirmed
+                              </th>
+                              <th>
+                                   <button type="button" className="btn mybtncustomer btn-secondary  mr-1" onClick={()=>{editOrder()}}><i className="bi bi-pencil-fill my-pen-color" /></button>
+                                   <button type="button" className="btn mybtncustomer btn-secondary  mr-1" onClick={()=>{viewOrder()}}><i className="bi bi-eye-fill my-list-color" /></button>
+                                   <button type="button" className="btn mybtncustomer btn-secondary  mr-1"><i className="bi bi-files my-eye-color" /></button>
+                                   <button type="button" className="btn mybtncustomer btn-secondary  mr-1"><i className="bi bi-file-earmark-check-fill my-eye-color" /></button>
+                                   <button type="button" className="btn mybtncustomer btn-secondary  mr-1"><i className="bi bi-person-fill my-trash-color" /></button>
+                              </th>
+                            </tr>
+                          </thead>
+                        </Table>
                       </td>
-                      <td rowSpan="1" className="date-cell">
+                      
+                      <td  className="date-cell">
                         <div>
                           17 Dec, 2021
                         </div>
@@ -248,71 +252,369 @@ const JumbotronComponent = () => {
                           23 Dec, 2021
                         </div>
                       </td> 
-                      <td className='noborder'>
-                         <tr className='noborder'>
-                          <div style={{display:'flex'}} className='my-table'>
-                          <MyTooltip text="ALINEA">ALINEA</MyTooltip>
-                                      <MyTooltip text="Q22/CX0Y12Z02 spspspspspspspspspspsp">Q22/CX0Y12Z02 spspspspspspspspspspsp</MyTooltip>
-                                      <MyTooltip text="2.4mm">2.4mm</MyTooltip>
-                                      <MyTooltip text="peach">peach</MyTooltip>
-                                      <MyTooltip text="1000m">1000m</MyTooltip>
-                                      <MyTooltip text="2000.00m">2000.00m</MyTooltip>
-                                      <MyTooltip text="996.70m">996.70m</MyTooltip>
-                                      <MyTooltip text="491.10m">491.10m</MyTooltip>
-                                      <MyTooltip text="0.00m">0.00m</MyTooltip>
-                                      <MyTooltip text="3.30m">3.30m</MyTooltip>
-                          </div>
-                            
-                         </tr>
-                         <tr className='noborder'>
+                      <td>
+                        <Table size='sm' className="order-page-table">
+                          <tbody>
+                            <tr>
+                              <td title="ALINEA">ALINEA</td>
+                              <td title="Q22/CX0Y12Z02 Q22/CX0Y12Z02">Q22/CX0Y12Z02 Q22/CX0Y12Z02</td>
+                              <td title="2.4mm">2.4mm</td>
+                              <td title="peach">peach</td>
+                              <td title="1000m">1000m</td>
+                              <td title="2000.00m">2000.00m</td>
+                              <td title="996.70m">996.70m</td>
+                              <td title="491.10m"> 491.10m</td>
+                              <td title="0.00m">0.00m</td>
+                              <td title="3.30m">3.30m</td>
+                            </tr>
 
-                         <div style={{display:'flex',flexWrap: 'nowrap', position: 'relative'}} className='my-table'>
-                                      <MyTooltip text="ALINEA">ALINEA</MyTooltip>
-                                      <MyTooltip text="Q22/CX0Y12Z02">Q22/CX0Y12Z02</MyTooltip>
-                                      <MyTooltip text="2.4mm">2.4mm</MyTooltip>
-                                      <MyTooltip text="peach">peach</MyTooltip>
-                                      <MyTooltip text="1000m">1000m</MyTooltip>
-                                      <MyTooltip text="2000.00m">2000.00m</MyTooltip>
-                                      <MyTooltip text="996.70m">996.70m</MyTooltip>
-                                      <MyTooltip text="491.10m">491.10m</MyTooltip>
-                                      <MyTooltip text="0.00m">0.00m</MyTooltip>
-                                      <MyTooltip text="3.30m">3.30m</MyTooltip>
-                          </div>
-                         </tr>
-                         <tr className='noborder'>
-                         <div style={{display:'flex'}} className='my-table'>
-                                      <MyTooltip text="ALINEA">ALINEA</MyTooltip>
-                                      <MyTooltip text="Q22/CX0Y12Z02">Q22/CX0Y12Z02</MyTooltip>
-                                      <MyTooltip text="2.4mm">2.4mm</MyTooltip>
-                                      <MyTooltip text="peach">peach</MyTooltip>
-                                      <MyTooltip text="1000m">1000m</MyTooltip>
-                                      <MyTooltip text="2000.00m">2000.00m</MyTooltip>
-                                      <MyTooltip text="996.70m">996.70m</MyTooltip>
-                                      <MyTooltip text="491.10m">491.10m</MyTooltip>
-                                      <MyTooltip text="0.00m">0.00m</MyTooltip>
-                                      <MyTooltip text="3.30m">3.30m</MyTooltip>
-                          </div>
-                         </tr>
-                         <tr className='noborder'>
-                         <div style={{display:'flex'}} className='my-table'>
-                                      <MyTooltip text="ALINEA">ALINEA</MyTooltip>
-                                      <MyTooltip text="Q22/CX0Y12Z02">Q22/CX0Y12Z02</MyTooltip>
-                                      <MyTooltip text="2.4mm">2.4mm</MyTooltip>
-                                      <MyTooltip text="peach">peach</MyTooltip>
-                                      <MyTooltip text="1000m">1000m</MyTooltip>
-                                      <MyTooltip text="2000.00m">2000.00m</MyTooltip>
-                                      <MyTooltip text="996.70m">996.70m</MyTooltip>
-                                      <MyTooltip text="491.10m">491.10m</MyTooltip>
-                                      <MyTooltip text="0.00m">0.00m</MyTooltip>
-                                      <MyTooltip text="3.30m">3.30m</MyTooltip>
-                          </div>
-                         </tr>
+                            <tr>
+                              <td title="ALINEA">ALINEA</td>
+                              <td title="Q22/CX0Y12Z02">Q22/CX0Y12Z02</td>
+                              <td title="2.4mm">2.4mm</td>
+                              <td title="peach">peach</td>
+                              <td title="1000m">1000m</td>
+                              <td title="2000.00m">2000.00m</td>
+                              <td title="996.70m">996.70m</td>
+                              <td title="491.10m"> 491.10m</td>
+                              <td title="0.00m">0.00m</td>
+                              <td title="3.30m">3.30m</td>
+                            </tr>
+
+                            <tr>
+                              <td title="ALINEA">ALINEA</td>
+                              <td title="Q22/CX0Y12Z02">Q22/CX0Y12Z02</td>
+                              <td title="2.4mm">2.4mm</td>
+                              <td title="peach">peach</td>
+                              <td title="1000m">1000m</td>
+                              <td title="2000.00m">2000.00m</td>
+                              <td title="996.70m">996.70m</td>
+                              <td title="491.10m"> 491.10m</td>
+                              <td title="0.00m">0.00m</td>
+                              <td title="3.30m">3.30m</td>
+                            </tr>
+
+                            <tr>
+                              <td title="ALINEA">ALINEA</td>
+                              <td title="Q22/CX0Y12Z02">Q22/CX0Y12Z02</td>
+                              <td title="2.4mm">2.4mm</td>
+                              <td title="peach">peach</td>
+                              <td title="1000m">1000m</td>
+                              <td title="2000.00m">2000.00m</td>
+                              <td title="996.70m">996.70m</td>
+                              <td title="491.10m"> 491.10m</td>
+                              <td title="0.00m">0.00m</td>
+                              <td title="3.30m">3.30m</td>
+                            </tr>
+                           
+                            
+                                 
+                          </tbody>
+                        </Table>  
                       </td>
                     </tr>
-                    
-                    
-                    
-                  
+                    {/* Repeat this block for each set of order details */}
+
+{/* Repeat this block for each set of order details */}
+<tr >
+                      <td>
+                        <Table className="order-page-table" size="sm">
+                          <thead>
+                            <tr>
+                              <th>
+                                 #572
+                              </th>
+                              <th title='Aqualite Industries Pvt. Ltd.'>
+                                 Aqualite Industries Pvt. Ltd.
+                              </th>
+                            </tr>
+                            <tr>
+                              <th>
+                                 Confirmed
+                              </th>
+                              <th>
+                                   <button type="button" className="btn mybtncustomer btn-secondary  mr-1" onClick={()=>{editOrder()}}><i className="bi bi-pencil-fill my-pen-color" /></button>
+                                   <button type="button" className="btn mybtncustomer btn-secondary  mr-1" onClick={()=>{viewOrder()}}><i className="bi bi-eye-fill my-list-color" /></button>
+                                   <button type="button" className="btn mybtncustomer btn-secondary  mr-1"><i className="bi bi-files my-eye-color" /></button>
+                                   <button type="button" className="btn mybtncustomer btn-secondary  mr-1"><i className="bi bi-file-earmark-check-fill my-eye-color" /></button>
+                                   <button type="button" className="btn mybtncustomer btn-secondary  mr-1"><i className="bi bi-person-fill my-trash-color" /></button>
+                              </th>
+                            </tr>
+                          </thead>
+                        </Table>
+                      </td>
+                      
+                      <td  className="date-cell">
+                        <div>
+                          17 Dec, 2021
+                        </div>
+                        <div>
+                          23 Dec, 2021
+                        </div>
+                      </td> 
+                      <td>
+                        <Table size='sm' className="order-page-table">
+                          <tbody>
+                            <tr>
+                              <td title="ALINEA">ALINEA</td>
+                              <td title="Q22/CX0Y12Z02 Q22/CX0Y12Z02">Q22/CX0Y12Z02 Q22/CX0Y12Z02</td>
+                              <td title="2.4mm">2.4mm</td>
+                              <td title="peach">peach</td>
+                              <td title="1000m">1000m</td>
+                              <td title="2000.00m">2000.00m</td>
+                              <td title="996.70m">996.70m</td>
+                              <td title="491.10m"> 491.10m</td>
+                              <td title="0.00m">0.00m</td>
+                              <td title="3.30m">3.30m</td>
+                            </tr>
+
+                            <tr>
+                              <td title="ALINEA">ALINEA</td>
+                              <td title="Q22/CX0Y12Z02">Q22/CX0Y12Z02</td>
+                              <td title="2.4mm">2.4mm</td>
+                              <td title="peach">peach</td>
+                              <td title="1000m">1000m</td>
+                              <td title="2000.00m">2000.00m</td>
+                              <td title="996.70m">996.70m</td>
+                              <td title="491.10m"> 491.10m</td>
+                              <td title="0.00m">0.00m</td>
+                              <td title="3.30m">3.30m</td>
+                            </tr>
+
+                            <tr>
+                              <td title="ALINEA">ALINEA</td>
+                              <td title="Q22/CX0Y12Z02">Q22/CX0Y12Z02</td>
+                              <td title="2.4mm">2.4mm</td>
+                              <td title="peach">peach</td>
+                              <td title="1000m">1000m</td>
+                              <td title="2000.00m">2000.00m</td>
+                              <td title="996.70m">996.70m</td>
+                              <td title="491.10m"> 491.10m</td>
+                              <td title="0.00m">0.00m</td>
+                              <td title="3.30m">3.30m</td>
+                            </tr>
+
+                            <tr>
+                              <td title="ALINEA">ALINEA</td>
+                              <td title="Q22/CX0Y12Z02">Q22/CX0Y12Z02</td>
+                              <td title="2.4mm">2.4mm</td>
+                              <td title="peach">peach</td>
+                              <td title="1000m">1000m</td>
+                              <td title="2000.00m">2000.00m</td>
+                              <td title="996.70m">996.70m</td>
+                              <td title="491.10m"> 491.10m</td>
+                              <td title="0.00m">0.00m</td>
+                              <td title="3.30m">3.30m</td>
+                            </tr>
+                           
+                            
+                                 
+                          </tbody>
+                        </Table>  
+                      </td>
+                    </tr>
+                    {/* Repeat this block for each set of order details */}
+
+                    {/* Repeat this block for each set of order details */}
+                    <tr >
+                      <td>
+                        <Table className="order-page-table" size="sm">
+                          <thead>
+                            <tr>
+                              <th>
+                                 #572
+                              </th>
+                              <th title='Aqualite Industries Pvt. Ltd.'>
+                                 Aqualite Industries Pvt. Ltd.
+                              </th>
+                            </tr>
+                            <tr>
+                              <th>
+                                 Confirmed
+                              </th>
+                              <th>
+                                   <button type="button" className="btn mybtncustomer btn-secondary  mr-1" onClick={()=>{editOrder()}}><i className="bi bi-pencil-fill my-pen-color" /></button>
+                                   <button type="button" className="btn mybtncustomer btn-secondary  mr-1" onClick={()=>{viewOrder()}}><i className="bi bi-eye-fill my-list-color" /></button>
+                                   <button type="button" className="btn mybtncustomer btn-secondary  mr-1"><i className="bi bi-files my-eye-color" /></button>
+                                   <button type="button" className="btn mybtncustomer btn-secondary  mr-1"><i className="bi bi-file-earmark-check-fill my-eye-color" /></button>
+                                   <button type="button" className="btn mybtncustomer btn-secondary  mr-1"><i className="bi bi-person-fill my-trash-color" /></button>
+                              </th>
+                            </tr>
+                          </thead>
+                        </Table>
+                      </td>
+                      
+                      <td  className="date-cell">
+                        <div>
+                          17 Dec, 2021
+                        </div>
+                        <div>
+                          23 Dec, 2021
+                        </div>
+                      </td> 
+                      <td>
+                        <Table size='sm' className="order-page-table">
+                          <tbody>
+                            <tr>
+                              <td title="ALINEA">ALINEA</td>
+                              <td title="Q22/CX0Y12Z02 Q22/CX0Y12Z02">Q22/CX0Y12Z02 Q22/CX0Y12Z02</td>
+                              <td title="2.4mm">2.4mm</td>
+                              <td title="peach">peach</td>
+                              <td title="1000m">1000m</td>
+                              <td title="2000.00m">2000.00m</td>
+                              <td title="996.70m">996.70m</td>
+                              <td title="491.10m"> 491.10m</td>
+                              <td title="0.00m">0.00m</td>
+                              <td title="3.30m">3.30m</td>
+                            </tr>
+
+                            <tr>
+                              <td title="ALINEA">ALINEA</td>
+                              <td title="Q22/CX0Y12Z02">Q22/CX0Y12Z02</td>
+                              <td title="2.4mm">2.4mm</td>
+                              <td title="peach">peach</td>
+                              <td title="1000m">1000m</td>
+                              <td title="2000.00m">2000.00m</td>
+                              <td title="996.70m">996.70m</td>
+                              <td title="491.10m"> 491.10m</td>
+                              <td title="0.00m">0.00m</td>
+                              <td title="3.30m">3.30m</td>
+                            </tr>
+
+                            <tr>
+                              <td title="ALINEA">ALINEA</td>
+                              <td title="Q22/CX0Y12Z02">Q22/CX0Y12Z02</td>
+                              <td title="2.4mm">2.4mm</td>
+                              <td title="peach">peach</td>
+                              <td title="1000m">1000m</td>
+                              <td title="2000.00m">2000.00m</td>
+                              <td title="996.70m">996.70m</td>
+                              <td title="491.10m"> 491.10m</td>
+                              <td title="0.00m">0.00m</td>
+                              <td title="3.30m">3.30m</td>
+                            </tr>
+
+                            <tr>
+                              <td title="ALINEA">ALINEA</td>
+                              <td title="Q22/CX0Y12Z02">Q22/CX0Y12Z02</td>
+                              <td title="2.4mm">2.4mm</td>
+                              <td title="peach">peach</td>
+                              <td title="1000m">1000m</td>
+                              <td title="2000.00m">2000.00m</td>
+                              <td title="996.70m">996.70m</td>
+                              <td title="491.10m"> 491.10m</td>
+                              <td title="0.00m">0.00m</td>
+                              <td title="3.30m">3.30m</td>
+                            </tr>
+                           
+                            
+                                 
+                          </tbody>
+                        </Table>  
+                      </td>
+                    </tr>
+                    {/* Repeat this block for each set of order details */}
+
+                    {/* Repeat this block for each set of order details */}
+                    <tr >
+                      <td>
+                        <Table className="order-page-table" size="sm">
+                          <thead>
+                            <tr>
+                              <th>
+                                 #572
+                              </th>
+                              <th title='Aqualite Industries Pvt. Ltd.'>
+                                 Aqualite Industries Pvt. Ltd.
+                              </th>
+                            </tr>
+                            <tr>
+                              <th>
+                                 Confirmed
+                              </th>
+                              <th>
+                                   <button type="button" className="btn mybtncustomer btn-secondary  mr-1" onClick={()=>{editOrder()}}><i className="bi bi-pencil-fill my-pen-color" /></button>
+                                   <button type="button" className="btn mybtncustomer btn-secondary  mr-1" onClick={()=>{viewOrder()}}><i className="bi bi-eye-fill my-list-color" /></button>
+                                   <button type="button" className="btn mybtncustomer btn-secondary  mr-1"><i className="bi bi-files my-eye-color" /></button>
+                                   <button type="button" className="btn mybtncustomer btn-secondary  mr-1"><i className="bi bi-file-earmark-check-fill my-eye-color" /></button>
+                                   <button type="button" className="btn mybtncustomer btn-secondary  mr-1"><i className="bi bi-person-fill my-trash-color" /></button>
+                              </th>
+                            </tr>
+                          </thead>
+                        </Table>
+                      </td>
+                      
+                      <td  className="date-cell">
+                        <div>
+                          17 Dec, 2021
+                        </div>
+                        <div>
+                          23 Dec, 2021
+                        </div>
+                      </td> 
+                      <td>
+                        <Table size='sm' className="order-page-table">
+                          <tbody>
+                            <tr>
+                              <td title="ALINEA">ALINEA</td>
+                              <td title="Q22/CX0Y12Z02 Q22/CX0Y12Z02">Q22/CX0Y12Z02 Q22/CX0Y12Z02</td>
+                              <td title="2.4mm">2.4mm</td>
+                              <td title="peach">peach</td>
+                              <td title="1000m">1000m</td>
+                              <td title="2000.00m">2000.00m</td>
+                              <td title="996.70m">996.70m</td>
+                              <td title="491.10m"> 491.10m</td>
+                              <td title="0.00m">0.00m</td>
+                              <td title="3.30m">3.30m</td>
+                            </tr>
+
+                            <tr>
+                              <td title="ALINEA">ALINEA</td>
+                              <td title="Q22/CX0Y12Z02">Q22/CX0Y12Z02</td>
+                              <td title="2.4mm">2.4mm</td>
+                              <td title="peach">peach</td>
+                              <td title="1000m">1000m</td>
+                              <td title="2000.00m">2000.00m</td>
+                              <td title="996.70m">996.70m</td>
+                              <td title="491.10m"> 491.10m</td>
+                              <td title="0.00m">0.00m</td>
+                              <td title="3.30m">3.30m</td>
+                            </tr>
+
+                            <tr>
+                              <td title="ALINEA">ALINEA</td>
+                              <td title="Q22/CX0Y12Z02">Q22/CX0Y12Z02</td>
+                              <td title="2.4mm">2.4mm</td>
+                              <td title="peach">peach</td>
+                              <td title="1000m">1000m</td>
+                              <td title="2000.00m">2000.00m</td>
+                              <td title="996.70m">996.70m</td>
+                              <td title="491.10m"> 491.10m</td>
+                              <td title="0.00m">0.00m</td>
+                              <td title="3.30m">3.30m</td>
+                            </tr>
+
+                            <tr>
+                              <td title="ALINEA">ALINEA</td>
+                              <td title="Q22/CX0Y12Z02">Q22/CX0Y12Z02</td>
+                              <td title="2.4mm">2.4mm</td>
+                              <td title="peach">peach</td>
+                              <td title="1000m">1000m</td>
+                              <td title="2000.00m">2000.00m</td>
+                              <td title="996.70m">996.70m</td>
+                              <td title="491.10m"> 491.10m</td>
+                              <td title="0.00m">0.00m</td>
+                              <td title="3.30m">3.30m</td>
+                            </tr>
+                           
+                            
+                                 
+                          </tbody>
+                        </Table>  
+                      </td>
+                    </tr>
+                    {/* Repeat this block for each set of order details */}
+                   
                   </tbody>
                 </Table>
                 

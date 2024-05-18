@@ -21,8 +21,6 @@ const Customer = () => { // Removed the empty object pattern
   const navigate = useNavigate();
   const [collapse, setCollapse] = useState(false);
   const [data, setData] = useState([]);
- 
-  
 
   const tableStyle = {
     // margin: 'auto', // Centers the table horizontally
@@ -40,6 +38,11 @@ const Customer = () => { // Removed the empty object pattern
     // Navigate to the edit page with the item's id
     // Navigate(`/resources/address-types/edit/${itemId}`);
     navigate('/order/customers/add');
+  };
+  const handleView = () => {
+    // Navigate to the edit page with the item's id
+    // Navigate(`/resources/address-types/edit/${itemId}`);
+    navigate('/order/customers/view');
   };
 
   const handleEditAddress = (customer)=>{
@@ -84,7 +87,7 @@ const Customer = () => { // Removed the empty object pattern
     const fetchData = async () => {
       const token = localStorage.getItem('userToken');
       console.log('token',token);
-      const response = await fetch('https://factory.teamasia.in/api/public/customers', {
+      const response = await fetch('https://factory.teamasia.in/api/public/customers/?is_trashed=0', {
         method: 'GET', 
         headers: {
           'Authorization': `Bearer ${token}`
@@ -167,7 +170,7 @@ const Customer = () => { // Removed the empty object pattern
                     <td>
                       {/* Added type="button" to each button */}
                       <button type="button" className="btn mybtncustomer btn-secondary btn-sm mr-2" onClick={() => handleEditClick(customer)}><i className="bi bi-pencil-fill my-pen-color" /></button>
-                      <button type="button" className="btn mybtncustomer btn-secondary btn-sm mr-2"><i className="bi bi-eye-fill my-eye-color" /></button>
+                      <button type="button" className="btn mybtncustomer btn-secondary btn-sm mr-2" onClick={() => handleView(customer)}><i className="bi bi-eye-fill my-eye-color" /></button>
                       <button type="button" className="btn mybtncustomer btn-secondary btn-sm mr-2"  onClick={() => handleEditAddress(customer)}> <i className="bi bi-geo-alt-fill my-geo-color" /> </button>
                       <button type="button" className="btn mybtncustomer btn-secondary btn-sm mr-2"><i className="bi bi-list my-list-color" onClick={() => handlePendingReport(customer)}/></button>
                     </td>

@@ -14,6 +14,7 @@ import ComponentCard from '../../../components/ComponentCard';
 const QaPeTeams = () => {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
+  const [validationData, setValidationData] = useState([]);
   const [istrashed, setIstrashed] = useState('0');
   // const data = [
   //   { id: 1, Name: 'Ajay Kumar', Department: 'Quality Assurance'},
@@ -35,12 +36,13 @@ const QaPeTeams = () => {
   const handleEditClick = (item) => {
     // Navigate to the edit page with the item's id
     // Navigate(`/resources/address-types/edit/${itemId}`);
-    navigate('/resources/qa-pe-teams/edit', { state: item });
+    const validationDataArray = validationData.filter(ex => ex !== item.name);
+    navigate('/resources/qa-pe-teams/edit', { state: {item, validationDataArray} });
   };
   const handleEditAdd = () => {
     // Navigate to the edit page with the item's id
     // Navigate(`/resources/address-types/edit/${itemId}`);
-    navigate('/resources/qa-pe-teams/add');
+    navigate('/resources/qa-pe-teams/add',{state:validationData});
   };
   const handleTrash = ()=>{
      
@@ -97,7 +99,11 @@ const QaPeTeams = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const result = await response.json();
-      setData(result.qapateams); 
+      setData(result.qapateams);
+      const addresstypesItems =result.qapateams.map((a)=>{
+        return a.name
+       });
+     setValidationData(addresstypesItems);
       console.log(result.qapateams); 
     };
   

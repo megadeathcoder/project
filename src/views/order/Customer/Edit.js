@@ -82,37 +82,63 @@ const handleChangeLabel = (e) => {
   );
 };
 
-  const addItem = () => {
-    console.log('mega',items);
-    const newItems = items.slice();
-    newItems.push({name:'',designation:'',email:'',country_code:'',mobile:'',whatsapp_invoice_dispatch:'',whatsapp_ledger:'',whatsapp_pending_payment:'',whatsapp_proforma_invoice:'',email_invoice_dispatch:'',email_ledger:'',email_pending_payment:'',email_proforma_invoice:''})
-    console.log('mega',newItems);
-    setItems(newItems);
-  };
+const addItem = () => {
+  const newItems = items.slice();
+  newItems.push({
+    id:"",
+    name: "",
+          designation: "",
+          email: "",
+          country_code: "",
+          mobile: "",
+          email_proforma_invoice: "0",
+          email_invoice_dispatch: "0",
+          email_ledger: "0",
+          email_pending_payment: "0",
+          whatsapp_proforma_invoice: "0",
+          whatsapp_invoice_dispatch: "0",
+          whatsapp_ledger: "0",
+          whatsapp_pending_payment: "0"
+  })
+  setItems(newItems);
+};
 
-  const removeItem = index => {
-    const newItems = items.slice();
-    newItems.splice(index, 1);
-    setItems(newItems);
-    setFormDataS(prevState => ({
-      ...prevState,
-      items: newItems
-    }));
-  };
+const removeItem = (index) => {
+  const newItems = items.slice();
+  newItems.splice(index, 1);
+  console.log('newItems',newItems);
+  setItems(newItems);
+  setFormDataS(prevState=>({
+    ...prevState,
+    items:newItems
+}))
+};
 
-  const handleInputChange = (index, e) => {
-    const { name , value} = e.target;
-    const newItems = items.slice();
-    console.log("data",index,name,value,newItems);
-    newItems[index][name] = value;
-    console.log('newX',newItems);
-    setFormDataS(prevState => ({
-      ...prevState,
-      items: newItems
-    }));
-
-    setItems(newItems);
-  };
+const handleInputChange = (index, event) => {
+  const {name ,value,type} = event.target;
+  const newItems = items.slice();
+  console.log("data",index,newItems[index]);
+  if(type === 'checkbox'){
+    console.log('check value',value,event.target.checked);
+    if(newItems[index][name] === '0')
+    {
+      newItems[index][name] =  '1';
+    }
+    else{
+      newItems[index][name] =  '0';
+    }
+  }
+  else{
+      newItems[index][name] =  value;
+      console.log('check not',newItems[index][name]);
+  }
+  setItems(newItems);
+  setFormDataS(prevState=>({
+        ...prevState,
+        items:newItems
+    }))
+  
+};
 
   const addCompdoc= () => {
     const newItems = compdoc.slice();
@@ -445,14 +471,115 @@ const handleSubmit = async (event) => {
           
               <tbody>
               {items.map((item, index) => (
-                  <tr key={item.index}>
+                  <tr key={item.id}>
                     <Row>
                       <Col md="2"><Input name="name" value={item.name} type="text" onChange={e => handleInputChange(index, e)} placeholder="" /></Col>
-                      <Col md="2"><Input name="designation" value={item.designation} type="text" onChange={e => handleInputChange(index, e)} placeholder="" /></Col>
-                      <Col md="2"><Input name="email" value={item.email} type="text" onChange={e => handleInputChange(index, e)} placeholder="" /></Col>
-                      <Col md="2"><Input name="country_code" value={item.country_code} type="text" onChange={e => handleInputChange(index, e)} placeholder="" /></Col>
+                      <Col md="3"><Input name="designation" value={item.designation} type="text" onChange={e => handleInputChange(index, e)} placeholder="" /></Col>
+                      <Col md="3"><Input name="email" value={item.email} type="text" onChange={e => handleInputChange(index, e)} placeholder="" /></Col>
+                      <Col md="1"><Input name="country_code" value={item.country_code} type="text" onChange={e => handleInputChange(index, e)} placeholder="" /></Col>
                       <Col md="2"><Input name="mobile" value={item.mobile} type="text" onChange={e => handleInputChange(index, e)} placeholder="" /></Col>
                       <Col md="1"><button type="button"  style={{ backgroundColor:"red",marginTop:"5px"}} onClick={() => removeItem(index)}>X</button></Col>
+                    </Row>
+                    <Row>
+                    <Col md="2">
+                      <FormGroup>
+                        {/* <Input type="checkbox" checked={ DefaultToFactoryStock === '1'} onChange={checkboxclick()}  /> */}
+                        <br></br>
+                        <Label className='mx-1'>Email</Label>
+                        <FormText className="muted"></FormText>
+                      </FormGroup>
+                    </Col>
+
+                     <Col md="2">
+                      <FormGroup>
+                        {/* <Input type="checkbox" checked={ DefaultToFactoryStock === '1'} onChange={checkboxclick()}  /> */}
+                        <Label className=''>Proforma Invoice</Label>
+                        <br></br>
+                        <Input 
+                        type="checkbox" checked={ item.email_proforma_invoice !== '0' } name="email_proforma_invoice" onChange={e => handleInputChange(index, e)}  
+                        />
+                        <FormText className="muted"></FormText>
+                      </FormGroup>
+                    </Col>
+                     <Col md="2">
+                      <FormGroup>
+                        {/* <Input type="checkbox" checked={ DefaultToFactoryStock === '1'} onChange={checkboxclick()}  /> */}
+                        <Label className=''>Invoice/dispatch</Label>
+                        <br></br>
+                        <Input 
+                        type="checkbox" checked={ item.email_invoice_dispatch !== '0' } name="email_invoice_dispatch" onChange={e => handleInputChange(index, e)}  
+                        />
+                        <FormText className="muted"></FormText>
+                      </FormGroup>
+                    </Col>
+                     <Col md="2">
+                      <FormGroup>
+                        {/* <Input type="checkbox" checked={ DefaultToFactoryStock === '1'} onChange={checkboxclick()}  /> */}
+                        <Label className=''>Ledgers</Label>
+                        <br></br>
+                        <Input 
+                        type="checkbox" checked={ item.email_ledger !== '0' } name="email_ledger" onChange={e => handleInputChange(index, e)}  
+                        />
+                        <FormText className="muted"></FormText>
+                      </FormGroup>
+                    </Col>
+                     <Col md="2">
+                      <FormGroup>
+                        {/* <Input type="checkbox" checked={ DefaultToFactoryStock === '1'} onChange={checkboxclick()}  /> */}
+                        <Label className=''>Pending Payments</Label>
+                        <br></br>
+                        <Input 
+                        type="checkbox" checked={ item.email_pending_payment !== '0' } name="email_pending_payment" onChange={e => handleInputChange(index, e)}  
+                        />
+                        <FormText className="muted"></FormText>
+                      </FormGroup>
+                    </Col>
+                    </Row>
+
+                    <Row>
+                    <Col md="2">
+                      <FormGroup>
+                        {/* <Input type="checkbox" checked={ DefaultToFactoryStock === '1'} onChange={checkboxclick()}  /> */}
+                        <Label className='mx-1'>Whatsapp</Label>
+                        <FormText className="muted"></FormText>
+                      </FormGroup>
+                    </Col>
+                     <Col md="2">
+                      <FormGroup>
+                        {/* <Input type="checkbox" checked={ DefaultToFactoryStock === '1'} onChange={checkboxclick()}  /> */}
+                        <Input 
+                        type="checkbox" checked={ item.whatsapp_proforma_invoice !== '0' } name="whatsapp_proforma_invoice" onChange={e => handleInputChange(index, e)}  
+                        />
+                        <FormText className="muted"></FormText>
+                      </FormGroup>
+                    </Col>
+                     <Col md="2">
+                      <FormGroup>
+                        {/* <Input type="checkbox" checked={ DefaultToFactoryStock === '1'} onChange={checkboxclick()}  /> */}
+                        <Input 
+                        type="checkbox" checked={item.whatsapp_invoice_dispatch !== '0' } name="whatsapp_invoice_dispatch" onChange={e => handleInputChange(index, e)} 
+                        />
+                        <FormText className="muted"></FormText>
+                      </FormGroup>
+                    </Col>
+                     <Col md="2">
+                      <FormGroup>
+                        {/* <Input type="checkbox" checked={ DefaultToFactoryStock === '1'} onChange={checkboxclick()}  /> */}
+                        <Input 
+                        type="checkbox" checked={ item.whatsapp_ledger !== '0' } name="whatsapp_ledger" onChange={e => handleInputChange(index, e)}  
+                        />
+                        <FormText className="muted"></FormText>
+                      </FormGroup>
+                    </Col>
+                     <Col md="2">
+                      <FormGroup>
+                        {/* <Input type="checkbox" checked={ DefaultToFactoryStock === '1'} onChange={checkboxclick()}  /> */}
+                        <Input 
+                        type="checkbox" checked={ item.whatsapp_pending_payment !== '0' } name="whatsapp_pending_payment" onChange={e => handleInputChange(index, e)}  
+                        />
+                        <FormText className="muted"></FormText>
+                      </FormGroup>
+                    </Col>
                     </Row>
                     
                   </tr>

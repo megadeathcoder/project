@@ -14,6 +14,7 @@ import ComponentCard from '../../../components/ComponentCard';
 const Grains = () => {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
+  const [validationData, setValidationData] = useState([]);
   const [istrashed, setIstrashed] = useState('0');
   // const data = [
   //   { id: 1, Name: '1001 A'},
@@ -35,12 +36,13 @@ const Grains = () => {
   const handleEditClick = (item) => {
     // Navigate to the edit page with the item's id
     // Navigate(`/resources/address-types/edit/${itemId}`);
-    navigate('/resources/grains/edit', { state: item });
+    const validationDataArray = validationData.filter(ex => ex !== item.name);
+    navigate('/resources/grains/edit', { state: {item, validationDataArray} });
   };
   const handleEditAdd = () => {
     // Navigate to the edit page with the item's id
     // Navigate(`/resources/address-types/edit/${itemId}`);
-    navigate('/resources/grains/add');
+    navigate('/resources/grains/add',{state:validationData});
   };
   const handleTrash = ()=>{
      
@@ -97,7 +99,11 @@ const Grains = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const result = await response.json();
-      setData(result.grains); 
+      setData(result.grains);
+      const addresstypesItems =result.grains.map((a)=>{
+        return a.name
+       });
+     setValidationData(addresstypesItems);
     };
   
     fetchData();

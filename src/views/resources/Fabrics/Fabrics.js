@@ -14,6 +14,7 @@ import ComponentCard from '../../../components/ComponentCard';
 const Fabrics = () => {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
+  const [validationData, setValidationData] = useState([]);
   const [istrashed, setIstrashed] = useState('0');
   // const data = [
   //   { id: 1, Name: 'ACF'},  
@@ -36,12 +37,13 @@ const Fabrics = () => {
   const handleEditClick = (item) => {
     // Navigate to the edit page with the item's id
     // Navigate(`/resources/address-types/edit/${itemId}`);
-    navigate('/resources/fabrics/edit', { state: item });
+    const validationDataArray = validationData.filter(ex => ex !== item.name);
+    navigate('/resources/fabrics/edit', { state: {item, validationDataArray} });
   };
   const handleEditAdd = () => {
     // Navigate to the edit page with the item's id
     // Navigate(`/resources/address-types/edit/${itemId}`);
-    navigate('/resources/fabrics/add');
+    navigate('/resources/fabrics/add',{state:validationData});
   };
 
   const handleTrash = ()=>{
@@ -99,7 +101,11 @@ const Fabrics = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const result = await response.json();
-      setData(result.fabrics); 
+      setData(result.fabrics);
+      const addresstypesItems =result.fabrics.map((a)=>{
+        return a.name
+       });
+     setValidationData(addresstypesItems); 
     };
   
     fetchData();

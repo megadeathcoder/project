@@ -14,6 +14,7 @@ import ComponentCard from '../../../components/ComponentCard';
 const InventoryTypes = () => {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
+  const [validationData, setValidationData] = useState([]);
   const [istrashed, setIstrashed] = useState('0');
   // const data = [
   //   { id: 1, Name: 'Bag'},
@@ -36,12 +37,13 @@ const InventoryTypes = () => {
   const handleEditClick = (item) => {
     // Navigate to the edit page with the item's id
     // Navigate(`/resources/address-types/edit/${itemId}`);
-    navigate('/resources/inventorytypes/edit', { state: item });
+    const validationDataArray = validationData.filter(ex => ex !== item.name);
+    navigate('/resources/inventorytypes/edit', { state: {item, validationDataArray} });
   };
   const handleEditAdd = () => {
     // Navigate to the edit page with the item's id
     // Navigate(`/resources/address-types/edit/${itemId}`);
-    navigate('/resources/inventorytypes/add');
+    navigate('/resources/inventorytypes/add',{state:validationData});
   };
   const handleTrash = ()=>{
      
@@ -98,7 +100,11 @@ const InventoryTypes = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const result = await response.json();
-      setData(result.inventorytypes); 
+      setData(result.inventorytypes);
+      const addresstypesItems =result.inventorytypes.map((a)=>{
+        return a.name
+       });
+     setValidationData(addresstypesItems);
     };
   
     fetchData();

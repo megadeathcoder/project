@@ -31,6 +31,17 @@
       .my-btn-color:hover{
         background-color:#1b5557 !important;
         color:white !important;
+        border-color: #5b9395 !important;
+      }
+      .my-btn-color-blue{
+        background-color:#00c2f8 !important;
+        color:white !important;
+      }
+      .my-btn-color-blue:hover{
+        background-color:#289cbc !important;
+        color:white !important;
+        border-color: #00c2f8 !important;
+
       }
       .my-btn-color-yellow{
         background-color: #F3BB45 !important;
@@ -104,6 +115,9 @@
       .my-printer-color{
         color: #4d4242 !important;
       }
+      .my-calander-color{
+        color: #3e7b59 !important;
+      }
       thead, tbody, tfoot, tr, th{
         border-style: solid;
        border-width: 1px !important;
@@ -138,10 +152,15 @@
       }
       .date-cell {
           white-space: nowrap;
-          
         }
+
         .table-size-x{
           font-size:12px;
+        }
+        .table-size-x-button .table-size-x-button-row{
+          display: flex;
+          width:215px !important;
+          justify-content: space-between;
         }
         .table-size-x-button  button{
           padding: 2px !important;
@@ -155,21 +174,30 @@
           white-space:nowrap;
           text-overflow: ellipsis; 
         }
-        .my-table div{
-           width:50px;
+        .fix-wid-1{
+          overflow: hidden;
+          width: 125px !important;
+          white-space:nowrap;
+          text-overflow: ellipsis; 
+        }
+        .my-table .heading{
+          /* background-color: rgb(80, 223, 24); */
+           width:60px;
            overflow: hidden;
-           white-space: nowrap;
+           /* white-space: nowrap; */
            text-overflow: ellipsis;
            margin:0px 10px;
            position: relative;
         }
         .tooltip-container{
-          width: 50px;
+          /* background-color: red; */
+          width: 60px;
           overflow: hidden;
           white-space: nowrap;
           text-overflow: ellipsis;
           margin: 0 10px;
           cursor: default; 
+          position: relative;
         }
         
         .my-tooltip{
@@ -193,12 +221,92 @@
           .tooltip-container:hover .my-tooltip {
             visibility: visible;
             opacity: 1;
-          z-index: 1;
-
+            z-index: 1;
           }
-      
-
-
+         
+          .order-table-button button{
+            font-size: 12px;
+            padding: 5px 2px !important;
+            margin-right: 3px;
+            margin-bottom: 5px;
+          }
+         .order-view-page-flex{
+            display: flex;
+            flex-wrap: wrap;
+         }
+         .order-view-page-flex div{
+          width:33.33%;
+          white-space: nowrap;
+         }
+         .order-view-page-flex div i{
+           font-size:15px;
+           margin-right:5px
+         } 
+         @media only screen and (max-width:768px) {
+          .order-view-page-flex{
+            flex-direction: column;
+          }
+         }
+         .order-background{
+          background:#ebeff3 !important;
+         }
+         .order-history{
+          display:'flex';
+          flex-direction:'column'
+         }
+         .ledger-btn-margin{
+           margin-bottom: 4px;
+           margin-right:3px;
+         }
+         .order-page-table tr td{
+          width: 6rem !important;
+          max-width: 115px !important; 
+          overflow: hidden !important; 
+          text-Overflow:ellipsis !important; 
+          white-space: nowrap !important;
+         }
+         .order-page-table tr th{
+          width: 6rem !important;
+          max-width: 160px !important; 
+          overflow: hidden !important; 
+          text-Overflow:ellipsis !important; 
+          white-space: nowrap !important;
+          border: none !important;
+         }
+         
+         .order-page-table tr th button{
+            font-size: 12px;
+            padding: 2px 2px !important;
+            margin-right: 3px;
+            margin-bottom: 5px;
+         }
+         .role-page-blocks{
+          margin-bottom: 20px;
+         }
+         .role-page-blocks label{
+          margin-bottom: 20px;
+          color:#134429 ;
+          font-weight: 450 !important;
+         }
+         .role-page-blocks input{
+          margin-bottom: 20px;
+          color:#134429 ;
+          font-weight: 450 !important;
+          border: 2px solid green;
+          margin-right:5px;
+         }
+         .role-page-blocks > div:first-child{
+          margin-bottom: 15px;
+          font-size: 20px;
+          font-weight: 500;
+         }
+         .QapViewtable th,td{
+           /* white-space: nowrap; */
+         }
+         .stockmanagementtable th{
+           padding-left:10px !important;
+         }
+        
     </style>
   </head>
   <body>

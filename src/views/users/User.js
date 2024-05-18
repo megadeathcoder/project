@@ -1,5 +1,6 @@
 import React ,{useState,useEffect} from 'react';
 import {
+  Table,
   Button,
   Col,
   Row,
@@ -9,18 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import ComponentCard from '../../components/ComponentCard';
 
 const User = () => {
-  const [data, setData] = useState([
-    { id: 1, Name: '1037 A', Email: 'sonu.modal@teamcolence.com', Mobile: '9315496801', Role: 'superadmin', Mfastatus: 'Disable',Factory:["TAFP"]},
-    { id: 2, Name: '1037 A', Email: 'sonu.modal@teamcolence.com', Mobile: '9315496801', Role: 'Admin', Mfastatus: 'Disable',Factory:["TAFP","TAPL"]},
-    { id: 3, Name: '1037 A', Email: 'sonu.modal@teamcolence.com', Mobile: '9315496801', Role: 'Admin', Mfastatus: 'Disable',Factory:["TAFP"]},
-    { id: 4, Name: '1037 A', Email: 'sonu.modal@teamcolence.com', Mobile: '9315496801', Role: 'Admin', Mfastatus: 'Disable',Factory:["TAFP"]},
-    { id: 5, Name: '1037 A', Email: 'sonu.modal@teamcolence.com', Mobile: '9315496801', Role: 'Admin', Mfastatus: 'Disable',Factory:["TAFP"]},
-    { id: 6, Name: '1037 A', Email: 'sonu.modal@teamcolence.com', Mobile: '9315496801', Role: 'Admin', Mfastatus: 'Disable',Factory:["TAFP"]},
-    { id: 7, Name: '1037 A', Email: 'sonu.modal@teamcolence.com', Mobile: '9315496801', Role: 'Admin', Mfastatus: 'Disable',Factory:["TAFP"]},
-    { id: 8, Name: '1037 A', Email: 'sonu.modal@teamcolence.com', Mobile: '9315496801', Role: 'Admin', Mfastatus: 'Disable',Factory:["TAFP"]},
-    { id: 9, Name: '1037 A', Email: 'sonu.modal@teamcolence.com', Mobile: '9315496801', Role: 'Admin', Mfastatus: 'Disable',Factory:["TAFP"]},
-    { id: 10, Name: '1037 A', Email: 'sonu.modal@teamcolence.com', Mobile: '9315496801', Role: 'Admin', Mfastatus: 'Disable',Factory:["TAFP"]},
-  ]);
+  const [data, setData] = useState([]);
 
   const navigate = useNavigate();
   // const data = [
@@ -35,11 +25,7 @@ const User = () => {
   //   { id: 9, Name: '1037 A', Email: 'sonu.modal@teamcolence.com', Mobile: '9315496801', Role: 'Admin', Mfastatus: 'Disable'},
   //   { id: 10, Name: '1037 A', Email: 'sonu.modal@teamcolence.com', Mobile: '9315496801', Role: 'Admin', Mfastatus: 'Disable'},
   // ];
-  const tableStyle = {
-    // margin: 'auto', 
-    // width: '60%',  
-    // maxWidth: '1000px',
-  };
+ 
   const handleEditClick = (item) => {
     // Navigate to the edit page with the item's id
     // Navigate(`/resources/address-types/edit/${itemId}`);
@@ -54,7 +40,7 @@ const User = () => {
   const handleDeleteClick = async (itemId) => {
     try {
       // Call your API endpoint to delete the item
-      const response = await fetch(`https://indiapuleather.com/teamasia/api/public/users/${itemId}`, {
+      const response = await fetch(`https://factory.teamasia.in/api/public/users/${itemId}`, {
         method: 'DELETE',
         headers: {
           // Your headers here (if needed)
@@ -83,7 +69,7 @@ const User = () => {
     const fetchData = async () => {
       const token = localStorage.getItem('userToken');
       console.log('token',token);
-      const response = await fetch('https://indiapuleather.com/teamasia/api/public/cities', {
+      const response = await fetch('https://factory.teamasia.in/api/public/users?is_trashed=0', {
         method: 'GET', 
         headers: {
           'Authorization': `Bearer ${token}`
@@ -94,7 +80,8 @@ const User = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const result = await response.json();
-      setData(result); 
+      console.log('user',result.users)
+      setData(result.users); 
     };
   
     fetchData();
@@ -117,8 +104,7 @@ const User = () => {
       </Col>
     </Row>
 
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-      <table className="table" style={tableStyle}>
+      <Table  responsive>
               <thead>
               <tr>
 
@@ -131,25 +117,24 @@ const User = () => {
           </tr>
               </thead>
               <tbody>
-                {data.map((product) => (
-                  <tr key={product.id}>
-                  <td>{product.Name}</td>
-                  <td>{product.Email}</td>
-                  <td>{product.Mobile}</td>
-                  <td>{product.Role}</td>
-                  <td>{product.Mfastatus}</td>
+                {data.map((user) => (
+                  <tr key={user.id}>
+                  <td>{user.first_name}</td>
+                  <td>{user.email}</td>
+                  <td>{user.mobile}</td>
+                  <td>{user.role_id}</td>
+                  <td>{user.status}</td>
                   <td>
                     {/* Action buttons or icons */}
-                      <button type="button" className="btn mybtncustomer btn-secondary btn-sm mr-2" onClick={() => handleEditClick(product)}><i className="bi bi-pencil-fill my-pen-color" /></button>
+                      <button type="button" className="btn mybtncustomer btn-secondary btn-sm mr-2" onClick={() => handleEditClick(user)}><i className="bi bi-pencil-fill my-pen-color" /></button>
                       <button type="button" className="btn mybtncustomer btn-secondary btn-sm mr-2"> <i className="bi bi-shield-shaded my-eye-color" /> </button>
-                      <button type="button" className="btn mybtncustomer btn-secondary btn-sm mr-2" onClick={() => handleDeleteClick(product.id)}><i className="bi bi-trash-fill my-trash-color" /></button>
+                      <button type="button" className="btn mybtncustomer btn-secondary btn-sm mr-2" onClick={() => handleDeleteClick(user.id)}><i className="bi bi-trash-fill my-trash-color" /></button>
                   </td>
                 </tr>
                 ))}
               </tbody>
-            </table>
+            </Table>
             
-    </div>
    
   </ComponentCard>
 

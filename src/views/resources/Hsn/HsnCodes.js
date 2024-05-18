@@ -14,6 +14,7 @@ import ComponentCard from '../../../components/ComponentCard';
 const HsnCodes = () => {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
+  const [validationData, setValidationData] = useState([]);
   const [istrashed, setIstrashed] = useState('0');
   // const data = [
   //   { id: 1, Code: '39209959', CodeName: 'PVC Film'},
@@ -35,12 +36,13 @@ const HsnCodes = () => {
   const handleEditClick = (item) => {
     // Navigate to the edit page with the item's id
     // Navigate(`/resources/address-types/edit/${itemId}`);
-    navigate('/resources/hsn-codes/edit', { state: item });
+    const validationDataArray = validationData.filter(ex => ex.name !== item.name);
+    navigate('/resources/hsn-codes/edit', { state: {item, validationDataArray} });
   };
   const handleEditAdd = () => {
     // Navigate to the edit page with the item's id
     // Navigate(`/resources/address-types/edit/${itemId}`);
-    navigate('/resources/hsn-codes/add');
+    navigate('/resources/hsn-codes/add',{state:validationData});
   };
   const handleTrash = ()=>{
      
@@ -96,7 +98,12 @@ const HsnCodes = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const result = await response.json();
-      setData(result.hsns); 
+      setData(result.hsns);
+      console.log(result.hsns);
+      const addresstypesItems =result.hsns.map((a)=>{
+        return {name:a.name,hsnCode: a.hsn_code}
+       });
+     setValidationData(addresstypesItems);
     };
   
     fetchData();

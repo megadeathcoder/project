@@ -80,26 +80,33 @@ const JumbotronComponent = () => {
             <ComponentCard>
 
               <div className='table-margin'>
-               <Table className='table-margin-zero'>
+               <Table responsive className='table-margin-zero QapViewtable' size="sm">
                   <thead>
                     <tr>
-                      <th scope="col" style={{ width: '40%' }}>
-                        <div><img src={Barcode1} alt='barcode'/></div>
+                      <th scope="col" >
+                        <div><img src={Barcode1} style={{maxWidth:'250px' }} alt='barcode'/></div>
                       </th>
-                      <th scope="col">{var1} </th>
-                      <th scope="col">{var2} </th>
+                      <th scope="col">{var1}</th>
+                      <th scope="col">{var2}</th>
 
-                      <th scope="col"><Button className='my-btn-color'>Create Small Roll</Button></th>
-                      <th scope="col"><Button className='my-btn-color-red'>Add Fault</Button></th>
-                      <th scope="col"><Button className='my-btn-color-red'>Lab Report</Button></th>
+                      <th scope="col"><Button className='my-btn-color' style={{whiteSpace:'nowrap'}}>Create Small Roll</Button></th>
+                      <th scope="col"><Button className='my-btn-color-red' style={{whiteSpace:'nowrap'}}>Add Fault</Button></th>
+                      <th scope="col"><Button className='my-btn-color-red' style={{whiteSpace:'nowrap'}}>Lab Report</Button></th>
                       <th scope="col"><Button className='my-btn-color-red'>Print</Button></th>
                       <th scope="col"><Button className='my-btn-mo-color'>More</Button></th>
                       
                     </tr>
+
+                    <div style={{marginTop:'10px !important'}}>
+                      <div style={{marginTop:'10px !important',display:'flex'}}>
+                       <div>{var1}</div>
+                       <div>{var2}</div>
+                       <div>{var1}</div>
+                      </div>                  
+                    </div>
                   </thead>
                   
                 </Table>
-                
                 <div style={{padding: "25px 0px 0px 0px",border: "1px solid #dee2e6"}}>
                   <Row>
                     <Col className='col-10'>
@@ -115,7 +122,7 @@ const JumbotronComponent = () => {
                 
                 
             <Collapse isOpen={collapse}>
-                <Table className='table-margin-zero'>
+                <Table responsive className='table-margin-zero QapViewtable' size="sm">
                   <thead>
                     <tr>
                       <th scope="col">Grain</th>
@@ -154,7 +161,7 @@ const JumbotronComponent = () => {
                   </tbody>
                 </Table>
 
-                <Table responsive>
+                <Table responsive size="sm" className="QapViewtable">
                   <thead>
                     <tr>
                       <th scope="col">Pre Skin</th>

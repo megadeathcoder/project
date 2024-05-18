@@ -15,6 +15,7 @@ const Cities = () => {
   const [data, setData] = useState([]);
   const [data2, setData2] = useState([]);
   const [data3, setData3] = useState([]);
+  const [validationData, setValidationData] = useState([]);
   const [istrashed, setIstrashed] = useState('0');
   // const data2 = [
   //   { id: 1, CityName: 'Noida', State: 'Uttar Pradesh', Country: 'India' },
@@ -37,12 +38,13 @@ const Cities = () => {
   const handleEditClick = (item) => {
     // Navigate to the edit page with the item's id
     // Navigate(`/resources/address-types/edit/${itemId}`);
-    navigate('/resources/cities/edit', { state: item });
+    const validationDataArray = validationData.filter(ex => ex !== item.name);
+    navigate('/resources/cities/edit', { state: {item, validationDataArray} });
   };
   const handleEditAdd = () => {
     // Navigate to the edit page with the item's id
     // Navigate(`/resources/address-types/edit/${itemId}`);
-    navigate('/resources/cities/add');
+    navigate('/resources/cities/add',{state:validationData});
   };
   const handleTrash = ()=>{
      
@@ -119,6 +121,10 @@ const Cities = () => {
       const result = await response.json();
       console.log("responsejson",result);
       setData(result.cities); 
+      const addresstypesItems =result.cities.map((a)=>{
+        return a.name
+       });
+     setValidationData(addresstypesItems); 
     };
 
     const fetchData2 = async () => {

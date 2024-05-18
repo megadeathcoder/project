@@ -14,6 +14,7 @@ import ComponentCard from '../../../components/ComponentCard';
 const Designs = () => {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
+  const [validationData, setValidationData] = useState([]);
   const [istrashed, setIstrashed] = useState('0');
   // const data = [
   //   { id: 1, Code: 'P066', CustomerAlias: 'P066', ManuFacturerAlias: 'P066'},
@@ -36,12 +37,13 @@ const Designs = () => {
   const handleEditClick = (item) => {
     // Navigate to the edit page with the item's id
     // Navigate(`/resources/address-types/edit/${itemId}`);
-    navigate('/resources/designs/edit', { state: item });
+    const validationDataArray = validationData.filter(ex => ex.code !== item.code);
+    navigate('/resources/designs/edit', { state: {item, validationDataArray} });
   };
   const handleEditAdd = () => {
     // Navigate to the edit page with the item's id
     // Navigate(`/resources/address-types/edit/${itemId}`);
-    navigate('/resources/designs/add');
+    navigate('/resources/designs/add',{state:validationData});
   };
   const handleTrash = ()=>{
      
@@ -98,7 +100,13 @@ const Designs = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const result = await response.json();
-      setData(result.designs); 
+      setData(result.designs);
+      console.log(result.designs);
+      
+      const addresstypesItems =result.designs.map((a)=>{
+        return {code:a.code,customerAlias:a.customer_alias,manufacturerAlias:a.manufacturer_alias}
+       });
+     setValidationData(addresstypesItems); 
     };
   
     fetchData();

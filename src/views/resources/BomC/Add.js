@@ -22,12 +22,15 @@ import { useLocation,useNavigate } from 'react-router-dom';
 const Edit = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const {name:Name,code,serial_number:serialNumber} = location.state || {};  // Default to an empty object if state is undefined
+  const validationData = location.state || [];
+  const [errors,setErrors] = useState({});
   const [formDatas, setFormDataS] = useState({
-    name:Name,
-    code,
-    serialNumber
+    name:'',
+    code:'',
+    serialNumber:''
   });
+  
+  console.log(validationData);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -35,6 +38,34 @@ const Edit = () => {
       ...prevState,
       [name]: value
     }));
+
+    switch (name){
+      case 'name':
+            if (validationData.some(item => item.name.toLowerCase() === value.toLowerCase().trim())) {
+              setErrors((prev)=>({...prev,"name": "This name has already been used"}));
+          } else {
+              setErrors((prev)=>({...prev,"name": ""}));
+          }
+          break;
+
+      case 'code':
+        if (validationData.some(item => item.categoryCode.toLowerCase() === value.toLowerCase().trim())) {
+          setErrors((prev)=>({...prev,"code": "This code has already been used"}));
+      } else {
+          setErrors((prev)=>({...prev,"code": ""}));
+      }
+          break;
+      
+      default:
+            if (!value) {
+              setErrors((prev)=>({...prev,"serialNumber": "Please use numbers only"}));
+          } else {
+              setErrors((prev)=>({...prev,"serialNumber": ""}));
+          }
+            break;
+    
+        }
+    
   };
 
   async function apiCall() {
@@ -73,12 +104,40 @@ const Edit = () => {
     }
 }
 
-const handleSubmit = async (event) => {
-  event.preventDefault();
-  console.log('event',event);
-  apiCall();
+const validateForm=()=>{
+  let formIsValid =true;
+  const errors1 ={};
+  
+  if(formDatas.name === '') {
+    formIsValid = false;
+    // eslint-disable-next-line dot-notation
+    errors1["name"] = "Required";
+  }
+  if(formDatas.code === '') {
+    formIsValid = false;
+    // eslint-disable-next-line dot-notation
+    errors1["code"] = "Required";
+  }
+  if(formDatas.serialNumber === '') {
+    formIsValid = false;
+    // eslint-disable-next-line dot-notation
+    errors1["serialNumber"] = "Required";
+  }
+  
+  setErrors(errors1);
+  return formIsValid;
+  }
+  
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if(validateForm()) {
+      console.log('Form is valid, proceed with API call');
+      apiCall();
+    } else {
+      console.log('Form is invalid, do not submit');
+    }
+  };
 
-};
   return (
 <div>
      
@@ -104,8 +163,9 @@ const handleSubmit = async (event) => {
                       placeholder="Enter name" 
                       value={formDatas.name}
                       onChange={handleChange} 
-                     />
-                     <FormText className="muted"></FormText>
+                      className={errors.name ? "is-invalid":""}
+                      />
+                      {errors.name &&  <FormText className="text-danger">{errors.name}</FormText>}
                    </FormGroup>
                  </Col>
                  <Col md="4">
@@ -118,27 +178,33 @@ const handleSubmit = async (event) => {
                       placeholder="Enter name" 
                       value={formDatas.code}
                       onChange={handleChange} 
-                     />
-                     <FormText className="muted"></FormText>
+                      className={errors.code ? "is-invalid":""}
+                      />
+                      {errors.code &&  <FormText className="text-danger">{errors.code}</FormText>}
                    </FormGroup>
                  </Col>
                  <Col md="4">
                    <FormGroup>
                      <Label>Serial Number</Label>
                      <Input        
-                     type="text" 
+                     type="number" 
                       name="serialNumber" 
                       id="name" 
                       placeholder="Enter name" 
                       value={formDatas.serialNumber}
                       onChange={handleChange} 
-                     />
-                     <FormText className="muted"></FormText>
+                      className={errors.serialNumber ? "is-invalid":""}
+                      />
+                      {errors.serialNumber &&  <FormText className="text-danger">{errors.serialNumber}</FormText>}
                    </FormGroup>
                  </Col>
                  <Col md="4">
                    <FormGroup>
-                    <Button type="submit" className="btn my-btn-color" style={{marginTop:"28px"}}>
+                   <Button type="submit" 
+                            className="btn my-btn-color" 
+                            style={{marginTop:"28px"}}
+                            disabled={errors.name || errors.code || errors.serialNumber}
+                    >
                         Submit
                     </Button>
                    </FormGroup>

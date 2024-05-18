@@ -22,10 +22,12 @@ import { useLocation,useNavigate } from 'react-router-dom';
 const Edit = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const {name:Name} = location.state || {};  // Default to an empty object if state is undefined
+  const validationData = location.state || [];
+  const [errors,setErrors] = useState({});
   const [formDatas, setFormDataS] = useState({
-    name:Name,
+    name:'',
   });
+  console.log(validationData);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -74,12 +76,31 @@ const Edit = () => {
     }
 }
 
-const handleSubmit = async (event) => {
-  event.preventDefault();
-  console.log('event',event);
-  apiCall();
+const validateForm=()=>{
+  let formIsValid =true;
+  const errors1 ={};
+  
+  if(formDatas.name === '') {
+    formIsValid = false;
+    // eslint-disable-next-line dot-notation
+    errors1["name"] = "Required";
+  }
 
-};
+  
+  setErrors(errors1);
+  return formIsValid;
+  }
+  
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if(validateForm()) {
+      console.log('Form is valid, proceed with API call');
+      apiCall();
+    } else {
+      console.log('Form is invalid, do not submit');
+    }
+  };
+
   return (
 <div>
      
@@ -105,8 +126,9 @@ const handleSubmit = async (event) => {
                       placeholder="Enter name" 
                       value={formDatas.name}
                       onChange={handleChange} 
-                     />
-                     <FormText className="muted"></FormText>
+                      className={errors.name ? "is-invalid":""}
+                      />
+                      {errors.name &&  <FormText className="text-danger">{errors.name}</FormText>}
                    </FormGroup>
                  </Col>
                  <Col md="4">

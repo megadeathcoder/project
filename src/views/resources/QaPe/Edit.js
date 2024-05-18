@@ -23,8 +23,10 @@ const Edit = () => {
    const location = useLocation();
   const navigate = useNavigate();
 
-  const {id, name:Name, department:SearchType} = location.state || {}; // Default to an empty object if state is undefined
- 
+  const {id, name:Name, department:SearchType,is_trashed:isTrashed} = location.state.item || {}; // Default to an empty object if state is undefined
+  const validationData = location.state.validationDataArray || []; 
+  const [errors,setErrors] = useState({});
+
   const [selectedType, setSelectedType] = useState(SearchType || '0');
 
   const handleTypeChange = (e) => {
@@ -34,8 +36,10 @@ const Edit = () => {
  
   const [formDatas, setFormDataS] = useState({
     name:Name,
+    isTrashed
   });
   
+  console.log(validationData);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -43,6 +47,11 @@ const Edit = () => {
       ...prevState,
       [name]: value
     }));
+    if (validationData.some(item => item.toLowerCase() === value.toLowerCase().trim())) {
+      setErrors({"name": "This name has already been used"});
+    } else {
+        setErrors({"name":''});
+    }
   };
 
   async function apiCall() {
@@ -69,7 +78,7 @@ const Edit = () => {
             body: JSON.stringify({
               name:formDatas.name,
               department:selectedType,
-       
+              is_trashed:formDatas.isTrashed
             }),
         });
         const data = await response.json();
@@ -90,11 +99,31 @@ const Edit = () => {
     }
 }
 
-const handleSubmit = async (event) => {
-  event.preventDefault();
-  console.log('event',event);
-  apiCall();
-};
+const validateForm=()=>{
+  let formIsValid =true;
+  const errors1 ={};
+  
+  if(formDatas.name === '') {
+    formIsValid = false;
+    // eslint-disable-next-line dot-notation
+    errors1["name"] = "Required";
+  }
+ 
+  
+  setErrors(errors1);
+  return formIsValid;
+  }
+  
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if(validateForm()) {
+      console.log('Form is valid, proceed with API call');
+      apiCall();
+    } else {
+      console.log('Form is invalid, do not submit');
+    }
+  };
+
 return (
 <div>
      
@@ -120,8 +149,9 @@ return (
                       placeholder="Enter name" 
                       value={formDatas.name}
                       onChange={handleChange} 
-                     />
-                     <FormText className="muted"></FormText>
+                      className={errors.name ? "is-invalid":""}
+                      />
+                      {errors.name &&  <FormText className="text-danger">{errors.name}</FormText>}
                    </FormGroup>
                  </Col>
                  
@@ -139,7 +169,11 @@ return (
                  </Col>
                  <Col md="4">
                    <FormGroup>
-                    <Button type="submit" className="btn my-btn-color" style={{marginTop:"28px"}}>
+                   <Button type="submit" 
+                            className="btn my-btn-color" 
+                            style={{marginTop:"28px"}}
+                            disabled={errors.name}
+                    >
                         Submit
                     </Button>
                    </FormGroup>

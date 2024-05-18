@@ -14,46 +14,32 @@ import ComponentCard from '../../../components/ComponentCard';
 const AddressTypes = () => {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
+  const [validationData, setValidationData] = useState([]);
   const [istrashed, setIstrashed] = useState('0');
  
-  // const data = [
-  //   { id: 1, Name: 'Manufacturing Unit' },
-  //   { id: 2, Name: 'Registered/Corporate Office' },
-  //   { id: 3, Name: 'Warehouse/Godown' },
-  //   { id: 4, Name: 'Manufacturing Unit' },
-  //   { id: 5, Name: 'Registered/Corporate Office' },
-  //   { id: 6, Name: 'Warehouse/Godown' },
-  //   { id: 7, Name: 'Manufacturing Unit' },
-  //   { id: 8, Name: 'Registered/Corporate Office' },
-  //   { id: 9, Name: 'Warehouse/Godown' },
-  //   { id: 10, Name: 'Manufacturing Unit' },
-  
-  // ];
 
-  const tableStyle = {
-    // margin: 'auto', 
-    // width: '60%',  
-    // maxWidth: '1000px',
-  };
+
+
   const handleEditClick = (item) => {
     // Navigate to the edit page with the item's id
     // Navigate(`/resources/address-types/edit/${itemId}`);
-    navigate('/resources/address-types/edit', { state: item });
+    const validationDataArray = validationData.filter(ex => ex !== item.name);
+    navigate('/resources/address-types/edit', { state: {item, validationDataArray} });
   };
   const handleEditAdd = () => {
     // Navigate to the edit page with the item's id
     // Navigate(`/resources/address-types/edit/${itemId}`);
-    navigate('/resources/address-types/add');
+    navigate('/resources/address-types/add',{state:validationData});
   };
   
   const handleTrash = ()=>{
      
     if(istrashed === '0')
     {
-      setIstrashed('1')
+      setIstrashed('1');
     }
     else{
-      setIstrashed('0')
+      setIstrashed('0');
     }
   }
 
@@ -104,6 +90,10 @@ const AddressTypes = () => {
       const result = await response.json();
       console.log("responsejson",result);
       setData(result.addresstypes); 
+      const addresstypesItems =result.addresstypes.map((a)=>{
+           return a.name
+      });
+      setValidationData(addresstypesItems);
     };
   
     fetchData();
@@ -131,7 +121,7 @@ const AddressTypes = () => {
     </Row>
 
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-      <table className="table" style={tableStyle}>
+      <table className="table" >
               <thead>
               <tr>
             <th>Name</th>

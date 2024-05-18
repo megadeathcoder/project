@@ -14,6 +14,7 @@ import ComponentCard from '../../../components/ComponentCard';
 const LabTests = () => {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
+  const [validationData, setValidationData] = useState([]);
   const [istrashed, setIstrashed] = useState('0');
   // const data = [
   //   { id: 1, TestName: 'Delta E', Method: 'ASTM'},
@@ -35,12 +36,13 @@ const LabTests = () => {
   const handleEditClick = (item) => {
     // Navigate to the edit page with the item's id
     // Navigate(`/resources/address-types/edit/${itemId}`);
-    navigate('/resources/lab-tests/edit', { state: item });
+    const validationDataArray = validationData.filter(ex => ex.name !== item.name);
+    navigate('/resources/lab-tests/edit', { state: {item, validationDataArray} });
   };
   const handleEditAdd = () => {
     // Navigate to the edit page with the item's id
     // Navigate(`/resources/address-types/edit/${itemId}`);
-    navigate('/resources/lab-tests/add');
+    navigate('/resources/lab-tests/add',{state:validationData});
   };
   const handleTrash = ()=>{
      
@@ -97,7 +99,11 @@ const LabTests = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const result = await response.json();
-      setData(result.labtests); 
+      setData(result.labtests);
+      const addresstypesItems =result.labtests.map((a)=>{
+        return {name:a.name,Method:a.method_name}
+       });
+     setValidationData(addresstypesItems);
       console.log('result.labtests',result.labtests); 
     };
   

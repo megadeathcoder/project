@@ -22,22 +22,50 @@ import { useLocation,useNavigate } from 'react-router-dom';
 const Edit = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const {id,name:Name,discount_percent : DiscountPercentage,is_factory_stock: DefaultToFactoryStock} = location.state || {}; // Default to an empty object if state is undefined
+  const {id,name:Name,discount_percent : DiscountPercentage,is_factory_stock: DefaultToFactoryStock,is_trashed:isTrashed} = location.state.item || {}; // Default to an empty object if state is undefined
+  const validationData = location.state.validationDataArray || []; 
+  const [errors,setErrors] = useState({});
+  
   const [check,setCheck] = useState(DefaultToFactoryStock === '1')
   
   const [formDatas, setFormDataS] = useState({
     name:Name,
     DiscountPercentage,
-    DefaultToFactoryStock
+    DefaultToFactoryStock,
+    isTrashed
   });
   
-
+  console.log(validationData);
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormDataS(prevState => ({
       ...prevState,
       [name]: value
     }));
+    
+    switch (name){
+      case 'name':
+            if (validationData.some(item => item.toLowerCase() === value.toLowerCase().trim())) {
+              setErrors((prev)=>({...prev,"name": "This name has already been used"}));
+          } else {
+              setErrors((prev)=>({...prev,"name": ""}));
+          }
+          break;
+
+      case 'DiscountPercentage':
+            if (!value) {
+              setErrors((prev)=>({...prev,"DiscountPercentage": "Please use characters only"}));
+          } else {
+              setErrors((prev)=>({...prev,"DiscountPercentage": ""}));
+          }
+          break;
+      
+      default:
+          break;
+    
+        }
+
   };
   const checkboxclick = ()=>{
     let value;
@@ -78,7 +106,8 @@ const Edit = () => {
             body: JSON.stringify({
               name:formDatas.name,
               discount_percent:formDatas.DiscountPercentage,
-              is_factory_stock:formDatas.DefaultToFactoryStock
+              is_factory_stock:formDatas.DefaultToFactoryStock,
+              is_trashed:formDatas.isTrashed
             }),
         });
         const data = await response.json();
@@ -99,12 +128,36 @@ const Edit = () => {
     }
 }
 
-const handleSubmit = async (event) => {
-  event.preventDefault();
-  console.log('event',event);
-  apiCall();
+const validateForm=()=>{
+  let formIsValid =true;
+  const errors1 ={};
+  
+  if(formDatas.name === '') {
+    formIsValid = false;
+    // eslint-disable-next-line dot-notation
+    errors1["name"] = "Required";
+  }
+  if(formDatas.DiscountPercentage === '') {
+    formIsValid = false;
+    // eslint-disable-next-line dot-notation
+    errors1["DiscountPercentage"] = "Required";
+  }
+ 
+  
+  setErrors(errors1);
+  return formIsValid;
+  }
+  
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if(validateForm()) {
+      console.log('Form is valid, proceed with API call');
+      apiCall();
+    } else {
+      console.log('Form is invalid, do not submit');
+    }
+  };
 
-};
   return (
 <div>
      <Row>
@@ -129,8 +182,9 @@ const handleSubmit = async (event) => {
                      placeholder="Enter name" 
                      value={formDatas.name}
                      onChange={handleChange} 
+                      className={errors.name ? "is-invalid":""}
                       />
-                     <FormText className="muted"></FormText>
+                      {errors.name &&  <FormText className="text-danger">{errors.name}</FormText>}
                    </FormGroup>
                  </Col>
                  <Col md="8">
@@ -143,8 +197,9 @@ const handleSubmit = async (event) => {
                       placeholder="Enter name" 
                       value={formDatas.DiscountPercentage}
                       onChange={handleChange} 
+                      className={errors.DiscountPercentage ? "is-invalid":""}
                       />
-                     <FormText className="muted"></FormText>
+                      {errors.DiscountPercentage &&  <FormText className="text-danger">{errors.DiscountPercentage}</FormText>}
                    </FormGroup>
                  </Col>
                  <Col md="8">
@@ -159,7 +214,11 @@ const handleSubmit = async (event) => {
                  </Col>
                  <Col md="4">
                    <FormGroup>
-                    <Button type="submit" className="btn my-btn-color" style={{marginTop:"28px"}}>
+                   <Button type="submit" 
+                            className="btn my-btn-color" 
+                            style={{marginTop:"28px"}}
+                            disabled={errors.name || errors.DiscountPercentage}
+                    >
                         Submit
                     </Button>
                    </FormGroup>

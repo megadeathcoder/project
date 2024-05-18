@@ -77,10 +77,10 @@ const handleSubmit = async (event) => {
             <AuthLogo />
             <Card>
               <CardBody className="p-4 m-1">
-                <h5 className="mb-0">Login</h5>
-                <small className="pb-4 d-block">
+                <h5 className="mb-2 text-center p-3" style={{fontWeight:'800',background:'aliceblue'}}>Login</h5>
+                {/* <small className="pb-4 d-block">
                   Do not have an account? <Link to="/auth/registerformik">Sign Up</Link>
-                </small>
+                </small> */}
                 <Formik
                   initialValues={initialValues}
                   validationSchema={validationSchema}
@@ -119,7 +119,7 @@ const handleSubmit = async (event) => {
                           Remember me
                         </Label>
                         <Link className="ms-auto text-decoration-none" to="/auth/forgotPwd">
-                          <small>Forgot Pwd?</small>
+                          {/* <small>Forgot Pwd?</small> */}
                         </Link>
                       </FormGroup>
                       <FormGroup>

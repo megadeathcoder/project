@@ -15,23 +15,48 @@ import {
 
 } from 'reactstrap';
 // import { useParams } from 'react-router-dom';
-import {useNavigate } from 'react-router-dom';
+import {useNavigate,useLocation } from 'react-router-dom';
 
 // import ComponentCard from '../../components/ComponentCard';
 
 const Edit = () => {
+  const location = useLocation();
   const navigate = useNavigate();
+  const validationData = location.state || [];
+
+  const [errors,setErrors] = useState({});
   const [formDatas, setFormDataS] = useState({
     name:'',
     code:'',
   });
 
+  console.log(validationData);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormDataS(prevState => ({
       ...prevState,
       [name]: value
     }));
+    switch (name){
+      case 'code':
+            if (validationData.some(item => item.code.toLowerCase() === value.toLowerCase().trim())) {
+              setErrors((prev)=>({...prev,"code": "This code has already been used"}));
+          } else {
+              setErrors((prev)=>({...prev,"code": ""}));
+          }
+          break;
+
+      case 'name':
+            if (validationData.some(item => item.name.toLowerCase() === value.toLowerCase().trim())) {
+              setErrors((prev)=>({...prev,"name": "This name has already been used"}));
+          } else {
+              setErrors((prev)=>({...prev,"name": ""}));
+          }
+          break;
+      
+      default:
+            break;
+        }
   };
 
   async function apiCall() {
@@ -66,12 +91,36 @@ const Edit = () => {
     }
 }
 
-const handleSubmit = async (event) => {
-  event.preventDefault();
-  console.log('event',event);
-  apiCall();
+const validateForm=()=>{
+  let formIsValid =true;
+  const errors1 ={};
+  
+  if(formDatas.name === '') {
+    formIsValid = false;
+    // eslint-disable-next-line dot-notation
+    errors1["name"] = "Required";
+  }
+  if(formDatas.code === '') {
+    formIsValid = false;
+    // eslint-disable-next-line dot-notation
+    errors1["code"] = "Required";
+  }
 
-};
+  
+  setErrors(errors1);
+  return formIsValid;
+  }
+  
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if(validateForm()) {
+      console.log('Form is valid, proceed with API call');
+      apiCall();
+    } else {
+      console.log('Form is invalid, do not submit');
+    }
+  };
+
   return (
 <div>
      
@@ -97,8 +146,9 @@ const handleSubmit = async (event) => {
                       placeholder="Enter name" 
                       value={formDatas.code}
                       onChange={handleChange} 
-                     />
-                     <FormText className="muted"></FormText>
+                      className={errors.code ? "is-invalid":""}
+                      />
+                      {errors.code &&  <FormText className="text-danger">{errors.code}</FormText>}
                    </FormGroup>
                  </Col>
                  <Col md="4">
@@ -111,8 +161,9 @@ const handleSubmit = async (event) => {
                       placeholder="Enter name" 
                       value={formDatas.name}
                       onChange={handleChange}
-                     />
-                     <FormText className="muted"></FormText>
+                      className={errors.name ? "is-invalid":""}
+                      />
+                      {errors.name &&  <FormText className="text-danger">{errors.name}</FormText>}
                    </FormGroup>
                  </Col>
                  <Col md="4">

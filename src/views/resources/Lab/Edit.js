@@ -22,7 +22,12 @@ import { useLocation,useNavigate  } from 'react-router-dom';
 const Edit = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const {id,name:TestName,method_name:Method,labtestdirections:TestDirection} = location.state || {}; // Default to an empty object if state is undefined
+  const {id,name:TestName,method_name:Method,labtestdirections:TestDirection,is_trashed:isTrashed} = location.state.item || {}; // Default to an empty object if state is undefined
+  const validationData = location.state.validationDataArray || []; 
+  const [errors,setErrors] = useState({});
+  
+  console.log(validationData);
+
   const [items, setItems] = useState([]);
  console.log("items",items);
 
@@ -34,7 +39,8 @@ const Edit = () => {
   const [formDatas, setFormDataS] = useState({
     name:TestName,
     Method,
-    items
+    items,
+    isTrashed
   });
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -42,6 +48,27 @@ const Edit = () => {
       ...prevState,
       [name]: value
     }));
+    switch (name){
+      case 'name':
+            if (validationData.some(item => item.toLowerCase() === value.toLowerCase().trim())) {
+              setErrors((prev)=>({...prev,"name": "This name has already been used"}));
+          } else {
+              setErrors((prev)=>({...prev,"name": ""}));
+          }
+          break;
+
+      case 'Method':
+            if (!value) {
+              setErrors((prev)=>({...prev,"Method": "Please use characters only"}));
+          } else {
+              setErrors((prev)=>({...prev,"Method": ""}));
+          }
+          break;
+      
+      default:
+            break;
+    
+        }
   };
 
   const addItem = () => {
@@ -99,7 +126,8 @@ const Edit = () => {
             body: JSON.stringify({
               name:formDatas.name,
               method_name:formDatas.Method,
-              lab_test_direction:filtered
+              lab_test_direction:filtered,
+              is_trashed:formDatas.isTrashed
             }),
         });
 
@@ -121,12 +149,35 @@ const Edit = () => {
     }
 }
 
-const handleSubmit = async (event) => {
-  event.preventDefault();
-  console.log('event',event);
-  apiCall();
+const validateForm=()=>{
+  let formIsValid =true;
+  const errors1 ={};
+  
+  if(formDatas.name === '') {
+    formIsValid = false;
+    // eslint-disable-next-line dot-notation
+    errors1["name"] = "Required";
+  }
+  if(formDatas.Method === '') {
+    formIsValid = false;
+    // eslint-disable-next-line dot-notation
+    errors1["Method"] = "Required";
+  }
 
-};
+  
+  setErrors(errors1);
+  return formIsValid;
+  }
+  
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if(validateForm()) {
+      console.log('Form is valid, proceed with API call');
+      apiCall();
+    } else {
+      console.log('Form is invalid, do not submit');
+    }
+  };
 
   useEffect(()=>{
     function testDirectionAdd(){
@@ -171,8 +222,9 @@ const handleSubmit = async (event) => {
                       placeholder="Enter name" 
                       value={formDatas.name}
                       onChange={handleChange} 
-                     />
-                     <FormText className="muted"></FormText>
+                      className={errors.name ? "is-invalid":""}
+                      />
+                      {errors.name &&  <FormText className="text-danger">{errors.name}</FormText>}
                    </FormGroup>
                  </Col>
                  <Col md="8" className='mb-5'>
@@ -185,8 +237,9 @@ const handleSubmit = async (event) => {
                       placeholder="Enter name" 
                       value={formDatas.Method}
                       onChange={handleChange} 
-                     />
-                     <FormText className="muted"></FormText>
+                      className={errors.Method ? "is-invalid":""}
+                      />
+                      {errors.Method &&  <FormText className="text-danger">{errors.Method}</FormText>}
                    </FormGroup>
                  </Col>
 
@@ -222,7 +275,11 @@ const handleSubmit = async (event) => {
 
                  <Col md="4">
                    <FormGroup>
-                    <Button type="submit" className="btn my-btn-color" style={{marginTop:"28px"}}>
+                   <Button type="submit" 
+                            className="btn my-btn-color" 
+                            style={{marginTop:"28px"}}
+                            disabled={errors.name || errors.Method}
+                    >
                         Submit
                     </Button>
                    </FormGroup>

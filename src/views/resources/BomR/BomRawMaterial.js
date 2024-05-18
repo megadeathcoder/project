@@ -14,6 +14,7 @@ import ComponentCard from '../../../components/ComponentCard';
 const BomRawMaterial = () => {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
+  const [validationData, setValidationData] = useState([]);
   const [istrashed, setIstrashed] = useState('0');
   // const data = [
   //   { id: 1, BomRawMaterialCategoryName: 'PVC Paste Resin', SortOrder: '1'},
@@ -36,13 +37,14 @@ const BomRawMaterial = () => {
   const handleEditClick = (item) => {
     // Navigate to the edit page with the item's id
     // Navigate(`/resources/address-types/edit/${itemId}`);
-    navigate('/resources/bom-raw-material-category/edit', { state: item });
+    const validationDataArray = validationData.filter(ex => ex !== item.name);
+    navigate('/resources/bom-raw-material-category/edit', { state: {item, validationDataArray} });
   };
 
   const handleEditAdd = () => {
     // Navigate to the edit page with the item's id
     // Navigate(`/resources/address-types/edit/${itemId}`);
-    navigate('/resources/bom-raw-material-category/add');
+    navigate('/resources/bom-raw-material-category/add',{state:validationData});
   };
   const handleTrash = ()=>{
      
@@ -94,12 +96,17 @@ const BomRawMaterial = () => {
           'Authorization': `Bearer ${token}`
         }
       });
-      console.log('result',response);
+      
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const result = await response.json();
-      setData(result.bomrawmaterialcategories); 
+      setData(result.bomrawmaterialcategories);
+      const addresstypesItems =result.bomrawmaterialcategories.map((a)=>{
+        return a.name
+       });
+     setValidationData(addresstypesItems); 
+      console.log('result',result.bomrawmaterialcategories)
     };
   
     fetchData();

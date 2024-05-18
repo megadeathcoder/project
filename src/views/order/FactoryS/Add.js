@@ -42,12 +42,12 @@ const Add = () => {
     qualityId:'x',
     colorId:'x',
     hsnId:'x',
+    quantity:'',
     PricePerUnit:'',
     Thickness:'',
     TaxRate:'',
     deliveryDate:'',
     CustomerItemRefernce:'',
-    quantity:''
   });
   
   // const [data2, setData2] = useState([
@@ -182,6 +182,14 @@ const removeItem2 = index => {
               quality_id: formDatas.qualityId,
               color_id: formDatas.colorId,
               hsn_id: formDatas.hsnId,
+              topcoat:'',
+              adhesive:'', 
+              filler_in_adhesive:'',
+              filler_in_foam_1:'',
+              filler_in_foam_2:'',
+              final_gsm:'',
+              foam_1:'' ,
+              foam_2:'',
               quantity: formDatas.quantity,
               price: formDatas.PricePerUnit,
               thickness: formDatas.Thickness,
@@ -213,6 +221,14 @@ const removeItem2 = index => {
               quality_id: formDatas.qualityId,
               color_id: formDatas.colorId,
               hsn_id: formDatas.hsnId,
+              topcoat:'sapr',
+              adhesive:'', 
+              filler_in_adhesive:'',
+              filler_in_foam_1:'',
+              filler_in_foam_2:'',
+              final_gsm:'',
+              foam_1:'' ,
+              foam_2:'',
               quantity: formDatas.quantity,
               price: formDatas.PricePerUnit,
               thickness: formDatas.Thickness,
@@ -294,7 +310,6 @@ const handleSubmit = async (event) => {
   } else {
     console.log('Form is invalid, do not submit');
   }
-
 };
 
   const handleTypeChange = (e) => {
@@ -524,7 +539,6 @@ const handleSubmit = async (event) => {
                       
                     </FormGroup>
                   </Col>
-
                  <Col md="5">
                     <FormGroup>
                       <Label>Fabric</Label>
@@ -631,7 +645,6 @@ const handleSubmit = async (event) => {
                      value={formDatas.quantity}
                      onChange={handleChange} 
                       />
-                     
                      <FormText className="muted"></FormText>
                    </FormGroup>
                  </Col>
@@ -678,7 +691,7 @@ const handleSubmit = async (event) => {
                  <Col md="10" >
                    <FormGroup>
                      <Label>Delivery Date</Label>
-                     <Input type="text" 
+                     <Input type="date" 
                      name="deliveryDate" 
                      id="name"
                      placeholder="Enter name" 

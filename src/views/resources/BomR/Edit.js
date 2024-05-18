@@ -22,10 +22,13 @@ import { useLocation,useNavigate } from 'react-router-dom';
 const Edit = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const {id,name:Name,sort_order : sortOrder} = location.state || {};  // Default to an empty object if state is undefined
+  const {id,name:Name,sort_order : sortOrder,is_trashed:isTrashed} = location.state.item || {};  // Default to an empty object if state is undefined
+  const validationData = location.state.validationDataArray || []; 
+  const [errors,setErrors] = useState({});
   const [formDatas, setFormDataS] = useState({
     name:Name,
-    sortOrder
+    sortOrder,
+    isTrashed
   });
 
   const handleChange = (e) => {
@@ -34,7 +37,29 @@ const Edit = () => {
       ...prevState,
       [name]: value
     }));
+
+    switch (name){
+      case 'name':
+            if (validationData.some(item => item.toLowerCase() === value.toLowerCase().trim())) {
+              setErrors((prev)=>({...prev,"name": "This name has already been used"}));
+          } else {
+              setErrors((prev)=>({...prev,"name": ""}));
+          }
+          break;
+
+      default:
+            if (!value) {
+              setErrors((prev)=>({...prev,"sortOrder": "Please use characters only"}));
+          } else {
+              setErrors((prev)=>({...prev,"sortOrder": ""}));
+          }
+            break;
+    
+        }
+
   };
+
+  console.log(validationData);
 
   async function apiCall() {
     try {
@@ -60,6 +85,7 @@ const Edit = () => {
             body: JSON.stringify({
               name:formDatas.name,
               sort_order:formDatas.sortOrder,
+              is_trashed:formDatas.isTrashed
             }),
         });
         const data = await response.json();
@@ -80,12 +106,36 @@ const Edit = () => {
     }
 }
 
-const handleSubmit = async (event) => {
-  event.preventDefault();
-  console.log('event',event);
-  apiCall();
+const validateForm=()=>{
+  let formIsValid =true;
+  const errors1 ={};
+  
+  if(formDatas.name === '') {
+    formIsValid = false;
+    // eslint-disable-next-line dot-notation
+    errors1["name"] = "Required";
+  }
+  if(formDatas.sortOrder === '') {
+    formIsValid = false;
+    // eslint-disable-next-line dot-notation
+    errors1["sortOrder"] = "Required";
+  }
+ 
+  
+  setErrors(errors1);
+  return formIsValid;
+  }
+  
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if(validateForm()) {
+      console.log('Form is valid, proceed with API call');
+      apiCall();
+    } else {
+      console.log('Form is invalid, do not submit');
+    }
+  };
 
-};
   return (
 <div>
      
@@ -111,27 +161,33 @@ const handleSubmit = async (event) => {
                       placeholder="Enter name" 
                       value={formDatas.name}
                       onChange={handleChange} 
-                     />
-                     <FormText className="muted"></FormText>
+                      className={errors.name ? "is-invalid":""}
+                      />
+                      {errors.name &&  <FormText className="text-danger">{errors.name}</FormText>}
                    </FormGroup>
                  </Col>
                  <Col md="8">
                    <FormGroup>
                      <Label>Sort Order</Label>
                      <Input        
-                     type="text" 
+                     type="number" 
                       name="sortOrder" 
                       id="name" 
                       placeholder="Enter name" 
                       value={formDatas.sortOrder}
                       onChange={handleChange} 
-                     />
-                     <FormText className="muted"></FormText>
+                      className={errors.sortOrder ? "is-invalid":""}
+                      />
+                      {errors.sortOrder &&  <FormText className="text-danger">{errors.sortOrder}</FormText>}
                    </FormGroup>
                  </Col>
                  <Col md="4">
                    <FormGroup>
-                    <Button type="submit" className="btn my-btn-color" style={{marginTop:"28px"}}>
+                    <Button type="submit" 
+                            className="btn my-btn-color" 
+                            style={{marginTop:"28px"}}
+                            disabled={errors.name || errors.sortOrder}
+                    >
                         Submit
                     </Button>
                    </FormGroup>

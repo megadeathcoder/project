@@ -15,6 +15,7 @@ import ComponentCard2 from '../../../assets/images/logos/logo-text.png';
 const Faults = () => {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
+  const [validationData, setValidationData] = useState([]);
   const [istrashed, setIstrashed] = useState('0');
   // const data = [
   //   { id: 1, FaultCode: 'F036', Image: '../../../assets/images/logos/logo-text.png', FaultName: 'Coating layer separation', Desciption: 'black'},
@@ -37,12 +38,13 @@ const Faults = () => {
   const handleEditClick = (item) => {
     // Navigate to the edit page with the item's id
     // Navigate(`/resources/address-types/edit/${itemId}`);
-    navigate('/resources/faults/edit', { state: item });
+    const validationDataArray = validationData.filter(ex => ex !== item.name);
+    navigate('/resources/faults/edit',{ state: {item, validationDataArray} });
   };
   const handleEditAdd = () => {
     // Navigate to the edit page with the item's id
     // Navigate(`/resources/address-types/edit/${itemId}`);
-    navigate('/resources/faults/add');
+    navigate('/resources/faults/add',{state:validationData});
   };
   const handleTrash = ()=>{
      
@@ -99,7 +101,11 @@ const Faults = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const result = await response.json();
-      setData(result.faults); 
+      setData(result.faults);
+      const addresstypesItems =result.faults.map((a)=>{
+        return a.name
+       });
+     setValidationData(addresstypesItems);
       console.log('result',result.faults);
     };
   

@@ -14,6 +14,7 @@ import ComponentCard from '../../../components/ComponentCard';
 const Qualities = () => {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
+  const [validationData, setValidationData] = useState([]);
   const [istrashed, setIstrashed] = useState('0');
   // const data = [
   //   { id: 1, Name: '123'},  
@@ -35,12 +36,13 @@ const Qualities = () => {
   const handleEditClick = (item) => {
     // Navigate to the edit page with the item's id
     // Navigate(`/resources/address-types/edit/${itemId}`);
-    navigate('/resources/qualities/edit', { state: item });
+    const validationDataArray = validationData.filter(ex => ex !== item.name);
+    navigate('/resources/qualities/edit', { state: {item, validationDataArray} });
   };
   const handleEditAdd = () => {
     // Navigate to the edit page with the item's id
     // Navigate(`/resources/address-types/edit/${itemId}`);
-    navigate('/resources/qualities/add');
+    navigate('/resources/qualities/add',{state:validationData});
   };
   const handleTrash = ()=>{
      
@@ -97,7 +99,11 @@ const Qualities = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const result = await response.json();
-      setData(result.qualities); 
+      setData(result.qualities);
+      const addresstypesItems =result.qualities.map((a)=>{
+        return a.name
+       });
+     setValidationData(addresstypesItems);
       console.log(result.qualities); 
     };
   

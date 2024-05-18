@@ -14,24 +14,57 @@ import {
 
 } from 'reactstrap';
 // import { useParams } from 'react-router-dom';
-import { useNavigate  } from 'react-router-dom';
+import { useLocation, useNavigate  } from 'react-router-dom';
 
 // import ComponentCard from '../../components/ComponentCard';
 
 const Add = () => {
+  const location = useLocation();
   const navigate = useNavigate();
+  const validationData = location.state || [];
+  const [errors,setErrors] = useState({});
   const [formDatas, setFormDataS] = useState({
     name: '',
     isoCode: '',
     isdCode: ''
   });
 
+  console.log(validationData);
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormDataS(prevState => ({
       ...prevState,
       [name]: value
     }));
+  
+    switch (name){
+      case 'name':
+            if (validationData.some(item => item.name.toLowerCase() === value.toLowerCase().trim())) {
+              setErrors((prev)=>({...prev,"name": "This name has already been used"}));
+          } else {
+              setErrors((prev)=>({...prev,"name": ""}));
+          }
+          break;
+
+      case 'isdCode':
+            if (validationData.some(item => item.isdCode === value.trim())) {
+              setErrors((prev)=>({...prev,"isdCode": "This isdcode has already been used"}));
+          } else {
+              setErrors((prev)=>({...prev,"isdCode": ""}));
+          }
+          break;
+      
+      default:
+        if (validationData.some(item => item.isoCode.toLowerCase() === value.toLowerCase().trim())) {
+              setErrors((prev)=>({...prev,"isoCode": "This isocode has already been used"}));
+          } else {
+              setErrors((prev)=>({...prev,"isoCode": ""}));
+          }
+            break;
+    
+        }
+
   };
 
   async function apiCall() {
@@ -71,12 +104,40 @@ const Add = () => {
     }
 }
 
-const handleSubmit = async (event) => {
-  event.preventDefault();
-  console.log('event',event);
-  apiCall();
+const validateForm=()=>{
+  let formIsValid =true;
+  const errors1 ={};
+  
+  if(formDatas.name === '') {
+    formIsValid = false;
+    // eslint-disable-next-line dot-notation
+    errors1["name"] = "Required";
+  }
+  if(formDatas.isdCode === '') {
+    formIsValid = false;
+    // eslint-disable-next-line dot-notation
+    errors1["isdCode"] = "Required";
+  }
+  if(formDatas.isoCode === '') {
+    formIsValid = false;
+    // eslint-disable-next-line dot-notation
+    errors1["isoCode"] = "Required";
+  }
 
-};
+  
+  setErrors(errors1);
+  return formIsValid;
+  }
+  
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if(validateForm()) {
+      console.log('Form is valid, proceed with API call');
+      apiCall();
+    } else {
+      console.log('Form is invalid, do not submit');
+    }
+  };
 
   return (
 <div>
@@ -97,8 +158,9 @@ const handleSubmit = async (event) => {
                       placeholder="Enter name" 
                       value={formDatas.name}
                       onChange={handleChange} 
-                    />
-                    <FormText className="muted"></FormText>
+                      className={errors.name ? "is-invalid":""}
+                      />
+                      {errors.name &&  <FormText className="text-danger">{errors.name}</FormText>}
                   </FormGroup>
                 </Col>
                 <Col md="4">
@@ -111,8 +173,9 @@ const handleSubmit = async (event) => {
                       placeholder="Enter ISO code" 
                       value={formDatas.isoCode}
                       onChange={handleChange} 
-                    />
-                    <FormText className="muted"></FormText>
+                      className={errors.isoCode ? "is-invalid":""}
+                      />
+                      {errors.isoCode &&  <FormText className="text-danger">{errors.isoCode}</FormText>}
                   </FormGroup>
                 </Col>
                 <Col md="4">
@@ -125,14 +188,19 @@ const handleSubmit = async (event) => {
                       placeholder="Enter ISD code" 
                       value={formDatas.isdCode}
                       onChange={handleChange} 
-                    />
-                    <FormText className="muted"></FormText>
+                      className={errors.isdCode ? "is-invalid":""}
+                      />
+                      {errors.isdCode &&  <FormText className="text-danger">{errors.isdCode}</FormText>}
                   </FormGroup>
                 </Col>
                 <Col md="4">
                   <FormGroup>
-                    <Button type="submit" className="btn my-btn-color" style={{marginTop:"28px"}}>
-                      Submit
+                  <Button type="submit" 
+                            className="btn my-btn-color" 
+                            style={{marginTop:"28px"}}
+                            disabled={errors.name || errors.isoCode || errors.isdCode}
+                    >
+                        Submit
                     </Button>
                   </FormGroup>
                 </Col>

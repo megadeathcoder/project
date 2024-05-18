@@ -28,14 +28,12 @@ const JumbotronComponent = () => {
 
   return (
     <>
-    
-          <div style={{display:'flex',flexGrow:'1'}}>
-
-                <div style={{width:'25%',fontSize:'10px',background:'white',margin:'5px',height: 'fit-content'}}>
-                  <div style={{textAlign:'center',background:'#3780a2',padding:'10px',color:'white',fontSize:'14px'}}>
+     <Row>
+      <Col md="3">
+          <div style={{textAlign:'center',background:'#3780a2',padding:'10px',color:'white',fontSize:'14px'}}>
                     Overall Stock
                   </div>
-                  <Table title='Overall Stock' style={{margin:'0px'}}>
+                  <Table responsive size="sm"  title='Overall Stock' style={{background:'white'}} className="stockmanagementtable">
                           <thead>
                           
                           </thead>
@@ -81,13 +79,12 @@ const JumbotronComponent = () => {
                         
                         </tbody>
                       </Table>
-                 </div>
-
-                <div style={{width:'25%',fontSize:'10px',background:'white',margin:'5px',height: 'fit-content'}}>
-                  <div style={{textAlign:'center',background:'#3780a2',padding:'10px',color:'white',fontSize:'14px'}}>
-                      Ready Stock
+      </Col>
+      <Col md="3">
+          <div style={{textAlign:'center',background:'#3780a2',padding:'10px',color:'white',fontSize:'14px'}}>
+                   Ready Stock
                   </div>
-                  <Table title='Overall Stock' style={{margin:'0px'}}>
+                  <Table responsive size="sm" className="stockmanagementtable" title='Overall Stock' style={{background:'white'}}>
                           <thead>
                           
                           </thead>
@@ -104,86 +101,76 @@ const JumbotronComponent = () => {
                         <tbody>
                           <tr>
                           <th scope="row">Total</th>
-                                    <td>900</td>
-                                    <td>23,008.80 M</td>
+                                    <td>135</td>
+                                    <td>3,672.00 M</td>
                           </tr>
                           <tr>
                             <th scope="row">Grades</th>
                           </tr>
                           <tr>
                           <th scope="row">Ist</th>
-                                    <td>591</td>
-                                    <td>16,796.00 M</td>
+                                    <td>133</td>
+                                    <td>3,649.50 M</td>
                           </tr>
                           <tr>
                           <th scope="row">A</th>
-                                    <td>285</td>
-                                    <td>5,810.80 M</td>
+                                    <td>2</td>
+                                    <td>22.50 M</td>
+                          </tr>
+                          <tr>
+                          <th scope="row">B</th>
+                                    <td>0</td>
+                                    <td>0.00 M</td>
+                          </tr>
+                        </tbody>
+                      </Table>
+      </Col>
+      <Col md="3">
+          <div style={{textAlign:'center',background:'#3780a2',padding:'10px',color:'white',fontSize:'14px'}}>
+                  Factory Stock
+                  </div>
+                  <Table responsive size="sm"  className="stockmanagementtable" title='Overall Stock' style={{background:'white'}}>
+                          <thead>
+                          </thead>
+                        <thead>
+                          <tr>
+                            <th scope="col"></th>
+                            <th scope="col">Count</th>
+                            <th scope="col">Qty</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                          <th scope="row">Total</th>
+                                    <td>706</td>
+                                    <td>17,507.40 M</td>
+                          </tr>
+                          <tr>
+                            <th scope="row">Grades</th>
+                          </tr>
+                          <tr>
+                          <th scope="row">Ist</th>
+                                    <td>399</td>
+                                    <td>11,317.10 M</td>
+                          </tr>
+                          <tr>
+                          <th scope="row">A</th>
+                                    <td>283</td>
+                                    <td>5,788.30 M</td>
                           </tr>
                           <tr>
                           <th scope="row">B</th>
                                     <td>24</td>
                                     <td>402.00 M</td>
                           </tr>
-                          
-                        
                         </tbody>
                       </Table>
-                 </div>
-   
-                <div style={{width:'25%',fontSize:'10px',background:'white',margin:'5px',height: 'fit-content'}}>
-            <div style={{textAlign:'center',background:'#3780a2',padding:'10px',color:'white',fontSize:'14px'}}>
-               Factory Stock
-            </div>
-            <Table title='Overall Stock' style={{margin:'0px'}}>
-                    <thead>
-                    
-                    </thead>
-                    
-                  <thead>
-                      
-                    
-                    <tr>
-                      <th scope="col"></th>
-                      <th scope="col">Count</th>
-                      <th scope="col">Qty</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                    <th scope="row">Total</th>
-                              <td>900</td>
-                              <td>23,008.80 M</td>
-                    </tr>
-                    <tr>
-                       <th scope="row">Grades</th>
-                    </tr>
-                    <tr>
-                    <th scope="row">Ist</th>
-                              <td>591</td>
-                              <td>16,796.00 M</td>
-                    </tr>
-                    <tr>
-                    <th scope="row">A</th>
-                              <td>285</td>
-                              <td>5,810.80 M</td>
-                    </tr>
-                    <tr>
-                    <th scope="row">B</th>
-                              <td>24</td>
-                              <td>402.00 M</td>
-                    </tr>
-                    
-                  
-                  </tbody>
-                </Table>
-                </div>
-
-                <div style={{width:'25%',fontSize:'10px',background:'white',margin:'5px' ,height: 'fit-content'}}>
-                  <div style={{textAlign:'center',background:'#3780a2',padding:'10px',color:'white',fontSize:'14px'}}>
-                      Surplus Stock
+      </Col>
+      <Col md="3">
+          <div style={{textAlign:'center',background:'#3780a2',padding:'10px',color:'white',fontSize:'14px'}}>
+                 Surplus Stock
                   </div>
-                  <Table title='Overall Stock' style={{margin:'0px'}}>
+                  <Table responsive size="sm" className="stockmanagementtable" title='Overall Stock' style={{background:'white'}}>
                           <thead>
                           
                           </thead>
@@ -200,21 +187,21 @@ const JumbotronComponent = () => {
                         <tbody>
                           <tr>
                           <th scope="row">Total</th>
-                                    <td>900</td>
-                                    <td>23,008.80 M</td>
+                                    <td>59</td>
+                                    <td>1,829.40 M</td>
                           </tr>
                           <tr>
                             <th scope="row">Grades</th>
                           </tr>
                           <tr>
                           <th scope="row">Ist</th>
-                                    <td>591</td>
-                                    <td>16,796.00 M</td>
+                                    <td>59</td>
+                                    <td>1,829.40 M</td>
                           </tr>
                           <tr>
                           <th scope="row">A</th>
-                                    <td>285</td>
-                                    <td>5,810.80 M</td>
+                                    <td>0</td>
+                                    <td>0.00 M</td>
                           </tr>
                           <tr>
                           <th scope="row">B</th>
@@ -229,11 +216,8 @@ const JumbotronComponent = () => {
                         
                         </tbody>
                       </Table>
-                </div>
-          </div>
-           
-    
-
+      </Col>
+     </Row>
       <ComponentCard title="">
 
           <Row style={{padding:'8px'}}>
@@ -273,8 +257,6 @@ const JumbotronComponent = () => {
                    </FormGroup>
                  </Col>
                </Row>
-               
-              
              </Form>
                 </CardBody>
               </Card>
@@ -285,10 +267,10 @@ const JumbotronComponent = () => {
             <Table responsive>
                   <thead>
                     <tr>
-                      <th scope="col"></th>
-                      <th scope="col"></th>
+                      <th scope="col" style={{minWidth:'200px'}}></th>
+                      <th scope="col" style={{minWidth:'200px'}}></th>
                       
-                      <th scope="col"></th>
+                      <th scope="col" style={{minWidth:'150px'}}></th>
                     </tr>
                   </thead>
                   <tbody>

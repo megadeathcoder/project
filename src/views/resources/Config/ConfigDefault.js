@@ -14,6 +14,7 @@ import ComponentCard from '../../../components/ComponentCard';
 const ConfigDefault = () => {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
+  const [validationData, setValidationData] = useState([]);
   const [istrashed, setIstrashed] = useState('0');
   // const data = [
   //   { id: 1, DisplayName: 'Grades', ConfigName: 'grading', SearchType: 'year', Value: '1'},
@@ -35,12 +36,13 @@ const ConfigDefault = () => {
   const handleEditClick = (item) => {
     // Navigate to the edit page with the item's id
     // Navigate(`/resources/address-types/edit/${itemId}`);
-    navigate('/resources/config-default/edit', { state: item });
+    const validationDataArray = validationData.filter(ex => ex.name !== item.name);
+    navigate('/resources/config-default/edit', { state: {item, validationDataArray} });
   };
   const handleEditAdd = () => {
     // Navigate to the edit page with the item's id
     // Navigate(`/resources/address-types/edit/${itemId}`);
-    navigate('/resources/config-default/add');
+    navigate('/resources/config-default/add',{state:validationData});
   };
   const handleTrash = ()=>{
      
@@ -113,7 +115,11 @@ const ConfigDefault = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const result = await response.json();
-      setData(result.configs); 
+      setData(result.configs);
+      const addresstypesItems =result.configs.map((a)=>{
+        return {name:a.name,displayName:a.display_name}
+       });
+     setValidationData(addresstypesItems);
       console.log('result',result.configs); 
     };
   

@@ -110,6 +110,7 @@ async function apiCall() {
             sms_content:formDatas.SmsContent,
             email_content:formDatas.EmailContent,
             subject:formDatas.Subject,
+            'is_trashed':'0'
           }),
       });
 

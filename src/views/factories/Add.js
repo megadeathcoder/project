@@ -103,7 +103,8 @@ const Edit= () => {
               company_name:formDatas.companyName,
               cim_no:formDatas.cimNo,
               uam_no:formDatas.uamNo,
-              factory_production_line:filtered
+              factory_production_line:filtered,
+              is_trashed:'0'
             }),
         });
 
